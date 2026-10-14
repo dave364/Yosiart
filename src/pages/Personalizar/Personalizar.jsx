@@ -4,7 +4,6 @@ import { PIEZAS, COLORES, GLITTERS, MAX_NOMBRE, buscarPieza, buscarColor, plata 
 import { useCart } from "../../context/CartContext";
 import { telefonoParece } from "../../utils/telefono";
 import { achicarFoto } from "../../utils/foto";
-import PiezaPreview from "../../components/PiezaPreview/PiezaPreview";
 import Pieza3D from "../../components/Pieza3D/Pieza3D";
 import Icono from "../../components/Icono/Icono";
 import "./Personalizar.scss";
@@ -21,7 +20,6 @@ const Personalizar = () => {
   const [cargandoFoto, setCargandoFoto] = useState(false);
   const [intento, setIntento] = useState(false);
   const [agregado, setAgregado] = useState(null);
-  const [ver3d, setVer3d] = useState(false);
 
   const { agregar } = useCart();
 
@@ -87,34 +85,14 @@ const Personalizar = () => {
       <div className="personalizar__grilla">
         <section className="personalizar__vista" aria-label="Vista previa">
           <div className="personalizar__vista-caja">
-            <div className="personalizar__modo" role="group" aria-label="Tipo de vista">
-              <button type="button" className="chip" aria-pressed={!ver3d} onClick={() => setVer3d(false)}>
-                Vista plana
-              </button>
-              <button type="button" className="chip" aria-pressed={ver3d} onClick={() => setVer3d(true)}>
-                Ver en 3D
-              </button>
-            </div>
-            {ver3d ? (
-              <Pieza3D
-                forma={pieza.forma}
-                color={opciones.color}
-                glitter={opciones.glitter}
-                nombre={opciones.nombre}
-                telefono={pieza.lleva.telefono ? opciones.telefono : ""}
-                foto={pieza.lleva.foto ? opciones.foto : null}
-              />
-            ) : (
-              <PiezaPreview
-                forma={pieza.forma}
-                color={opciones.color}
-                glitter={opciones.glitter}
-                nombre={opciones.nombre}
-                telefono={pieza.lleva.telefono ? opciones.telefono : ""}
-                foto={pieza.lleva.foto ? opciones.foto : null}
-                className={`personalizar__svg personalizar__svg--${pieza.forma}`}
-              />
-            )}
+            <Pieza3D
+              forma={pieza.forma}
+              color={opciones.color}
+              glitter={opciones.glitter}
+              nombre={opciones.nombre}
+              telefono={pieza.lleva.telefono ? opciones.telefono : ""}
+              foto={pieza.lleva.foto ? opciones.foto : null}
+            />
             <p>Vista previa aproximada: cada pieza es hecha a mano y puede variar un poco.</p>
           </div>
         </section>
