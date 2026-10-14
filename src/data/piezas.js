@@ -28,7 +28,8 @@ export const PIEZAS = [
     descripcion: "Para el collar de tu perro, con glitter a elección.",
     categoria: "mascotas",
     forma: "hueso",
-    lleva: { nombre: true, telefono: true, foto: false },
+    // telefonoAtras: el cliente elige si el teléfono va adelante o en el dorso
+    lleva: { nombre: true, telefono: true, telefonoAtras: true, foto: false },
     precio: null,
     nuevo: true,
     muestra: { color: "rosa", glitter: "dorado", nombre: "Luna", telefono: "" },

@@ -20,12 +20,13 @@ const Glitter = ({ forma, hex }) =>
     </g>
   ) : null;
 
-const PiezaPreview = ({ forma, color, glitter, nombre, telefono, foto, etiqueta, className }) => {
+const PiezaPreview = ({ forma, color, glitter, nombre, telefono, telefonoLado = "frente", foto, etiqueta, className }) => {
   const clipId = useId();
   const c = buscarColor(color);
   const g = buscarGlitter(glitter);
   const texto = (nombre || "").trim() || "Tu nombre";
-  const tel = (telefono || "").trim();
+  // La vista plana muestra solo el frente: si el teléfono va en el dorso, no se dibuja.
+  const tel = telefonoLado === "frente" ? (telefono || "").trim() : "";
   const descripcion = etiqueta || `Vista previa: ${texto}, color ${c.nombre.toLowerCase()}`;
 
   if (forma === "corazon") {

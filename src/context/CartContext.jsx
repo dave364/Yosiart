@@ -14,6 +14,7 @@ const claveDe = (piezaId, opciones) =>
     opciones.glitter,
     (opciones.nombre || "").trim().toLowerCase(),
     (opciones.telefono || "").trim(),
+    opciones.telefonoLado || "",
     opciones.foto ? opciones.foto.slice(-40) : "",
   ].join("|");
 

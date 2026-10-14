@@ -8,7 +8,14 @@ import Pieza3D from "../../components/Pieza3D/Pieza3D";
 import Icono from "../../components/Icono/Icono";
 import "./Personalizar.scss";
 
-const OPCIONES_INICIALES = { color: "frambuesa", glitter: "dorado", nombre: "", telefono: "", foto: null };
+const OPCIONES_INICIALES = {
+  color: "frambuesa",
+  glitter: "dorado",
+  nombre: "",
+  telefono: "",
+  telefonoLado: "dorso", // en las chapitas de mascotas el teléfono suele ir atrás
+  foto: null,
+};
 
 const Personalizar = () => {
   const [params, setParams] = useSearchParams();
@@ -59,6 +66,9 @@ const Personalizar = () => {
   const errorFotoFalta = pieza.lleva.foto && !opciones.foto ? "Subí la foto que va dentro de la pieza." : null;
   const valido = !errorNombre && !errorTelefono && !errorFotoFalta;
 
+  // Solo las chapitas de mascotas permiten llevar el teléfono en el dorso.
+  const ladoTelefono = pieza.lleva.telefonoAtras ? opciones.telefonoLado : "frente";
+
   const alAgregar = () => {
     setIntento(true);
     if (!valido) return;
@@ -68,6 +78,7 @@ const Personalizar = () => {
       glitter: opciones.glitter,
       nombre,
       telefono: pieza.lleva.telefono ? telefono : "",
+      telefonoLado: pieza.lleva.telefono && telefono ? ladoTelefono : null,
       foto: pieza.lleva.foto ? opciones.foto : null,
     };
     agregar(pieza, datos, cantidad);
@@ -91,6 +102,7 @@ const Personalizar = () => {
               glitter={opciones.glitter}
               nombre={opciones.nombre}
               telefono={pieza.lleva.telefono ? opciones.telefono : ""}
+              telefonoLado={ladoTelefono}
               foto={pieza.lleva.foto ? opciones.foto : null}
             />
             <p>Vista previa aproximada: cada pieza es hecha a mano y puede variar un poco.</p>
@@ -187,6 +199,26 @@ const Personalizar = () => {
                 aria-invalid={!!errorTelefono}
               />
               {errorTelefono && <span className="campo__error">{errorTelefono}</span>}
+              {pieza.lleva.telefonoAtras && (
+              <div className="chips" role="group" aria-label="Dónde va el teléfono">
+                <button
+                  type="button"
+                  className="chip"
+                  aria-pressed={opciones.telefonoLado === "dorso"}
+                  onClick={() => cambiar("telefonoLado", "dorso")}
+                >
+                  Atrás, en el dorso
+                </button>
+                <button
+                  type="button"
+                  className="chip"
+                  aria-pressed={opciones.telefonoLado === "frente"}
+                  onClick={() => cambiar("telefonoLado", "frente")}
+                >
+                  Adelante, debajo del nombre
+                </button>
+              </div>
+              )}
             </div>
           )}
 

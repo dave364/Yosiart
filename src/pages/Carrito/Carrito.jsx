@@ -128,7 +128,12 @@ const Carrito = () => {
                   <h2>{i.nombrePieza}</h2>
                   <ul className="item__detalle">
                     {i.opciones.nombre && <li>Nombre: <strong>{i.opciones.nombre}</strong></li>}
-                    {i.opciones.telefono && <li>Teléfono: {i.opciones.telefono}</li>}
+                    {i.opciones.telefono && (
+                      <li>
+                        Teléfono: {i.opciones.telefono}{" "}
+                        ({i.opciones.telefonoLado === "frente" ? "adelante" : "en el dorso"})
+                      </li>
+                    )}
                     <li>Color: {color.nombre} · {glitter.nombre}</li>
                     {i.opciones.foto && <li>Con foto</li>}
                   </ul>

@@ -52,12 +52,12 @@ const Argolla = ({ cy, r }) => (
   </>
 );
 
-const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, foto }) => {
+const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLado = "dorso", foto }) => {
   const id = useId().replace(/:/g, "");
   const escenarioRef = useRef(null);
   const piezaRef = useRef(null);
   const sombraRef = useRef(null);
-  const giro = useRef({ rotY: -25, rotX: -8, vel: 0, arrastrando: false, x: 0, y: 0 });
+  const giro = useRef({ rotY: -25, rotX: -8, vel: 0, arrastrando: false, x: 0, y: 0, objetivo: null });
   const reducir =
     typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   const [auto, setAuto] = useState(!reducir);
@@ -103,7 +103,14 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, foto }) =>
       prev = t;
       const g = giro.current;
       if (!g.arrastrando) {
-        if (Math.abs(g.vel) > 0.01) {
+        if (g.objetivo != null) {
+          // Gira suave hasta mostrar la cara pedida (por ejemplo, el dorso con el teléfono).
+          g.rotY += (g.objetivo - g.rotY) * Math.min(1, dt / 120);
+          if (Math.abs(g.objetivo - g.rotY) < 0.5) {
+            g.rotY = g.objetivo;
+            g.objetivo = null;
+          }
+        } else if (Math.abs(g.vel) > 0.01) {
           g.rotY += g.vel * dt;
           g.vel *= Math.pow(0.9, dt / 16);
         } else if (autoRef.current) {
@@ -125,6 +132,7 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, foto }) =>
     const g = giro.current;
     g.arrastrando = true;
     g.vel = 0;
+    g.objetivo = null;
     g.x = e.clientX;
     g.y = e.clientY;
     escenarioRef.current?.setPointerCapture(e.pointerId);
@@ -152,25 +160,36 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, foto }) =>
     giro.current.rotY += e.key === "ArrowLeft" ? -15 : 15;
     pintar();
   };
-  const verDeFrente = () => {
+  // Lleva la pieza a mostrar el frente (0°) o el dorso (180°) por el camino más corto.
+  const mostrarCara = (cara) => {
     setAuto(false);
     const g = giro.current;
     g.vel = 0;
-    g.rotY = Math.round(g.rotY / 360) * 360;
-    g.rotX = -8;
-    pintar();
+    const base = cara === "dorso" ? 180 : 0;
+    g.objetivo = Math.round((g.rotY - base) / 360) * 360 + base;
   };
+
+  // Al escribir el teléfono o cambiar de lado, mostramos la cara donde va a quedar.
+  const telLimpio = (telefono || "").trim();
+  useEffect(() => {
+    if (forma === "corazon" || !telLimpio) return;
+    mostrarCara(telefonoLado === "dorso" ? "dorso" : "frente");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [telLimpio, telefonoLado]);
 
   const c = buscarColor(color);
   const gl = buscarGlitter(glitter);
   const silueta = SILUETA[forma] || SILUETA.hueso;
   const [ax, ay] = ARGOLLA[forma] || ARGOLLA.hueso;
   const texto = (nombre || "").trim() || "Tu nombre";
-  const tel = forma !== "corazon" ? (telefono || "").trim() : "";
+  const tel = forma !== "corazon" ? telLimpio : "";
+  const telFrente = telefonoLado === "frente" ? tel : "";
+  const telDorso = telefonoLado === "dorso" ? tel : "";
   const escala = ancho / 300;
   const zFrente = (ESPESOR / 2) * escala;
   const agujero = mezclar(c.hex, -0.5);
-  const yNombre = NOMBRE_Y[forma] - (tel ? 10 : 0);
+  const yNombre = NOMBRE_Y[forma] - (telFrente ? 10 : 0);
+  const yDorso = NOMBRE_Y[forma] - (forma === "hueso" ? 18 : 14);
 
   return (
     <div className="pieza3d">
@@ -266,9 +285,9 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, foto }) =>
                   >
                     {texto}
                   </text>
-                  {tel && (
+                  {telFrente && (
                     <text x="150" y={yNombre + 24} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="700" fontSize="14" fill={c.texto}>
-                      {tel}
+                      {telFrente}
                     </text>
                   )}
                   <rect data-banda="" x="-300" y="-300" width="900" height="900" fill={`url(#${id}-brillo)`} />
@@ -276,7 +295,7 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, foto }) =>
                 <circle cx={ax} cy={ay} r="9" fill={agujero} />
               </svg>
 
-              {/* Dorso, con la firma de la marca */}
+              {/* Dorso: el teléfono (si va atrás) y la firma de la marca */}
               <svg
                 className="pieza3d__capa pieza3d__capa--cara"
                 viewBox="0 0 300 300"
@@ -284,9 +303,20 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, foto }) =>
                 aria-hidden="true"
               >
                 <g fill={mezclar(c.hex, -0.08)}>{silueta}</g>
-                <text x="150" y={NOMBRE_Y[forma] - 10} textAnchor="middle" fontFamily="Dancing Script, cursive" fontWeight="700" fontSize="28" fill={c.texto} opacity="0.75">
-                  YosiArt
-                </text>
+                {telDorso ? (
+                  <>
+                    <text x="150" y={yDorso} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="800" fontSize={telDorso.length > 13 ? 19 : 22} fill={c.texto}>
+                      {telDorso}
+                    </text>
+                    <text x="150" y={yDorso + 24} textAnchor="middle" fontFamily="Dancing Script, cursive" fontWeight="700" fontSize="17" fill={c.texto} opacity="0.75">
+                      YosiArt
+                    </text>
+                  </>
+                ) : (
+                  <text x="150" y={NOMBRE_Y[forma] - 10} textAnchor="middle" fontFamily="Dancing Script, cursive" fontWeight="700" fontSize="28" fill={c.texto} opacity="0.75">
+                    YosiArt
+                  </text>
+                )}
                 <circle cx={300 - ax} cy={ay} r="9" fill={agujero} />
               </svg>
 
@@ -309,8 +339,11 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, foto }) =>
         <button type="button" className="chip" aria-pressed={auto} onClick={() => setAuto((v) => !v)}>
           Giro automático
         </button>
-        <button type="button" className="chip" onClick={verDeFrente}>
-          Ver de frente
+        <button type="button" className="chip" onClick={() => mostrarCara("frente")}>
+          Ver frente
+        </button>
+        <button type="button" className="chip" onClick={() => mostrarCara("dorso")}>
+          Ver dorso
         </button>
       </div>
     </div>
