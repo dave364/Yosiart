@@ -189,7 +189,8 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
   const zFrente = (ESPESOR / 2) * escala;
   const agujero = mezclar(c.hex, -0.5);
   const yNombre = NOMBRE_Y[forma] - (telFrente ? 10 : 0);
-  const yDorso = NOMBRE_Y[forma] - (forma === "hueso" ? 18 : 14);
+  // Centrado vertical del teléfono en el dorso (solo lo usan las chapitas hueso).
+  const yDorso = NOMBRE_Y[forma] - 7;
 
   return (
     <div className="pieza3d">
@@ -295,7 +296,7 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
                 <circle cx={ax} cy={ay} r="9" fill={agujero} />
               </svg>
 
-              {/* Dorso: el teléfono (si va atrás) y la firma de la marca */}
+              {/* Dorso: liso, o con el teléfono si el cliente lo eligió atrás */}
               <svg
                 className="pieza3d__capa pieza3d__capa--cara"
                 viewBox="0 0 300 300"
@@ -303,18 +304,9 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
                 aria-hidden="true"
               >
                 <g fill={mezclar(c.hex, -0.08)}>{silueta}</g>
-                {telDorso ? (
-                  <>
-                    <text x="150" y={yDorso} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="800" fontSize={telDorso.length > 13 ? 19 : 22} fill={c.texto}>
-                      {telDorso}
-                    </text>
-                    <text x="150" y={yDorso + 24} textAnchor="middle" fontFamily="Dancing Script, cursive" fontWeight="700" fontSize="17" fill={c.texto} opacity="0.75">
-                      YosiArt
-                    </text>
-                  </>
-                ) : (
-                  <text x="150" y={NOMBRE_Y[forma] - 10} textAnchor="middle" fontFamily="Dancing Script, cursive" fontWeight="700" fontSize="28" fill={c.texto} opacity="0.75">
-                    YosiArt
+                {telDorso && (
+                  <text x="150" y={yDorso} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="800" fontSize={telDorso.length > 13 ? 19 : 22} fill={c.texto}>
+                    {telDorso}
                   </text>
                 )}
                 <circle cx={300 - ax} cy={ay} r="9" fill={agujero} />
