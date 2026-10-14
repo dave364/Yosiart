@@ -12,6 +12,7 @@ const Footer = () => (
       </Link>
       <nav aria-label="Pie de página" className="footer__links">
         <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer">@yosiart.resina</a>
+        <Link to="/seguimiento">Seguí tu pedido</Link>
         <Link to="/presupuesto">Pedir presupuesto</Link>
         {/* TODO: completar las zonas reales de envío */}
         <span>Envíos a [ZONAS]</span>

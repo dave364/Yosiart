@@ -1,9 +1,9 @@
 // Achica la foto que sube el cliente antes de guardarla en el carrito.
-// Una foto de celular pesa varios MB y no entra en localStorage; para la
-// vista previa alcanza con ~400px. La foto original se va a subir a
-// Cloudinary cuando este el backend (TODO).
+// Una foto de celular pesa varios MB y no entra en localStorage. A 800px
+// queda en ~100 KB: entra en el carrito y alcanza para hacer la pieza.
+// Al confirmar el pedido viaja a la API, que la guarda (api/src/fotos.js).
 
-const LADO_MAX = 400;
+const LADO_MAX = 800;
 const CALIDAD = 0.82;
 export const MAX_MB = 10;
 

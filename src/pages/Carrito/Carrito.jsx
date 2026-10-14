@@ -90,7 +90,15 @@ const Carrito = () => {
             Tu pedido <strong>#{pedido.numero ?? pedido.id}</strong> quedó registrado. Te escribimos a{" "}
             <strong>{email.trim()}</strong> con los próximos pasos.
           </p>
-          <Link to="/" className="btn">Volver al inicio</Link>
+          <div className="carrito__acciones">
+            <Link
+              to={`/seguimiento?numero=${encodeURIComponent(pedido.numero)}&email=${encodeURIComponent(email.trim())}`}
+              className="btn"
+            >
+              Seguir mi pedido
+            </Link>
+            <Link to="/" className="btn btn--borde">Volver al inicio</Link>
+          </div>
         </div>
       </main>
     );

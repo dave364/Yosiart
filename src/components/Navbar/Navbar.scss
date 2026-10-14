@@ -95,7 +95,9 @@
     border-radius: var(--radius-sm);
     box-shadow: 0 10px 30px rgba(58, 26, 42, .12);
 
-    button {
+    button, a {
+      display: flex;
+      align-items: center;
       width: 100%;
       min-height: 44px;
       padding: 0 12px;
@@ -105,8 +107,10 @@
       background: transparent;
       color: var(--tinta);
       font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
       cursor: pointer;
-      &:hover { background: var(--blush-2); }
+      &:hover { background: var(--blush-2); color: var(--tinta); }
     }
   }
 

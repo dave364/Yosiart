@@ -8,6 +8,7 @@ import Home from "./pages/Home/Home";
 import Personalizar from "./pages/Personalizar/Personalizar";
 import Carrito from "./pages/Carrito/Carrito";
 import Presupuesto from "./pages/Presupuesto/Presupuesto";
+import Seguimiento from "./pages/Seguimiento/Seguimiento";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 
@@ -48,6 +49,7 @@ function App() {
           <Route path="/personalizar" element={<Personalizar />} />
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/presupuesto" element={<Presupuesto />} />
+          <Route path="/seguimiento" element={<Seguimiento />} />
           <Route path="*" element={<NoEncontrada />} />
         </Routes>
         <Footer />

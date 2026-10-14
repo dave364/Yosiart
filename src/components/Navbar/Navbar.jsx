@@ -85,6 +85,7 @@ const Navbar = () => {
               </button>
               {menuCuenta && (
                 <div className="navbar__desplegable">
+                  <Link to="/seguimiento">Mis pedidos</Link>
                   <button type="button" onClick={logout}>
                     Cerrar sesión
                   </button>

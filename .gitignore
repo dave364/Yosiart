@@ -28,3 +28,4 @@ dist/
 .vite/
 .env*
 .vite-cache/
+!.env.example
