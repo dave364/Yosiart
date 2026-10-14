@@ -40,6 +40,13 @@
     p { margin: 0; font-size: 14px; color: var(--tinta-suave); text-align: center; }
   }
 
+  &__modo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
   &__svg {
     width: 100%;
     height: auto;
