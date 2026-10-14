@@ -1,0 +1,176 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--blush);
+  border-bottom: 1px solid var(--borde);
+
+  &__barra {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 76px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  &__marca {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    margin-right: auto;
+
+    img {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-pill);
+      object-fit: cover;
+      border: 2px solid var(--rosa-chicle);
+    }
+
+    span {
+      font-family: var(--font-display);
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--frambuesa);
+    }
+  }
+
+  &__menu {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    a {
+      color: var(--tinta);
+      font-weight: 700;
+      text-decoration: none;
+      &:hover, &.active { color: var(--frambuesa); }
+    }
+  }
+
+  &__toggle {
+    display: none;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: var(--tinta);
+    cursor: pointer;
+  }
+
+  &__acciones {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__cuenta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 8px;
+    border: 0;
+    background: transparent;
+    color: var(--tinta);
+    font-weight: 700;
+    cursor: pointer;
+    &:hover { color: var(--frambuesa); }
+  }
+
+  &__cuenta-wrap { position: relative; }
+
+  &__desplegable {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    min-width: 180px;
+    padding: 6px;
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 10px 30px rgba(58, 26, 42, .12);
+
+    button {
+      width: 100%;
+      min-height: 44px;
+      padding: 0 12px;
+      text-align: left;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--tinta);
+      font-weight: 700;
+      cursor: pointer;
+      &:hover { background: var(--blush-2); }
+    }
+  }
+
+  &__carrito {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: var(--radius-pill);
+    background: var(--frambuesa);
+    color: var(--blanco);
+    font-weight: 700;
+    text-decoration: none;
+    &:hover { background: var(--frambuesa-hover); color: var(--blanco); }
+  }
+
+  &__contador {
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: var(--radius-pill);
+    background: var(--blanco);
+    color: var(--frambuesa);
+    font-size: 13px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // Celular: el menu se abre debajo de la barra
+  @media (max-width: 860px) {
+    &__barra { flex-wrap: wrap; gap: 8px; }
+    &__toggle { display: inline-flex; order: -1; }
+    &__marca { gap: 8px; }
+    &__marca span { font-size: 26px; }
+    &__marca img { width: 40px; height: 40px; }
+    &__acciones { gap: 4px; }
+    &__carrito { padding: 0 14px; }
+    &__cuenta span, &__carrito-texto { display: none; }
+
+    // Celulares muy angostos: solo el logo, sin el texto
+    @media (max-width: 380px) {
+      &__marca span { display: none; }
+    }
+
+    &__menu {
+      display: none;
+      order: 10;
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding-top: 8px;
+
+      a {
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        border-top: 1px solid var(--borde);
+      }
+
+      &--abierto { display: flex; }
+    }
+  }
+}

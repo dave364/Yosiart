@@ -1,0 +1,35 @@
+.footer {
+  margin-top: 48px;
+  border-top: 1px solid var(--borde);
+
+  &__contenido {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+
+  &__marca {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+
+    img { width: 44px; height: 44px; border-radius: var(--radius-pill); object-fit: cover; }
+    span { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--frambuesa); }
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    font-size: 15px;
+    font-weight: 700;
+
+    span { color: var(--tinta-suave); font-weight: 600; }
+  }
+}

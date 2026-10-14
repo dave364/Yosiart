@@ -1,0 +1,42 @@
+// Paleta y tipografias de YosiArt (ver el sistema de diseno "YosiArt Resina").
+
+:root {
+  /* Colores de marca */
+  --frambuesa: #A8124C;        // color del logo: titulos, botones, enlaces
+  --frambuesa-hover: #860C3B;
+  --rosa-chicle: #EC6FA3;      // huellitas, corazones, acentos (nunca texto chico)
+  --rojo-yosi: #D81B32;        // toque puntual: ofertas
+  --lila-glitter: #8A4FC2;
+  --turquesa: #1F8FA3;
+  --dorado: #B8892E;
+
+  /* Fondos y texto */
+  --blush: #FDF3F6;            // fondo general
+  --blush-2: #F8E1EA;          // tarjetas y secciones alternas
+  --blanco: #FFFFFF;
+  --tinta: #3A1A2A;            // texto principal
+  --tinta-suave: #7A5468;      // texto secundario
+  --borde: #EBC9D7;
+  --error: #B3261E;
+
+  /* Tipografias */
+  --font-display: 'Dancing Script', 'Brush Script MT', cursive;
+  --font-texto: 'Nunito', system-ui, sans-serif;
+
+  /* Formas */
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+  --ancho-max: 1200px;
+
+  /* Compatibilidad con los componentes que vienen de Kenypets
+     (AuthModal, Reset) para que tomen la paleta nueva sin tocarlos. */
+  --color-light: var(--blush);
+  --color-dark: var(--tinta);
+  --color-darkest: var(--tinta);
+  --color-purple: var(--frambuesa);
+  --color-beige: var(--borde);
+  --brand-secondary: var(--rosa-chicle);
+  --brand-font: var(--font-display);
+  --text-dark: var(--tinta);
+}

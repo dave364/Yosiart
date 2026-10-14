@@ -1,0 +1,118 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--blush);
+  color: var(--tinta);
+  font-family: var(--font-texto);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--frambuesa);
+  &:hover { color: var(--frambuesa-hover); }
+}
+
+img { max-width: 100%; display: block; }
+
+button, input, textarea, select { font: inherit; }
+
+:focus-visible {
+  outline: 3px solid var(--lila-glitter);
+  outline-offset: 2px;
+}
+
+.contenedor {
+  max-width: var(--ancho-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.titulo-seccion {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: clamp(34px, 5vw, 44px);
+  line-height: 1.15;
+  font-weight: 700;
+  color: var(--frambuesa);
+}
+
+.bajada {
+  margin: 0 0 28px;
+  font-size: 17px;
+  color: var(--tinta-suave);
+}
+
+// Botones
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--frambuesa);
+  background: var(--frambuesa);
+  color: var(--blanco);
+  font-weight: 800;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+
+  &:hover { background: var(--frambuesa-hover); border-color: var(--frambuesa-hover); color: var(--blanco); }
+  &:disabled { opacity: .55; cursor: not-allowed; }
+
+  &--borde {
+    background: transparent;
+    color: var(--frambuesa);
+    &:hover { background: var(--frambuesa); color: var(--blanco); }
+  }
+
+  &--grande { min-height: 56px; padding: 0 32px; font-size: 18px; }
+  &--ancho { width: 100%; }
+}
+
+.solo-lectores {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+// Campos de formulario
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label, .campo__titulo { font-size: 17px; font-weight: 800; }
+  .campo__opcional { font-weight: 600; color: var(--tinta-suave); }
+
+  input, textarea {
+    min-height: 48px;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--borde);
+    background: var(--blanco);
+    color: var(--tinta);
+    font-size: 17px;
+    &:focus { border-color: var(--frambuesa); outline: none; }
+  }
+
+  textarea { min-height: 120px; resize: vertical; }
+
+  .campo__ayuda { font-size: 14px; color: var(--tinta-suave); }
+  .campo__error { font-size: 14px; color: var(--error); font-weight: 700; }
+}

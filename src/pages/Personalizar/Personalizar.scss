@@ -1,0 +1,168 @@
+.personalizar {
+  padding-top: 40px;
+  padding-bottom: 64px;
+
+  &__titulo {
+    margin: 0 0 6px;
+    font-family: var(--font-display);
+    font-size: clamp(40px, 6vw, 52px);
+    line-height: 1.1;
+    font-weight: 700;
+    color: var(--frambuesa);
+  }
+
+  &__grilla {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    align-items: flex-start;
+  }
+
+  &__vista {
+    flex: 1 1 420px;
+    min-width: 0;
+    position: sticky;
+    top: 100px;
+
+    @media (max-width: 900px) { position: static; }
+  }
+
+  &__vista-caja {
+    border-radius: 28px;
+    background: var(--blush-2);
+    border: 1px solid var(--borde);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    p { margin: 0; font-size: 14px; color: var(--tinta-suave); text-align: center; }
+  }
+
+  &__svg {
+    width: 100%;
+    height: auto;
+    &--hueso { max-width: 420px; }
+    &--corazon { max-width: 380px; }
+    &--circulo { max-width: 360px; }
+  }
+
+  &__opciones {
+    flex: 1 1 420px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+}
+
+.grupo {
+  border: 0;
+  margin: 0;
+  padding: 0;
+
+  legend { padding: 0; margin-bottom: 12px; font-size: 17px; font-weight: 800; }
+  &__valor { font-weight: 600; color: var(--tinta-suave); }
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.chip {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--borde);
+  background: var(--blanco);
+  color: var(--tinta);
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover { border-color: var(--rosa-chicle); }
+  &[aria-pressed="true"] { background: var(--frambuesa); border-color: var(--frambuesa); color: var(--blanco); }
+}
+
+.swatches { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.swatch {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-pill);
+  border: 3px solid var(--blanco);
+  box-shadow: 0 0 0 1px var(--borde);
+  cursor: pointer;
+
+  &[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--tinta); }
+}
+
+.subir-foto {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 18px;
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--rosa-chicle);
+  background: var(--blanco);
+  color: var(--frambuesa);
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+
+  &:hover { background: var(--blush-2); }
+}
+
+// el input real esta oculto: el foco se muestra en el label
+.campo:has(#foto:focus-visible) .subir-foto {
+  outline: 3px solid var(--lila-glitter);
+  outline-offset: 2px;
+}
+
+.resumen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+
+  &__cantidad {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+
+    button {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--borde);
+      background: var(--blush);
+      color: var(--frambuesa);
+      font-size: 22px;
+      font-weight: 800;
+      cursor: pointer;
+      &:hover { border-color: var(--frambuesa); }
+    }
+  }
+
+  &__numero { min-width: 24px; text-align: center; font-size: 18px; }
+  &__precio { font-size: 22px; font-weight: 800; }
+}
+
+.aviso {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: var(--radius-lg);
+  background: var(--blush-2);
+  font-weight: 700;
+
+  a { font-weight: 800; }
+}

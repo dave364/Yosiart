@@ -1,0 +1,183 @@
+/* =============================================
+   LOGIN / REGISTRO
+   ============================================= */
+
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(25, 0, 25, 0.55);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+
+.auth-modal {
+  position: relative;
+  background: var(--color-light);
+  border-radius: 22px;
+  padding: 2rem 1.5rem 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  font-family: var(--font-texto);
+  color: var(--color-dark);
+  box-shadow: 0 14px 50px rgba(82, 43, 91, 0.3);
+  animation: auth-aparecer 0.22s ease;
+
+  h2 {
+    font-family: var(--brand-font);
+    color: var(--color-purple);
+    font-size: 1.7rem;
+    margin: 0 0 1rem;
+    text-align: center;
+  }
+}
+
+@keyframes auth-aparecer {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.auth-modal__cerrar {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.9rem;
+  border: none;
+  background: transparent;
+  color: var(--color-purple);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+  line-height: 1;
+}
+
+.auth-modal__promo {
+  background: #fff;
+  border: 1.5px dashed var(--brand-secondary);
+  border-radius: 14px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.85rem;
+  text-align: center;
+  margin: 0 0 1.25rem;
+  line-height: 1.45;
+}
+
+/* --- CAMPOS --- */
+.auth-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-purple);
+
+  input {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border: 1.5px solid var(--color-beige);
+    border-radius: 12px;
+    /* 16px evita que iOS haga zoom al enfocar el campo */
+    font-size: 16px;
+    font-family: var(--font-texto);
+    color: var(--color-darkest);
+    background: #fff;
+    box-sizing: border-box;
+
+    &:focus { outline: none; border-color: var(--color-purple); }
+  }
+
+  small {
+    font-size: 0.72rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    opacity: 0.8;
+  }
+}
+
+.auth-campo__password {
+  position: relative;
+
+  input { padding-right: 3rem; }
+
+  button {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    font-size: 1.05rem;
+    cursor: pointer;
+    padding: 0.25rem 0.4rem;
+    line-height: 1;
+  }
+}
+
+.auth-error {
+  background: #fdecea;
+  color: #a1281c;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin: 0 0 1rem;
+  line-height: 1.4;
+}
+
+/* --- BOTONES --- */
+.auth-btn {
+  width: 100%;
+  padding: 0.85rem 1.2rem;
+  border-radius: 999px;
+  border: 2px solid var(--color-purple);
+  background: transparent;
+  color: var(--color-purple);
+  font-family: var(--font-texto);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+  &:active:not(:disabled) { transform: scale(0.98); }
+}
+
+.auth-btn--principal {
+  background: var(--color-purple);
+  color: var(--color-light);
+}
+
+.auth-modal__cambiar,
+.auth-modal__ayuda {
+  text-align: center;
+  font-size: 0.85rem;
+  margin: 1rem 0 0;
+  color: var(--color-dark);
+
+  button {
+    border: none;
+    background: transparent;
+    color: var(--color-purple);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+}
+
+.auth-modal__ayuda {
+  font-size: 0.78rem;
+  opacity: 0.8;
+  margin-top: 0.6rem;
+}
+
+
+@media (max-width: 600px) {
+  .auth-modal { padding: 1.75rem 1.25rem 1.25rem; }
+}
