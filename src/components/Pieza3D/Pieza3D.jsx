@@ -1,37 +1,22 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { buscarColor, buscarGlitter } from "../../data/piezas";
+import {
+  formaDe,
+  tamanoNombre,
+  tamanoTelefonoDorso,
+  HuellaDeco,
+  FOTO_CORAZON,
+  PUNTOS_GLITTER as PUNTOS,
+} from "../../data/formas";
 import "./Pieza3D.scss";
 
 // Vista 3D de la pieza: se arma con láminas SVG apiladas en CSS 3D
 // (sin librerías). El giro, el brillo y los destellos del glitter se
 // actualizan por fuera de React en cada cuadro, para que vaya fluido.
-
-// Siluetas en un cuadro de 300×300 (las mismas formas que PiezaPreview).
-const SILUETA = {
-  hueso: (
-    <>
-      <rect x="60" y="118" width="180" height="64" rx="12" />
-      <circle cx="62" cy="118" r="34" />
-      <circle cx="62" cy="182" r="34" />
-      <circle cx="238" cy="118" r="34" />
-      <circle cx="238" cy="182" r="34" />
-    </>
-  ),
-  corazon: <path d="M150 280 C 40 203 8 143 36 92 C 66 38 128 46 150 96 C 172 46 234 38 264 92 C 292 143 260 203 150 280 Z" />,
-  circulo: <circle cx="150" cy="160" r="122" />,
-};
-const ARGOLLA = { hueso: [62, 92], corazon: [150, 104], circulo: [150, 54] };
-const NOMBRE_Y = { hueso: 165, corazon: 222, circulo: 228 };
+// Las formas vienen de data/formas.jsx (las mismas que la vista plana).
 
 const CAPAS = 26; // láminas que forman el espesor
-const ESPESOR = 26; // en unidades del cuadro de 300
-
-// Puntos de glitter fijos (semilla fija para que no cambien entre renders).
-const PUNTOS = (() => {
-  let s = 7;
-  const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
-  return Array.from({ length: 70 }, () => [30 + r() * 240, 40 + r() * 240, 0.8 + r() * 2.2, r() * Math.PI * 2]);
-})();
+const ANCHO_BASE = 62; // % del escenario que ocupa la pieza más grande (6 cm)
 
 // Oscurece (k < 0) o aclara (k > 0) un color hex.
 const mezclar = (hex, k) => {
@@ -52,7 +37,7 @@ const Argolla = ({ cy, r }) => (
   </>
 );
 
-const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLado = "dorso", foto }) => {
+const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLado = "dorso", foto, tamanoCm }) => {
   const id = useId().replace(/:/g, "");
   const escenarioRef = useRef(null);
   const piezaRef = useRef(null);
@@ -177,20 +162,22 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [telLimpio, telefonoLado]);
 
+  const f = formaDe(forma);
   const c = buscarColor(color);
   const gl = buscarGlitter(glitter);
-  const silueta = SILUETA[forma] || SILUETA.hueso;
-  const [ax, ay] = ARGOLLA[forma] || ARGOLLA.hueso;
+  const { silueta, agujero: hueco, texto: caja } = f;
+  const [ax, ay] = hueco || [150, 150];
   const texto = (nombre || "").trim() || "Tu nombre";
   const tel = forma !== "corazon" ? telLimpio : "";
   const telFrente = telefonoLado === "frente" ? tel : "";
   const telDorso = telefonoLado === "dorso" ? tel : "";
   const escala = ancho / 300;
-  const zFrente = (ESPESOR / 2) * escala;
-  const agujero = mezclar(c.hex, -0.5);
-  const yNombre = NOMBRE_Y[forma] - (telFrente ? 10 : 0);
-  // Centrado vertical del teléfono en el dorso (solo lo usan las chapitas hueso).
-  const yDorso = NOMBRE_Y[forma] - 7;
+  const zFrente = (f.espesor / 2) * escala;
+  const colorHueco = mezclar(c.hex, -0.5);
+  const fs = tamanoNombre(forma, texto);
+  const cyNombre = caja.cy - (telFrente ? 10 : 0);
+  // La pieza se ve más chica o más grande según su medida real.
+  const anchoPieza = tamanoCm ? ANCHO_BASE * Math.max(0.62, Math.min(1, tamanoCm / 6)) : ANCHO_BASE;
 
   return (
     <div className="pieza3d">
@@ -200,7 +187,7 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
         tabIndex={0}
         role="img"
         aria-roledescription="vista 3D"
-        aria-label={`Vista 3D: ${texto}, color ${c.nombre.toLowerCase()}. Usá las flechas izquierda y derecha para girarla.`}
+        aria-label={`Vista 3D: ${f.nombre.toLowerCase()} con ${texto}, color ${c.nombre.toLowerCase()}. Usá las flechas izquierda y derecha para girarla.`}
         onPointerDown={alApretar}
         onPointerMove={alMover}
         onPointerUp={alSoltar}
@@ -208,23 +195,22 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
         onKeyDown={alTeclear}
       >
         <div ref={sombraRef} className="pieza3d__sombra" />
-        <div ref={piezaRef} className="pieza3d__pieza">
+        <div ref={piezaRef} className="pieza3d__pieza" style={{ width: `${anchoPieza}%` }}>
           {ancho > 0 && (
             <>
               {/* Canto: láminas intermedias, más oscuras hacia el centro */}
               {Array.from({ length: CAPAS - 2 }, (_, j) => {
-                const i = j + 1;
-                const t = i / (CAPAS - 1) - 0.5;
+                const t = (j + 1) / (CAPAS - 1) - 0.5;
                 return (
                   <svg
-                    key={i}
+                    key={j}
                     className="pieza3d__capa"
                     viewBox="0 0 300 300"
-                    style={{ transform: `translateZ(${t * ESPESOR * escala}px)` }}
+                    style={{ transform: `translateZ(${t * f.espesor * escala}px)` }}
                     aria-hidden="true"
                   >
                     <g fill={mezclar(c.hex, -0.28 + Math.abs(t) * 0.3)}>{silueta}</g>
-                    <circle cx={ax} cy={ay} r="9" fill={agujero} />
+                    {hueco && <circle cx={ax} cy={ay} r="8" fill={colorHueco} />}
                   </svg>
                 );
               })}
@@ -239,7 +225,7 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
                 <defs>
                   <clipPath id={`${id}-forma`}>{silueta}</clipPath>
                   <clipPath id={`${id}-foto`}>
-                    <circle cx="150" cy="150" r="54" />
+                    <circle cx={FOTO_CORAZON.cx} cy={FOTO_CORAZON.cy} r={FOTO_CORAZON.r - 4} />
                   </clipPath>
                   <linearGradient id={`${id}-brillo`} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="300" y2="300">
                     <stop offset="0" stopColor="#fff" stopOpacity="0" />
@@ -255,72 +241,87 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
                     PUNTOS.map((p, i) => (
                       <circle key={i} data-destello={i} cx={p[0]} cy={p[1]} r={p[2]} fill={gl.hex} />
                     ))}
+                  {forma === "huellita" && <HuellaDeco fill={c.texto} />}
                   {forma === "corazon" && (
                     <>
-                      <circle cx="150" cy="150" r="58" fill="#FFFFFF" opacity="0.92" />
+                      <circle cx={FOTO_CORAZON.cx} cy={FOTO_CORAZON.cy} r={FOTO_CORAZON.r} fill="#FFFFFF" opacity="0.92" />
                       {foto ? (
                         <image
                           href={foto}
-                          x="96"
-                          y="96"
-                          width="108"
-                          height="108"
+                          x={FOTO_CORAZON.cx - FOTO_CORAZON.r}
+                          y={FOTO_CORAZON.cy - FOTO_CORAZON.r}
+                          width={FOTO_CORAZON.r * 2}
+                          height={FOTO_CORAZON.r * 2}
                           preserveAspectRatio="xMidYMid slice"
                           clipPath={`url(#${id}-foto)`}
                         />
                       ) : (
-                        <text x="150" y="155" textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="700" fontSize="13" fill="#7A5468">
+                        <text x={FOTO_CORAZON.cx} y={FOTO_CORAZON.cy + 5} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="700" fontSize="13" fill="#7A5468">
                           Tu foto acá
                         </text>
                       )}
                     </>
                   )}
                   <text
-                    x="150"
-                    y={yNombre}
+                    x={caja.cx}
+                    y={cyNombre + fs * 0.33}
                     textAnchor="middle"
                     fontFamily="Dancing Script, cursive"
                     fontWeight="700"
-                    fontSize={forma === "corazon" ? 34 : texto.length > 8 ? 36 : 46}
+                    fontSize={fs}
                     fill={c.texto}
                   >
                     {texto}
                   </text>
                   {telFrente && (
-                    <text x="150" y={yNombre + 24} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="700" fontSize="14" fill={c.texto}>
+                    <text x={caja.cx} y={cyNombre + 30} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="700" fontSize="14" fill={c.texto}>
                       {telFrente}
                     </text>
                   )}
                   <rect data-banda="" x="-300" y="-300" width="900" height="900" fill={`url(#${id}-brillo)`} />
                 </g>
-                <circle cx={ax} cy={ay} r="9" fill={agujero} />
+                {hueco && <circle cx={ax} cy={ay} r="8" fill={colorHueco} />}
               </svg>
 
-              {/* Dorso: liso, o con el teléfono si el cliente lo eligió atrás */}
+              {/* Dorso: liso, o con el teléfono si el cliente lo eligió atrás.
+                  La forma va espejada para que coincida con el frente al dar vuelta la pieza
+                  (importa en las formas asimétricas, como el pescadito). */}
               <svg
                 className="pieza3d__capa pieza3d__capa--cara"
                 viewBox="0 0 300 300"
                 style={{ transform: `translateZ(${-zFrente}px) rotateY(180deg)` }}
                 aria-hidden="true"
               >
-                <g fill={mezclar(c.hex, -0.08)}>{silueta}</g>
+                <g transform="translate(300 0) scale(-1 1)">
+                  <g fill={mezclar(c.hex, -0.08)}>{silueta}</g>
+                  {hueco && <circle cx={ax} cy={ay} r="8" fill={colorHueco} />}
+                </g>
                 {telDorso && (
-                  <text x="150" y={yDorso} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="800" fontSize={telDorso.length > 13 ? 19 : 22} fill={c.texto}>
+                  <text
+                    x={300 - caja.cx}
+                    y={caja.cy + 8}
+                    textAnchor="middle"
+                    fontFamily="Nunito, sans-serif"
+                    fontWeight="800"
+                    fontSize={tamanoTelefonoDorso(forma, telDorso)}
+                    fill={c.texto}
+                  >
                     {telDorso}
                   </text>
                 )}
-                <circle cx={300 - ax} cy={ay} r="9" fill={agujero} />
               </svg>
 
               {/* Argolla dorada, perpendicular a la pieza */}
-              <svg
-                className="pieza3d__capa"
-                viewBox="0 0 300 300"
-                style={{ transform: `translateX(${(ax - 150) * escala}px) rotateY(90deg)` }}
-                aria-hidden="true"
-              >
-                <Argolla cy={ay - 32} r={32} />
-              </svg>
+              {hueco && (
+                <svg
+                  className="pieza3d__capa"
+                  viewBox="0 0 300 300"
+                  style={{ transform: `translateX(${(ax - 150) * escala}px) rotateY(90deg)` }}
+                  aria-hidden="true"
+                >
+                  <Argolla cy={ay - 32} r={32} />
+                </svg>
+              )}
             </>
           )}
         </div>

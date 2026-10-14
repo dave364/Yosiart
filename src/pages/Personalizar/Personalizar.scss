@@ -57,6 +57,7 @@
   padding: 0;
 
   legend { padding: 0; margin-bottom: 12px; font-size: 17px; font-weight: 800; }
+  &__nota { margin: 8px 0 0; font-size: 14px; color: var(--tinta-suave); }
   &__valor { font-weight: 600; color: var(--tinta-suave); }
 }
 
@@ -74,6 +75,16 @@
 
   &:hover { border-color: var(--rosa-chicle); }
   &[aria-pressed="true"] { background: var(--frambuesa); border-color: var(--frambuesa); color: var(--blanco); }
+
+  &--forma {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 12px;
+  }
+
+  &__forma { flex: none; color: var(--rosa-chicle); }
+  &[aria-pressed="true"] &__forma { color: var(--blanco); }
 }
 
 .swatches { display: flex; flex-wrap: wrap; gap: 12px; }

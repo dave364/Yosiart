@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { buscarColor, buscarGlitter, plata } from "../../data/piezas";
+import { FORMAS } from "../../data/formas";
 import { normalizarTelefono, telefonoParece } from "../../utils/telefono";
 import { API_URL } from "../../config";
 import PiezaPreview from "../../components/PiezaPreview/PiezaPreview";
@@ -132,6 +133,11 @@ const Carrito = () => {
                       <li>
                         Teléfono: {i.opciones.telefono}{" "}
                         ({i.opciones.telefonoLado === "frente" ? "adelante" : "en el dorso"})
+                      </li>
+                    )}
+                    {i.opciones.tamano && (
+                      <li>
+                        Forma: {FORMAS[i.forma]?.nombre} · {i.opciones.tamano} (≈ {String(i.opciones.tamanoCm).replace(".", ",")} cm)
                       </li>
                     )}
                     <li>Color: {color.nombre} · {glitter.nombre}</li>

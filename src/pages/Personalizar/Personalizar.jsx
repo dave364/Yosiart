@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { PIEZAS, COLORES, GLITTERS, MAX_NOMBRE, buscarPieza, buscarColor, plata } from "../../data/piezas";
+import { PIEZAS, COLORES, GLITTERS, MAX_NOMBRE, buscarPieza, buscarColor, tamanosDe, plata } from "../../data/piezas";
+import { FORMAS } from "../../data/formas";
 import { useCart } from "../../context/CartContext";
 import { telefonoParece } from "../../utils/telefono";
 import { achicarFoto } from "../../utils/foto";
@@ -8,7 +9,16 @@ import Pieza3D from "../../components/Pieza3D/Pieza3D";
 import Icono from "../../components/Icono/Icono";
 import "./Personalizar.scss";
 
+// Ícono chiquito de una forma, para los botones de elegir forma.
+const IconoForma = ({ forma }) => (
+  <svg viewBox="0 0 300 300" width="28" height="28" aria-hidden="true" className="chip__forma">
+    <g fill="currentColor">{FORMAS[forma].silueta}</g>
+  </svg>
+);
+
 const OPCIONES_INICIALES = {
+  forma: null, // solo para piezas con varias formas (chapitas)
+  tamano: null,
   color: "frambuesa",
   glitter: "dorado",
   nombre: "",
@@ -66,6 +76,11 @@ const Personalizar = () => {
   const errorFotoFalta = pieza.lleva.foto && !opciones.foto ? "Subí la foto que va dentro de la pieza." : null;
   const valido = !errorNombre && !errorTelefono && !errorFotoFalta;
 
+  // Forma y tamaño: las chapitas eligen entre las formas del molde; el resto tiene una sola.
+  const forma = pieza.formas?.includes(opciones.forma) ? opciones.forma : pieza.forma;
+  const tamanos = pieza.formas ? tamanosDe(forma) : null;
+  const tamano = tamanos ? tamanos.find((t) => t.id === opciones.tamano) || tamanos[0] : null;
+
   // Solo las chapitas de mascotas permiten llevar el teléfono en el dorso.
   const ladoTelefono = pieza.lleva.telefonoAtras ? opciones.telefonoLado : "frente";
 
@@ -74,6 +89,9 @@ const Personalizar = () => {
     if (!valido) return;
     // Solo guardamos los datos que esta pieza usa.
     const datos = {
+      forma,
+      tamano: tamano?.id ?? null,
+      tamanoCm: tamano?.cm ?? null,
       color: opciones.color,
       glitter: opciones.glitter,
       nombre,
@@ -82,11 +100,21 @@ const Personalizar = () => {
       foto: pieza.lleva.foto ? opciones.foto : null,
     };
     agregar(pieza, datos, cantidad);
-    setAgregado({ cantidad, nombre });
+    setAgregado({
+      cantidad,
+      nombre,
+      descripcion: pieza.formas
+        ? `chapita ${FORMAS[forma].nombre.toLowerCase()} ${tamano.nombre.toLowerCase()}`
+        : pieza.nombre.toLowerCase(),
+    });
     setIntento(false);
   };
 
   const color = buscarColor(opciones.color);
+
+  // Los pasos se numeran según los que tenga la pieza elegida.
+  let paso = 0;
+  const n = () => `${++paso}. `;
 
   return (
     <main className="personalizar contenedor">
@@ -97,7 +125,8 @@ const Personalizar = () => {
         <section className="personalizar__vista" aria-label="Vista previa">
           <div className="personalizar__vista-caja">
             <Pieza3D
-              forma={pieza.forma}
+              forma={forma}
+              tamanoCm={tamano?.cm}
               color={opciones.color}
               glitter={opciones.glitter}
               nombre={opciones.nombre}
@@ -111,7 +140,7 @@ const Personalizar = () => {
 
         <section className="personalizar__opciones" aria-label="Opciones">
           <fieldset className="grupo">
-            <legend>1. Elegí la pieza</legend>
+            <legend>{n()}Elegí la pieza</legend>
             <div className="chips">
               {PIEZAS.map((p) => (
                 <button
@@ -127,9 +156,53 @@ const Personalizar = () => {
             </div>
           </fieldset>
 
+          {pieza.formas && (
+            <fieldset className="grupo">
+              <legend>
+                {n()}Forma: <span className="grupo__valor">{FORMAS[forma].nombre}</span>
+              </legend>
+              <div className="chips">
+                {pieza.formas.map((id) => (
+                  <button
+                    type="button"
+                    key={id}
+                    className="chip chip--forma"
+                    aria-pressed={forma === id}
+                    onClick={() => cambiar("forma", id)}
+                  >
+                    <IconoForma forma={id} />
+                    {FORMAS[id].nombre}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          )}
+
+          {tamanos && (
+            <fieldset className="grupo">
+              <legend>
+                {n()}Tamaño: <span className="grupo__valor">≈ {String(tamano.cm).replace(".", ",")} cm</span>
+              </legend>
+              <div className="chips">
+                {tamanos.map((t) => (
+                  <button
+                    type="button"
+                    key={t.id}
+                    className="chip"
+                    aria-pressed={tamano.id === t.id}
+                    onClick={() => cambiar("tamano", t.id)}
+                  >
+                    {t.nombre}
+                  </button>
+                ))}
+              </div>
+              <p className="grupo__nota">Medida aproximada del lado más largo.</p>
+            </fieldset>
+          )}
+
           <fieldset className="grupo">
             <legend>
-              2. Color de la resina: <span className="grupo__valor">{color.nombre}</span>
+              {n()}Color de la resina: <span className="grupo__valor">{color.nombre}</span>
             </legend>
             <div className="swatches">
               {COLORES.map((c) => (
@@ -147,7 +220,7 @@ const Personalizar = () => {
           </fieldset>
 
           <fieldset className="grupo">
-            <legend>3. Glitter</legend>
+            <legend>{n()}Glitter</legend>
             <div className="chips">
               {GLITTERS.map((g) => (
                 <button
@@ -165,7 +238,7 @@ const Personalizar = () => {
 
           {pieza.lleva.nombre && (
             <div className="campo">
-              <label htmlFor="nombre">4. Nombre</label>
+              <label htmlFor="nombre">{n()}Nombre</label>
               <input
                 id="nombre"
                 type="text"
@@ -224,7 +297,7 @@ const Personalizar = () => {
 
           {pieza.lleva.foto && (
             <div className="campo">
-              <span className="campo__titulo">5. Tu foto</span>
+              <span className="campo__titulo">{n()}Tu foto</span>
               <label htmlFor="foto" className="subir-foto">
                 <Icono nombre="subir" />
                 {cargandoFoto
@@ -263,7 +336,7 @@ const Personalizar = () => {
           {agregado && (
             <div role="status" className="aviso">
               <span>
-                ¡Listo! Agregaste {agregado.cantidad} × {pieza.nombre.toLowerCase()}
+                ¡Listo! Agregaste {agregado.cantidad} × {agregado.descripcion}
                 {agregado.nombre && ` "${agregado.nombre}"`} al carrito.
               </span>
               <Link to="/carrito">Ver carrito →</Link>

@@ -10,6 +10,8 @@ const CLAVE = "yosiart_carrito";
 const claveDe = (piezaId, opciones) =>
   [
     piezaId,
+    opciones.forma || "",
+    opciones.tamano || "",
     opciones.color,
     opciones.glitter,
     (opciones.nombre || "").trim().toLowerCase(),
@@ -56,7 +58,7 @@ export const CartProvider = ({ children }) => {
           clave,
           piezaId: pieza.id,
           nombrePieza: pieza.nombre,
-          forma: pieza.forma,
+          forma: opciones.forma || pieza.forma,
           precio: pieza.precio,
           opciones,
           cantidad,

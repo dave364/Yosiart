@@ -19,15 +19,40 @@ export const GLITTERS = [
   { id: "plateado", nombre: "Plateado", hex: "#F2F2F5" },
 ];
 
-// forma: como se dibuja la vista previa (ver PiezaPreview).
-// lleva: que datos pide el personalizador para esa pieza.
+// Chapitas del molde actual: formas y tamaños.
+// cm: medida aproximada del lado más largo. TODO: confirmar con regla.
+export const MOLDE_CHAPITAS = {
+  hueso: [
+    { id: "grande", nombre: "Grande", cm: 6 },
+    { id: "chico", nombre: "Chico", cm: 4.5 },
+  ],
+  circulo: [
+    { id: "grande", nombre: "Grande", cm: 5 },
+    { id: "mediano", nombre: "Mediano", cm: 4 },
+    { id: "chico", nombre: "Chico", cm: 3 },
+  ],
+  pescado: [
+    { id: "grande", nombre: "Grande", cm: 5.5 },
+    { id: "chico", nombre: "Chico", cm: 4 },
+  ],
+  gato: [{ id: "unico", nombre: "Único", cm: 5 }],
+  perro: [
+    { id: "grande", nombre: "Grande", cm: 4.5 },
+    { id: "chico", nombre: "Chico", cm: 3.5 },
+  ],
+};
+
+// forma: forma por defecto (ver data/formas.jsx).
+// formas: si existe, el cliente elige entre esas formas (y sus tamaños en MOLDE_CHAPITAS).
+// lleva: qué datos pide el personalizador para esa pieza.
 export const PIEZAS = [
   {
-    id: "chapita-hueso",
-    nombre: "Chapita hueso con nombre",
-    descripcion: "Para el collar de tu perro, con glitter a elección.",
+    id: "chapita-mascota",
+    nombre: "Chapita para mascota",
+    descripcion: "Hueso, círculo, pescadito, gatito o perrito, con nombre y teléfono.",
     categoria: "mascotas",
     forma: "hueso",
+    formas: ["hueso", "circulo", "pescado", "gato", "perro"],
     // telefonoAtras: el cliente elige si el teléfono va adelante o en el dorso
     lleva: { nombre: true, telefono: true, telefonoAtras: true, foto: false },
     precio: null,
@@ -50,7 +75,7 @@ export const PIEZAS = [
     nombre: "Llavero huellita",
     descripcion: "Fondo del color que elijas con huellita y nombre.",
     categoria: "llaveros",
-    forma: "circulo",
+    forma: "huellita",
     lleva: { nombre: true, telefono: true, foto: false },
     precio: null,
     nuevo: false,
@@ -61,13 +86,16 @@ export const PIEZAS = [
     nombre: "Posavasos personalizado",
     descripcion: "Juego de 2, con el nombre o la inicial que quieras.",
     categoria: "deco",
-    forma: "circulo",
+    forma: "posavasos",
     lleva: { nombre: true, telefono: false, foto: false },
     precio: null,
     nuevo: false,
     muestra: { color: "turquesa", glitter: "plateado", nombre: "Casa", telefono: "" },
   },
 ];
+
+// Enlaces viejos (/personalizar?pieza=chapita-hueso) siguen funcionando.
+const ALIAS = { "chapita-hueso": "chapita-mascota" };
 
 export const CATEGORIAS = [
   {
@@ -102,7 +130,8 @@ export const CATEGORIAS = [
 
 export const MAX_NOMBRE = 12;
 
-export const buscarPieza = (id) => PIEZAS.find((p) => p.id === id) || null;
+export const buscarPieza = (id) => PIEZAS.find((p) => p.id === (ALIAS[id] || id)) || null;
+export const tamanosDe = (forma) => MOLDE_CHAPITAS[forma] || null;
 export const buscarColor = (id) => COLORES.find((c) => c.id === id) || COLORES[0];
 export const buscarGlitter = (id) => GLITTERS.find((g) => g.id === id) || GLITTERS[0];
 
