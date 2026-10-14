@@ -4,7 +4,7 @@
 //   Antes lo hacia una tarea de GitHub Actions, pero GitHub la corria
 //   cada 4 o 5 horas en vez de cada 10 minutos.
 
-const API_HEALTH = "https://yosiart-api.onrender.com/api/health";
+const API_HEALTH = "https://yosiart.onrender.com/api/health";
 
 export default {
   async fetch(request, env) {

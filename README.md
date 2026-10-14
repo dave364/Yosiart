@@ -19,7 +19,7 @@ La URL de la API se configura con un archivo `.env`:
 VITE_API_URL=http://localhost:3000
 ```
 
-Si no se define, usa `https://yosiart-api.onrender.com` (todavía no existe).
+Si no se define, usa la API publicada: `https://yosiart.onrender.com`.
 
 ## Páginas
 

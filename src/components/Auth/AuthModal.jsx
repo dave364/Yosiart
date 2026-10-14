@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { normalizarTelefono, telefonoParece } from "../../utils/telefono";
 import "./AuthModal.scss";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://yosiart-api.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL || "https://yosiart.onrender.com";
 
 const AuthModal = () => {
   const { modal, cerrarModal, abrirModal, login, registro } = useAuth();

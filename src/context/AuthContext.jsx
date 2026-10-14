@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 
 const AuthContext = createContext(null);
 
-const API_URL = import.meta.env.VITE_API_URL || "https://yosiart-api.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL || "https://yosiart.onrender.com";
 const CLAVE = "yosiart_sesion";
 
 export const AuthProvider = ({ children }) => {

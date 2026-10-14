@@ -48,11 +48,12 @@ proyecto creá un archivo `.env` con `VITE_API_URL=http://localhost:3000`.
    - **Root Directory**: `api`
    - **Build Command**: `npm install`
    - **Start Command**: `npm start`
-   - **Name**: `yosiart-api` (así queda en `yosiart-api.onrender.com`, que es
-     la dirección que usan la tienda y el keep-alive)
+   - **Name**: `yosiart` (así queda en `yosiart.onrender.com`, que es la
+     dirección que usan la tienda y el keep-alive; si cambia, actualizala en
+     `src/config.js`, `worker/index.js` y el workflow de `.github/`)
 3. **Variables de entorno**: las de `.env.example`, con
    `ORIGENES_PERMITIDOS` y `SITIO_URL` apuntando a la dirección real de la
-   tienda, y `API_URL=https://yosiart-api.onrender.com`.
+   tienda, y `API_URL=https://yosiart.onrender.com`.
 4. Una sola vez, desde tu PC con el `DATABASE_URL` de producción en `.env`:
    `npm run db:setup` y `npm run db:seed` (con el email y la clave del admin).
 

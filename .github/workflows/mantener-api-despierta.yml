@@ -20,4 +20,4 @@ jobs:
     steps:
       - name: Llamar al health de la API
         # --max-time largo por si justo la agarra dormida y tiene que arrancar
-        run: curl -fsS --max-time 120 https://yosiart-api.onrender.com/api/health
+        run: curl -fsS --max-time 120 https://yosiart.onrender.com/api/health

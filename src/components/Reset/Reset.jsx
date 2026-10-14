@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../Auth/AuthModal.scss";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://yosiart-api.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL || "https://yosiart.onrender.com";
 
 // Pantalla que abre el enlace del correo: /#reset=EL_TOKEN
 const Reset = ({ token }) => {
