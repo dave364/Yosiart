@@ -3,7 +3,7 @@
 // Las usan la vista 3D (Pieza3D) y la vista plana (PiezaPreview).
 //
 // Las chapitas copian el molde de silicona actual: círculo, hueso,
-// pescadito, cabeza de gato y cabeza de perro, cada una con su pestaña
+// pescadito y cabeza de gato, cada una con su pestaña
 // y agujero para la argolla.
 //
 // Cada forma tiene:
@@ -65,19 +65,6 @@ export const FORMAS = {
     ),
     agujero: [150, 108],
     texto: { cx: 150, cy: 194, ancho: 170, max: 46 },
-    espesor: 24,
-  },
-  perro: {
-    nombre: "Perrito",
-    silueta: (
-      <>
-        <circle cx="150" cy="146" r="90" />
-        <ellipse cx="62" cy="178" rx="30" ry="66" transform="rotate(30 62 178)" />
-        <ellipse cx="238" cy="178" rx="30" ry="66" transform="rotate(-30 238 178)" />
-      </>
-    ),
-    agujero: [150, 74],
-    texto: { cx: 150, cy: 158, ancho: 140, max: 44 },
     espesor: 24,
   },
 

@@ -35,10 +35,10 @@ export const MOLDE_CHAPITAS = {
     { id: "grande", nombre: "Grande", cm: 5.5 },
     { id: "chico", nombre: "Chico", cm: 4 },
   ],
-  gato: [{ id: "unico", nombre: "Único", cm: 5 }],
-  perro: [
-    { id: "grande", nombre: "Grande", cm: 4.5 },
-    { id: "chico", nombre: "Chico", cm: 3.5 },
+  gato: [
+    { id: "grande", nombre: "Grande", cm: 5 },
+    { id: "mediano", nombre: "Mediano", cm: 4 },
+    { id: "chico", nombre: "Chico", cm: 3 },
   ],
 };
 
@@ -49,10 +49,10 @@ export const PIEZAS = [
   {
     id: "chapita-mascota",
     nombre: "Chapita para mascota",
-    descripcion: "Hueso, círculo, pescadito, gatito o perrito, con nombre y teléfono.",
+    descripcion: "Hueso, círculo, pescadito o gatito, con nombre y teléfono.",
     categoria: "mascotas",
     forma: "hueso",
-    formas: ["hueso", "circulo", "pescado", "gato", "perro"],
+    formas: ["hueso", "circulo", "pescado", "gato"],
     // telefonoAtras: el cliente elige si el teléfono va adelante o en el dorso
     lleva: { nombre: true, telefono: true, telefonoAtras: true, foto: false },
     precio: null,
