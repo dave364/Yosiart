@@ -79,12 +79,15 @@ const AuthModal = () => {
     }
   };
 
+  // Un solo @, algo antes y un dominio con punto despues.
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+
   const listo = esRegistro
     ? nombre.trim().length >= 2 &&
-      email.includes("@") &&
+      emailOk &&
       telefonoParece(telefono) &&
       password.length >= 8
-    : email.includes("@") && password.length > 0;
+    : emailOk && password.length > 0;
 
   const alPresionar = (e) => {
     if (e.key === "Enter" && listo && !enviando) enviar();
@@ -153,11 +156,16 @@ const AuthModal = () => {
             autoCapitalize="none"
             spellCheck={false}
           />
+          {email.trim().length > 3 && !emailOk && (
+            <small style={{ color: "#a1281c" }}>
+              Revisá el email: tiene que ser como nombre@ejemplo.com (con un solo @).
+            </small>
+          )}
         </label>
 
         {esRegistro && (
           <label className="auth-campo">
-            WhatsApp
+            Teléfono
             <input
               value={telefono}
               onChange={(e) => setTelefono(e.target.value)}
@@ -168,13 +176,13 @@ const AuthModal = () => {
             />
             {telefono.length > 0 && !telefonoParece(telefono) ? (
               <small style={{ color: "#a1281c" }}>
-                Faltan digitos: van 10 contando el codigo de area, sin el 0 ni
-                el 15. Ejemplo: 11 2345 6789.
+                Revisá el número: van 10 dígitos contando el código de área, sin
+                el 0 ni el 15. Ejemplo: 11 2345 6789.
               </small>
             ) : (
               <small>
-                Con el codigo de area, sin el 0 ni el 15. Lo usamos para
-                coordinar tus pedidos.
+                Con el código de área, sin el 0 ni el 15. Lo usamos solo para
+                avisarte de tus pedidos.
               </small>
             )}
           </label>
@@ -208,7 +216,7 @@ const AuthModal = () => {
         <button
           className="auth-btn auth-btn--principal"
           onClick={esRecuperar ? pedirReset : enviar}
-          disabled={enviando || (esRecuperar ? !email.includes("@") : !listo)}
+          disabled={enviando || (esRecuperar ? !emailOk : !listo)}
         >
           {enviando
             ? "Un momento..."

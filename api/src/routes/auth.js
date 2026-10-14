@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
 import { telefonoValido, normalizarTelefono } from "../telefono.js";
 import { z } from "zod";
+import { emailCampo, nombreCampo, passwordCampo } from "../validacion.js";
 import { query } from "../db.js";
 import { JWT_SECRET, JWT_EXPIRES_IN, SITIO_URL } from "../config.js";
 import { requiereAuth } from "../middleware/auth.js";
@@ -12,20 +13,20 @@ import { mailBienvenida, mailReset, enviarEnSegundoPlano } from "../mail.js";
 export const router = Router();
 
 const registroSchema = z.object({
-  nombre: z.string().trim().min(2).max(80),
-  email: z.string().trim().toLowerCase().email(),
+  nombre: nombreCampo,
+  email: emailCampo,
   // Telefono argentino: lo aceptamos como lo escriba la persona y lo
   // guardamos normalizado. El numero local argentino tiene 10 digitos.
   telefono: z
     .string()
     .trim()
-    .refine(telefonoValido, "El telefono tiene que tener 10 digitos, con el codigo de area")
+    .refine(telefonoValido, "El teléfono tiene que tener 10 dígitos, con el código de área")
     .transform(normalizarTelefono),
-  password: z.string().min(8).max(200),
+  password: passwordCampo,
 });
 
 const loginSchema = z.object({
-  email: z.string().trim().toLowerCase().email(),
+  email: emailCampo,
   password: z.string().min(1),
 });
 
@@ -122,12 +123,12 @@ router.get("/me", requiereAuth, async (req, res, next) => {
 });
 
 const recuperarSchema = z.object({
-  email: z.string().trim().toLowerCase().email(),
+  email: emailCampo,
 });
 
 const restablecerSchema = z.object({
   token: z.string().trim().min(20).max(200),
-  password: z.string().min(8).max(200),
+  password: passwordCampo,
 });
 
 // Paso 1: el cliente pide el enlace.

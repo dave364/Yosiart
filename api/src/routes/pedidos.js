@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { emailCampo, nombreCampo } from "../validacion.js";
 import { query, withTransaction } from "../db.js";
 import { autenticacionOpcional, requiereAuth, requiereAdmin } from "../middleware/auth.js";
 import { mailResumenPedido, mailCambioEstado, enviarEnSegundoPlano, avisarPedidoNuevo } from "../mail.js";
@@ -12,7 +13,7 @@ export const router = Router();
 const telefonoCliente = z
   .string()
   .trim()
-  .refine(telefonoValido, "El telefono tiene que tener 10 digitos, con el codigo de area")
+  .refine(telefonoValido, "El teléfono tiene que tener 10 dígitos, con el código de área")
   .transform(normalizarTelefono);
 
 // Lo que el cliente eligio para cada pieza. Los campos que no estan aca
@@ -31,8 +32,8 @@ const personalizacionSchema = z.object({
 // El cliente manda QUE pieza quiere, CUANTAS y COMO personalizada,
 // nunca a que precio. El precio lo decide el servidor.
 const pedidoSchema = z.object({
-  cliente_nombre: z.string().trim().min(2).max(80),
-  cliente_email: z.string().trim().toLowerCase().email(),
+  cliente_nombre: nombreCampo,
+  cliente_email: emailCampo,
   cliente_telefono: telefonoCliente,
   items: z
     .array(
@@ -240,7 +241,7 @@ router.get("/mis", requiereAuth, async (req, res, next) => {
 // asi nadie puede mirar pedidos ajenos probando numeros.
 const seguimientoSchema = z.object({
   numero: z.string().trim().regex(/^\d{1,10}$/).transform((n) => n.padStart(4, "0")),
-  email: z.string().trim().toLowerCase().email(),
+  email: emailCampo,
 });
 
 router.get("/seguimiento", async (req, res, next) => {

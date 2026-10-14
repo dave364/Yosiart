@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { emailCampo, nombreCampo } from "../validacion.js";
 import { query, withTransaction } from "../db.js";
 import { autenticacionOpcional, requiereAdmin } from "../middleware/auth.js";
 import { telefonoValido, normalizarTelefono } from "../telefono.js";
@@ -20,11 +21,11 @@ const MAX_FOTOS = 3;
 const vacioANull = (v) => (v === "" || v === undefined ? null : v);
 
 const presupuestoSchema = z.object({
-  nombre: z.string().trim().min(2).max(80),
-  email: z.string().trim().toLowerCase().email(),
+  nombre: nombreCampo,
+  email: emailCampo,
   telefono: z.preprocess(
     vacioANull,
-    z.string().trim().refine(telefonoValido, "El telefono tiene que tener 10 digitos, con el codigo de area")
+    z.string().trim().refine(telefonoValido, "El teléfono tiene que tener 10 dígitos, con el código de área")
       .transform(normalizarTelefono).nullable()
   ),
   tipo: z.enum(TIPOS),

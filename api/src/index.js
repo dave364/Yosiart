@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { PORT, ORIGENES } from "./config.js";
+import "./validacion.js";
 import { router as authRouter } from "./routes/auth.js";
 import { router as productosRouter } from "./routes/productos.js";
 import { router as pedidosRouter } from "./routes/pedidos.js";
