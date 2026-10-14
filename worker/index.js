@@ -1,8 +1,8 @@
 // Worker de YosiArt.
 // - fetch: sirve la tienda (los archivos de /dist) como siempre.
 // - scheduled: cada 10 minutos le pega a la API para que Render no la duerma.
-//   Antes lo hacia una tarea de GitHub Actions, pero GitHub la corria
-//   cada 4 o 5 horas en vez de cada 10 minutos.
+//   No se usa GitHub Actions para esto: el repo es privado y una tarea cada
+//   10 minutos gastaria en pocos dias los minutos gratis del mes.
 
 const API_HEALTH = "https://yosiart.onrender.com/api/health";
 
