@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { PIEZAS, COLORES, GLITTERS, MAX_NOMBRE, buscarPieza, buscarColor, tamanosDe, plata } from "../../data/piezas";
+import { COLORES, GLITTERS, MAX_NOMBRE, buscarPieza, buscarColor, tamanosDe, precioDe, plata } from "../../data/piezas";
+import { useCatalogo } from "../../context/CatalogoContext";
 import { FORMAS } from "../../data/formas";
 import { useCart } from "../../context/CartContext";
 import { telefonoParece } from "../../utils/telefono";
@@ -29,7 +30,8 @@ const OPCIONES_INICIALES = {
 
 const Personalizar = () => {
   const [params, setParams] = useSearchParams();
-  const pieza = buscarPieza(params.get("pieza")) || PIEZAS[0];
+  const { piezas } = useCatalogo();
+  const pieza = buscarPieza(piezas, params.get("pieza")) || piezas[0];
 
   const [opciones, setOpciones] = useState(OPCIONES_INICIALES);
   const [cantidad, setCantidad] = useState(1);
@@ -78,8 +80,10 @@ const Personalizar = () => {
 
   // Forma y tamaño: las chapitas eligen entre las formas del molde; el resto tiene una sola.
   const forma = pieza.formas?.includes(opciones.forma) ? opciones.forma : pieza.forma;
-  const tamanos = pieza.formas ? tamanosDe(forma) : null;
+  const tamanos = tamanosDe(pieza, forma);
   const tamano = tamanos ? tamanos.find((t) => t.id === opciones.tamano) || tamanos[0] : null;
+
+  const precio = precioDe(pieza, forma, tamano?.id);
 
   // Solo las chapitas de mascotas permiten llevar el teléfono en el dorso.
   const ladoTelefono = pieza.lleva.telefonoAtras ? opciones.telefonoLado : "frente";
@@ -103,8 +107,8 @@ const Personalizar = () => {
     setAgregado({
       cantidad,
       nombre,
-      descripcion: pieza.formas
-        ? `chapita ${FORMAS[forma].nombre.toLowerCase()} ${tamano.nombre.toLowerCase()}`
+      descripcion: tamano
+        ? `${pieza.nombre.toLowerCase()} · ${FORMAS[forma].nombre.toLowerCase()} ${tamano.nombre.toLowerCase()}`
         : pieza.nombre.toLowerCase(),
     });
     setIntento(false);
@@ -142,7 +146,7 @@ const Personalizar = () => {
           <fieldset className="grupo">
             <legend>{n()}Elegí la pieza</legend>
             <div className="chips">
-              {PIEZAS.map((p) => (
+              {piezas.map((p) => (
                 <button
                   type="button"
                   key={p.id}
@@ -325,7 +329,7 @@ const Personalizar = () => {
               </button>
             </div>
             <span className="resumen__precio">
-              {pieza.precio == null ? plata(null) : plata(pieza.precio * cantidad)}
+              {precio == null ? plata(null) : plata(precio * cantidad)}
             </span>
           </div>
 

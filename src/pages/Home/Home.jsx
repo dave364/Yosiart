@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.webp";
-import { CATEGORIAS, PIEZAS, plata } from "../../data/piezas";
+import { CATEGORIAS, plata, precioDesde } from "../../data/piezas";
+import { useCatalogo } from "../../context/CatalogoContext";
 import PiezaPreview from "../../components/PiezaPreview/PiezaPreview";
 import Icono from "../../components/Icono/Icono";
 import "./Home.scss";
@@ -18,13 +19,14 @@ const PASOS = [
 
 const Home = () => {
   const [categoria, setCategoria] = useState(null);
+  const { piezas: todas } = useCatalogo();
 
   const elegirCategoria = (id) => {
     setCategoria(id);
     document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const piezas = categoria ? PIEZAS.filter((p) => p.categoria === categoria) : PIEZAS;
+  const piezas = categoria ? todas.filter((p) => p.categoria === categoria) : todas;
   const categoriaActual = CATEGORIAS.find((c) => c.id === categoria);
 
   return (
@@ -116,7 +118,10 @@ const Home = () => {
                   <h3>{p.nombre}</h3>
                   <p>{p.descripcion}</p>
                   <div className="producto__pie">
-                    <span className="producto__precio">{plata(p.precio)}</span>
+                    <span className="producto__precio">
+                      {precioDesde(p) != null && Object.keys(p.preciosTamano || {}).length > 0 ? "Desde " : ""}
+                      {plata(precioDesde(p))}
+                    </span>
                     <Link to={`/personalizar?pieza=${p.id}`} className="btn">
                       Personalizar
                     </Link>

@@ -1,9 +1,9 @@
-// Catalogo inicial de YosiArt.
-// Mientras no exista la API, los productos viven aca. Cuando este lista,
-// esto pasa a venir de GET /api/productos (igual que en Kenypets).
+// Catalogo de YosiArt.
+// Las piezas, sus precios y tamaños vienen de la API (GET /api/productos,
+// ver context/CatalogoContext.jsx) y se editan desde el panel. Lo de este
+// archivo es el respaldo: se muestra mientras la API carga o si no responde.
 //
-// precio: null => se muestra "Precio a confirmar". Completar con los
-// precios reales en pesos.
+// precio: null => se muestra "Precio a confirmar".
 
 export const COLORES = [
   { id: "frambuesa", nombre: "Frambuesa", hex: "#A8124C", texto: "#FFFFFF" },
@@ -43,7 +43,9 @@ export const MOLDE_CHAPITAS = {
 };
 
 // forma: forma por defecto (ver data/formas.jsx).
-// formas: si existe, el cliente elige entre esas formas (y sus tamaños en MOLDE_CHAPITAS).
+// formas: si existe, el cliente elige entre esas formas.
+// tamanos: { forma: [{ id, nombre, cm }] } para las formas que vienen en varios tamaños.
+// preciosTamano: { "chico": 3000, "hueso:grande": 4500 } (opcional, pisa a `precio`).
 // lleva: qué datos pide el personalizador para esa pieza.
 export const PIEZAS = [
   {
@@ -53,6 +55,7 @@ export const PIEZAS = [
     categoria: "mascotas",
     forma: "hueso",
     formas: ["hueso", "circulo", "pescado", "gato"],
+    tamanos: MOLDE_CHAPITAS,
     // telefonoAtras: el cliente elige si el teléfono va adelante o en el dorso
     lleva: { nombre: true, telefono: true, telefonoAtras: true, foto: false },
     precio: null,
@@ -94,6 +97,11 @@ export const PIEZAS = [
   },
 ];
 
+// Cómo se dibuja cada pieza en su tarjeta del catálogo (hasta tener fotos).
+export const MUESTRAS = Object.fromEntries(PIEZAS.map((p) => [p.id, p.muestra]));
+const MUESTRA_GENERICA = { color: "frambuesa", glitter: "dorado", nombre: "YosiArt", telefono: "" };
+export const muestraDe = (id) => MUESTRAS[id] || MUESTRA_GENERICA;
+
 // Enlaces viejos (/personalizar?pieza=chapita-hueso) siguen funcionando.
 const ALIAS = { "chapita-hueso": "chapita-mascota" };
 
@@ -130,8 +138,25 @@ export const CATEGORIAS = [
 
 export const MAX_NOMBRE = 12;
 
-export const buscarPieza = (id) => PIEZAS.find((p) => p.id === (ALIAS[id] || id)) || null;
-export const tamanosDe = (forma) => MOLDE_CHAPITAS[forma] || null;
+export const buscarPieza = (piezas, id) => piezas.find((p) => p.id === (ALIAS[id] || id)) || null;
+export const tamanosDe = (pieza, forma) => pieza?.tamanos?.[forma] || null;
+
+// Precio de una pieza en una forma y tamaño: primero el específico de esa
+// forma y tamaño, después el del tamaño, y si no el precio base.
+// La API hace la misma cuenta al crear el pedido, y es la que manda.
+export const precioDe = (pieza, forma, tamano) => {
+  const pt = pieza?.preciosTamano || {};
+  const v = (tamano && (pt[`${forma}:${tamano}`] ?? pt[tamano])) ?? pieza?.precio;
+  return v == null ? null : Number(v);
+};
+
+// Para la tarjeta del catálogo: el precio más bajo que puede tener la pieza.
+export const precioDesde = (pieza) => {
+  const valores = [pieza?.precio, ...Object.values(pieza?.preciosTamano || {})]
+    .filter((v) => v != null)
+    .map(Number);
+  return valores.length ? Math.min(...valores) : null;
+};
 export const buscarColor = (id) => COLORES.find((c) => c.id === id) || COLORES[0];
 export const buscarGlitter = (id) => GLITTERS.find((g) => g.id === id) || GLITTERS[0];
 

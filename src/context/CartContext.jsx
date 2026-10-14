@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { precioDe } from "../data/piezas";
 
 const CartContext = createContext(null);
 
@@ -59,7 +60,8 @@ export const CartProvider = ({ children }) => {
           piezaId: pieza.id,
           nombrePieza: pieza.nombre,
           forma: opciones.forma || pieza.forma,
-          precio: pieza.precio,
+          // Precio de referencia para mostrar; el que se cobra lo calcula la API.
+          precio: precioDe(pieza, opciones.forma || pieza.forma, opciones.tamano),
           opciones,
           cantidad,
         },

@@ -13,7 +13,7 @@ const Navbar = () => {
   const cuentaRef = useRef(null);
   const { pathname } = useLocation();
 
-  const { logueado, usuario, abrirModal, logout } = useAuth();
+  const { logueado, usuario, esAdmin, abrirModal, logout } = useAuth();
   const { unidades } = useCart();
 
   // Al cambiar de pagina se cierra el menu del celular.
@@ -85,6 +85,7 @@ const Navbar = () => {
               </button>
               {menuCuenta && (
                 <div className="navbar__desplegable">
+                  {esAdmin && <Link to="/admin">Panel de YosiArt</Link>}
                   <Link to="/seguimiento">Mis pedidos</Link>
                   <button type="button" onClick={logout}>
                     Cerrar sesión

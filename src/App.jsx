@@ -9,8 +9,10 @@ import Personalizar from "./pages/Personalizar/Personalizar";
 import Carrito from "./pages/Carrito/Carrito";
 import Presupuesto from "./pages/Presupuesto/Presupuesto";
 import Seguimiento from "./pages/Seguimiento/Seguimiento";
+import Admin from "./pages/Admin/Admin";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
+import { CatalogoProvider } from "./context/CatalogoContext";
 
 // Al cambiar de pagina vuelve arriba; si la URL trae #ancla, baja hasta ella.
 const ManejarScroll = () => {
@@ -33,28 +35,41 @@ const NoEncontrada = () => (
   </main>
 );
 
+// La tienda: con la barra, el pie y el modal de cuenta.
+const Tienda = () => (
+  <>
+    <Navbar />
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/personalizar" element={<Personalizar />} />
+      <Route path="/carrito" element={<Carrito />} />
+      <Route path="/presupuesto" element={<Presupuesto />} />
+      <Route path="/seguimiento" element={<Seguimiento />} />
+      <Route path="*" element={<NoEncontrada />} />
+    </Routes>
+    <Footer />
+    <AuthModal />
+  </>
+);
+
 function App() {
   const { hash } = useLocation();
 
-  // El email de "olvidé mi contraseña" (backend heredado de Kenypets) manda a /#reset=TOKEN.
+  // El email de "olvidé mi contraseña" manda a /#reset=TOKEN.
   if (hash.startsWith("#reset=")) return <Reset token={hash.slice("#reset=".length)} />;
 
   return (
     <AuthProvider>
-      <CartProvider>
-        <ManejarScroll />
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/personalizar" element={<Personalizar />} />
-          <Route path="/carrito" element={<Carrito />} />
-          <Route path="/presupuesto" element={<Presupuesto />} />
-          <Route path="/seguimiento" element={<Seguimiento />} />
-          <Route path="*" element={<NoEncontrada />} />
-        </Routes>
-        <Footer />
-        <AuthModal />
-      </CartProvider>
+      <CatalogoProvider>
+        <CartProvider>
+          <ManejarScroll />
+          <Routes>
+            {/* El panel tiene su propia barra, sin la de la tienda. */}
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/*" element={<Tienda />} />
+          </Routes>
+        </CartProvider>
+      </CatalogoProvider>
     </AuthProvider>
   );
 }
