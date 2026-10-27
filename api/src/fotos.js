@@ -9,7 +9,7 @@
 // mandarlas a Cloudinary o a un bucket.
 
 import crypto from "node:crypto";
-import { API_URL, FOTO_MAX_BYTES } from "./config.js";
+import { FOTO_MAX_BYTES } from "./config.js";
 
 const TIPOS = new Set(["image/jpeg", "image/png", "image/webp"]);
 const PATRON = /^data:(image\/[a-z]+);base64,([A-Za-z0-9+/=]+)$/;
@@ -31,7 +31,10 @@ function error(mensaje) {
 
 export const esDataUrl = (v) => typeof v === "string" && v.startsWith("data:");
 
-// Guarda una foto y devuelve su direccion publica.
+// Guarda una foto y devuelve su direccion (/api/fotos/<id>).
+// Se guarda sin el dominio: la tienda y la API comparten direccion, asi
+// que la foto se sigue viendo aunque mañana cambie el dominio. Los correos
+// le agregan el dominio con fotoAbsoluta (mail.js).
 // `client` es la conexion de la transaccion, para que si el pedido falla
 // tampoco quede la foto guardada.
 export async function guardarFoto(client, dataUrl) {
@@ -47,5 +50,5 @@ export async function guardarFoto(client, dataUrl) {
     `INSERT INTO fotos (id, mime, datos, bytes) VALUES ($1, $2, $3, $4)`,
     [id, m[1], datos, datos.length]
   );
-  return `${API_URL}/api/fotos/${id}`;
+  return `/api/fotos/${id}`;
 }

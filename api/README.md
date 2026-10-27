@@ -37,25 +37,31 @@ En PowerShell, las variables del seed se pasan así:
 $env:ADMIN_EMAIL="tu@email.com"; $env:ADMIN_PASSWORD="una-clave-larga"; npm run db:seed
 ```
 
-Para que la tienda use esta API en vez de la publicada, en la raíz del
-proyecto creá un archivo `.env` con `VITE_API_URL=http://localhost:3000`.
+Con la API corriendo, `npm run dev` en la raíz levanta la tienda y le manda
+las llamadas a `/api` a esta API local.
 
-## Deploy en Render
+## Deploy en Cloudflare
 
-1. **Base de datos**: creá un PostgreSQL (en Render o en Neon) y copiá su
-   *External Database URL*.
-2. **Servicio**: *New → Web Service*, elegí el repo `Yosiart` y configurá:
-   - **Root Directory**: `api`
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm start`
-   - **Name**: `yosiart` (así queda en `yosiart.onrender.com`, que es la
-     dirección que usan la tienda y el keep-alive; si cambia, actualizala en
-     `src/config.js`, `worker/index.js` y el workflow de `.github/`)
-3. **Variables de entorno**: las de `.env.example`, con
-   `ORIGENES_PERMITIDOS` y `SITIO_URL` apuntando a la dirección real de la
-   tienda, y `API_URL=https://yosiart.onrender.com`.
-4. Una sola vez, desde tu PC con el `DATABASE_URL` de producción en `.env`:
-   `npm run db:setup` y `npm run db:seed` (con el email y la clave del admin).
+La API se publica junto con la tienda, en el mismo worker
+(`worker/index.js`): `/api/...` va a esta API y el resto a la tienda.
+Cada push a `main` la publica sola.
+
+- **Base de datos**: Neon (`DATABASE_URL`).
+- **Secretos** (Cloudflare → Workers → yosiart → Settings → Variables and
+  Secrets, tipo *Secret*): `DATABASE_URL`, `JWT_SECRET`, `BREVO_API_KEY`,
+  `MAIL_FROM_EMAIL`, `ADMIN_EMAIL`.
+- **Variables comunes**: en `wrangler.jsonc` (`SITIO_URL`, `API_URL`, ...).
+- Crear las tablas o el admin se sigue haciendo desde tu PC, con el
+  `DATABASE_URL` de producción en `api/.env`: `npm run db:setup` y
+  `npm run db:seed`.
+
+Diferencias con un servidor común, ya resueltas en el código:
+- Cada pedido abre y cierra sus propias conexiones a la base (`db.js`).
+- Las contraseñas usan PBKDF2 nativo (`claves.js`); las cuentas viejas con
+  bcrypt se pasan solas al formato nuevo en su próximo login.
+- Los correos se terminan de mandar después de responder gracias a
+  `waitUntil` (`mail.js` + `worker/index.js`).
+- Las fotos se guardan como `/api/fotos/<id>`, sin dominio.
 
 ## Endpoints
 

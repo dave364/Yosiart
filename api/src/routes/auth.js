@@ -1,11 +1,11 @@
 import { Router } from "express";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
 import { telefonoValido, normalizarTelefono } from "../telefono.js";
 import { z } from "zod";
 import { emailCampo, nombreCampo, passwordCampo } from "../validacion.js";
 import { query } from "../db.js";
+import { hashPassword, verificarPassword } from "../claves.js";
 import { JWT_SECRET, JWT_EXPIRES_IN, SITIO_URL } from "../config.js";
 import { requiereAuth } from "../middleware/auth.js";
 import { mailBienvenida, mailReset, enviarEnSegundoPlano } from "../mail.js";
@@ -51,7 +51,7 @@ function publico(usuario) {
 router.post("/registro", async (req, res, next) => {
   try {
     const datos = registroSchema.parse(req.body);
-    const hash = await bcrypt.hash(datos.password, 12);
+    const hash = await hashPassword(datos.password);
 
     const { rows } = await query(
       `INSERT INTO usuarios (nombre, email, telefono, password_hash)
@@ -87,10 +87,17 @@ router.post("/login", async (req, res, next) => {
     const usuario = rows[0];
     // Se compara igual aunque el usuario no exista, para no revelar
     // por diferencia de tiempo si el email esta registrado.
-    const hash = usuario?.password_hash ?? "$2b$12$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidin";
-    const ok = await bcrypt.compare(datos.password, hash);
+    const { ok, rehacer } = await verificarPassword(datos.password, usuario?.password_hash);
     if (!usuario || !ok) {
       return res.status(401).json({ error: "Email o contrasena incorrectos." });
+    }
+
+    // Cuenta creada con el formato viejo (bcrypt): se guarda en el nuevo.
+    if (rehacer) {
+      await query(`UPDATE usuarios SET password_hash = $1 WHERE id = $2`, [
+        await hashPassword(datos.password),
+        usuario.id,
+      ]);
     }
 
     // Se revisa despues de la contrasena a proposito: si avisaramos
@@ -188,7 +195,7 @@ router.post("/restablecer", async (req, res, next) => {
       throw err;
     }
 
-    const password_hash = await bcrypt.hash(password, 10);
+    const password_hash = await hashPassword(password);
     await query(`UPDATE usuarios SET password_hash = $1 WHERE id = $2`, [
       password_hash,
       pedido.usuario_id,

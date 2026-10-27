@@ -1,7 +1,8 @@
 # YosiArt — tienda de piezas de resina personalizadas
 
 Frontend de la tienda de YosiArt. Usa la misma base que Kenypets
-(React + Vite + SCSS, deploy en Cloudflare Workers, API en Render),
+(React + Vite + SCSS), con la tienda y la API publicadas juntas en
+Cloudflare Workers,
 con la marca y el contenido de YosiArt.
 
 ## Cómo correrlo
@@ -13,13 +14,12 @@ npm run build    # genera /dist
 npm run lint
 ```
 
-La URL de la API se configura con un archivo `.env`:
+La tienda llama a la API en su misma dirección (`/api/...`). En desarrollo,
+Vite manda esas llamadas a la API local (`cd api && npm run dev`, puerto 3000).
 
-```
-VITE_API_URL=http://localhost:3000
-```
-
-Si no se define, usa la API publicada: `https://yosiart.onrender.com`.
+Para probar todo junto como en Cloudflare: `npm run build` y después
+`npx wrangler dev`, con un archivo `.dev.vars` en la raíz con las mismas
+variables que `api/.env`.
 
 ## Páginas
 
@@ -59,5 +59,4 @@ tu API local, creá un `.env` en la raíz con `VITE_API_URL=http://localhost:300
 ## Pendientes
 
 - **Contenido**: precios reales y medidas exactas (se cargan desde `/admin` → Piezas y precios), fotos de las piezas, demora (`[X DÍAS]`) y zonas de envío (`[ZONAS]`).
-- **Deploy de la tienda** en Cloudflare (la API ya está en Render: `https://yosiart.onrender.com`).
 - **Mercado Pago**: al final, cuando la página tenga su forma final.

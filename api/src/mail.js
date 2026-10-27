@@ -1,6 +1,19 @@
 // Envio de correos. Todo el contacto con el proveedor vive aca:
 // cambiar de Brevo a otro servicio es tocar solo la funcion enviar().
-import { BREVO_API_KEY, MAIL_FROM_EMAIL, MAIL_FROM_NOMBRE, SITIO_URL, ADMIN_EMAIL } from "./config.js";
+import { BREVO_API_KEY, MAIL_FROM_EMAIL, MAIL_FROM_NOMBRE, SITIO_URL, API_URL, ADMIN_EMAIL } from "./config.js";
+
+// Las fotos se guardan como "/api/fotos/<id>"; en un correo hace falta
+// la direccion completa.
+const fotoAbsoluta = (f) => (String(f).startsWith("/") ? API_URL + f : f);
+
+// Trabajo que sigue despues de responder (los correos).
+// En Node alcanza con no esperar la promesa. En Cloudflare, en cambio, el
+// worker se detiene apenas responde y el correo quedaria a medias: ahi
+// worker/index.js registra waitUntil para que lo deje terminar.
+let segundoPlano = () => {};
+export const usarSegundoPlano = (fn) => { segundoPlano = fn; };
+const enFondo = (promesa, contexto) =>
+  segundoPlano(promesa.catch((err) => console.error(`[mail] ${contexto}:`, err.message)));
 import { describirPersonalizacion, ESTADOS_PEDIDO } from "./catalogo.js";
 
 const API = "https://api.brevo.com/v3/smtp/email";
@@ -255,10 +268,9 @@ export function avisarPedidoNuevo(pedido, conCuenta) {
      <div style="font-size:14px;">${esc(pedido.cliente_email)} · ${esc(pedido.cliente_telefono)}</div>
      <div style="font-size:13px;color:${TINTA_SUAVE};margin-bottom:14px;">${conCuenta ? "Cliente registrado" : "Compra como invitado"}</div>
      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">${tablaItems(pedido.items)}</table>
-     ${fotos.map((f, n) => `<a href="${f}" style="display:inline-block;margin:12px 8px 0 0;color:${FRAMBUESA};">Ver foto ${n + 1}</a>`).join("")}`
+     ${fotos.map((f, n) => `<a href="${esc(fotoAbsoluta(f))}" style="display:inline-block;margin:12px 8px 0 0;color:${FRAMBUESA};">Ver foto ${n + 1}</a>`).join("")}`
   );
-  enviar({ para: ADMIN_EMAIL, nombre: "YosiArt", asunto: `Pedido nuevo #${pedido.numero} - ${pedido.cliente_nombre}`, html })
-    .catch((err) => console.error("[mail] aviso de pedido:", err.message));
+  enFondo(enviar({ para: ADMIN_EMAIL, nombre: "YosiArt", asunto: `Pedido nuevo #${pedido.numero} - ${pedido.cliente_nombre}`, html }), "aviso de pedido");
 }
 
 export function avisarPresupuestoNuevo(p) {
@@ -270,16 +282,13 @@ export function avisarPresupuestoNuevo(p) {
      <div style="font-size:14px;margin-bottom:14px;">${esc(p.email)}${p.telefono ? " · " + esc(p.telefono) : ""}</div>
      ${p.fecha_evento ? `<div style="font-size:14px;margin-bottom:10px;">Para el <strong>${esc(String(p.fecha_evento).slice(0, 10))}</strong></div>` : ""}
      <p style="margin:0 0 10px;white-space:pre-line;">${esc(p.descripcion)}</p>
-     ${(p.fotos || []).map((f, n) => `<a href="${f}" style="display:inline-block;margin:8px 8px 0 0;color:${FRAMBUESA};">Referencia ${n + 1}</a>`).join("")}`
+     ${(p.fotos || []).map((f, n) => `<a href="${esc(fotoAbsoluta(f))}" style="display:inline-block;margin:8px 8px 0 0;color:${FRAMBUESA};">Referencia ${n + 1}</a>`).join("")}`
   );
-  enviar({ para: ADMIN_EMAIL, nombre: "YosiArt", asunto: `Presupuesto nuevo - ${p.nombre}`, html })
-    .catch((err) => console.error("[mail] aviso de presupuesto:", err.message));
+  enFondo(enviar({ para: ADMIN_EMAIL, nombre: "YosiArt", asunto: `Presupuesto nuevo - ${p.nombre}`, html }), "aviso de presupuesto");
 }
 
 // Se llama sin await a proposito: si el correo falla o tarda, el registro
 // y el pedido ya quedaron guardados igual. El cliente no espera por esto.
 export function enviarEnSegundoPlano(para, nombre, { asunto, html }) {
-  enviar({ para, nombre, asunto, html }).catch((err) =>
-    console.error("[mail] fallo en segundo plano:", err.message)
-  );
+  enFondo(enviar({ para, nombre, asunto, html }), "fallo en segundo plano");
 }

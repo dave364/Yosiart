@@ -1,4 +1,5 @@
-import bcrypt from "bcryptjs";
+import "dotenv/config";
+import { hashPassword } from "../claves.js";
 import { pool } from "../db.js";
 
 // Piezas iniciales: las mismas que muestra la tienda (src/data/piezas.js
@@ -93,7 +94,7 @@ if (!email || !password) {
 } else if (password.length < 10) {
   console.log("La contrasena del admin debe tener al menos 10 caracteres.");
 } else {
-  const hash = await bcrypt.hash(password, 12);
+  const hash = await hashPassword(password);
   await pool.query(
     `INSERT INTO usuarios (nombre, email, telefono, password_hash, rol)
      VALUES ('YosiArt', $1, $2, $3, 'admin')

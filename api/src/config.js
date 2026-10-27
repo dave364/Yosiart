@@ -1,6 +1,6 @@
-import dotenv from "dotenv";
-dotenv.config();
-
+// Las variables llegan de distinto lado segun donde corre la API:
+// - En tu PC (npm run dev): del archivo api/.env, que carga src/index.js.
+// - En Cloudflare: de las variables y secretos del worker.
 export const PORT = process.env.PORT || 3000;
 
 export const JWT_SECRET = process.env.JWT_SECRET;
@@ -9,7 +9,7 @@ if (!JWT_SECRET || JWT_SECRET.length < 32) {
     "JWT_SECRET falta o es demasiado corto (minimo 32 caracteres).\n" +
     "Genera uno con: node -e \"console.log(require('crypto').randomBytes(48).toString('hex'))\""
   );
-  process.exit(1);
+  throw new Error("Falta JWT_SECRET");
 }
 
 export const JWT_EXPIRES_IN = "7d";
@@ -23,7 +23,7 @@ export const ORIGENES = (process.env.ORIGENES_PERMITIDOS ?? "http://localhost:51
 // Direccion publica de la tienda (enlaces de los correos) y de esta API
 // (las fotos de los clientes se sirven desde aca).
 export const SITIO_URL = (process.env.SITIO_URL || "http://localhost:5173").replace(/\/$/, "");
-export const API_URL = (process.env.API_URL || `http://localhost:${PORT}`).replace(/\/$/, "");
+export const API_URL = (process.env.API_URL || SITIO_URL).replace(/\/$/, "");
 
 // --- Correo (Brevo) ---
 // Si falta la clave, el sistema sigue funcionando y solo avisa en el log:

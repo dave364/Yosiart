@@ -1,14 +1,24 @@
 {
   "name": "yosiart",
   "compatibility_date": "2026-09-07",
+  // Necesario para que Express, pg y el resto de la API funcionen acá.
+  "compatibility_flags": ["nodejs_compat"],
   "main": "worker/index.js",
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
+    // /api/... siempre va a la API, nunca a la página de la tienda.
+    "run_worker_first": ["/api/*"]
   },
-  // Cada 10 minutos despierta la API (ver worker/index.js)
-  "triggers": {
-    "crons": ["*/10 * * * *"]
-  }
+  // Datos que no son secretos. Los secretos (DATABASE_URL, JWT_SECRET,
+  // BREVO_API_KEY, MAIL_FROM_EMAIL, ADMIN_EMAIL) se cargan en el panel de
+  // Cloudflare: Workers → yosiart → Settings → Variables and Secrets.
+  "vars": {
+    "SITIO_URL": "https://yosiart.castrodavid9872.workers.dev",
+    "API_URL": "https://yosiart.castrodavid9872.workers.dev",
+    "MAIL_FROM_NOMBRE": "YosiArt",
+    "ORIGENES_PERMITIDOS": "http://localhost:5173"
+  },
+  "observability": { "enabled": true }
 }

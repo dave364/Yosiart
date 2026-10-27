@@ -1,21 +1,29 @@
-// Worker de YosiArt.
-// - fetch: sirve la tienda (los archivos de /dist) como siempre.
-// - scheduled: cada 10 minutos le pega a la API para que Render no la duerma.
-//   No se usa GitHub Actions para esto: el repo es privado y una tarea cada
-//   10 minutos gastaria en pocos dias los minutos gratis del mes.
+// Worker de YosiArt: la tienda y la API en un solo lugar, gratis y sin
+// que se "duerma".
+// - /api/...  → la API (Express, la misma de la carpeta api/).
+// - todo lo demás → la tienda (los archivos de /dist).
+//
+// Antes la API estaba en Render. El plan gratis de Render reparte 750
+// horas por mes entre todos los servicios, y al mantenerla despierta con
+// un ping se gastaron y Render suspendió todo. En Cloudflare no hay límite
+// de horas ni hace falta despertarla.
 
-const API_HEALTH = "https://yosiart.onrender.com/api/health";
+import { httpServerHandler } from "cloudflare:node";
+import { waitUntil } from "cloudflare:workers";
+import { app } from "../api/src/app.js";
+import { usarSegundoPlano } from "../api/src/mail.js";
+
+// Los correos se mandan después de responder: waitUntil le pide a
+// Cloudflare que no corte el worker hasta que terminen.
+usarSegundoPlano(waitUntil);
+
+app.listen(3000);
+const api = httpServerHandler({ port: 3000 });
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
+    const { pathname } = new URL(request.url);
+    if (pathname.startsWith("/api/")) return api.fetch(request, env, ctx);
     return env.ASSETS.fetch(request);
-  },
-
-  async scheduled(event, env, ctx) {
-    ctx.waitUntil(
-      fetch(API_HEALTH, { headers: { "User-Agent": "yosiart-keepalive" } })
-        .then((r) => console.log("health", r.status))
-        .catch((e) => console.log("health error", e.message))
-    );
   },
 };
