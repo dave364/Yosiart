@@ -19,5 +19,5 @@ export const nombreCampo = z
 
 export const passwordCampo = z
   .string()
-  .min(8, "La contraseña tiene que tener al menos 8 caracteres.")
+  .min(10, "La contraseña tiene que tener al menos 10 caracteres.")
   .max(200, "La contraseña es demasiado larga.");

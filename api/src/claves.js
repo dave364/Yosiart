@@ -1,10 +1,14 @@
 // Contraseñas de los clientes.
 //
-// Se guardan con PBKDF2 (SHA-256, 100.000 vueltas) usando el crypto del
-// propio entorno. Antes se usaba bcrypt, pero bcrypt hecho en JavaScript
-// tarda demasiado para el plan gratis de Cloudflare Workers (10 ms de CPU
-// por pedido): el login se cortaba. PBKDF2 corre en código nativo y es
-// varias veces más rápido con una seguridad equivalente.
+// Se guardan con PBKDF2 (SHA-256) usando el crypto del propio entorno.
+// Antes se usaba bcrypt, pero bcrypt hecho en JavaScript tarda demasiado
+// para el plan gratis de Cloudflare Workers (10 ms de CPU por pedido).
+//
+// Vueltas: 25.000, unos 5 ms, para que el login entre con margen en esos
+// 10 ms. Para compensar, las contraseñas nuevas piden al menos 10
+// caracteres (validacion.js). Si se pasa al plan pago de Workers (30 s de
+// CPU), conviene subir VUELTAS a 100.000, el máximo que permite
+// Cloudflare: las cuentas se actualizan solas en su próximo login.
 //
 // Formato guardado: pbkdf2$<vueltas>$<sal en base64>$<hash en base64>
 //
@@ -14,7 +18,7 @@
 
 import bcrypt from "bcryptjs";
 
-const VUELTAS = 100_000; // el máximo que permite Cloudflare Workers
+const VUELTAS = 25_000;
 const enc = new TextEncoder();
 
 const aBase64 = (bytes) => Buffer.from(bytes).toString("base64");

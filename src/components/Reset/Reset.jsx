@@ -11,7 +11,7 @@ const Reset = ({ token }) => {
   const [enviando, setEnviando] = useState(false);
   const [listo, setListo] = useState(false);
 
-  const coinciden = password.length >= 8 && password === repetir;
+  const coinciden = password.length >= 10 && password === repetir;
 
   const enviar = async () => {
     setEnviando(true);
@@ -74,7 +74,7 @@ const Reset = ({ token }) => {
                   {ver ? "\u{1F648}" : "\u{1F441}"}
                 </button>
               </div>
-              <small>Minimo 8 caracteres.</small>
+              <small>Mínimo 10 caracteres.</small>
             </label>
 
             <label className="auth-campo">

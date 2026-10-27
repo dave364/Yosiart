@@ -85,7 +85,7 @@ const AuthModal = () => {
     ? nombre.trim().length >= 2 &&
       emailOk &&
       telefonoParece(telefono) &&
-      password.length >= 8
+      password.length >= 10
     : emailOk && password.length > 0;
 
   const alPresionar = (e) => {
@@ -206,7 +206,7 @@ const AuthModal = () => {
               {verPassword ? "🙈" : "👁"}
             </button>
           </div>
-          {esRegistro && <small>Mínimo 8 caracteres.</small>}
+          {esRegistro && <small>Mínimo 10 caracteres.</small>}
         </label>
         )}
 
