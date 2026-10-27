@@ -20,5 +20,8 @@
     "MAIL_FROM_NOMBRE": "YosiArt",
     "ORIGENES_PERMITIDOS": "http://localhost:5173"
   },
+  // Sin tareas programadas: el ping a Render ya no hace falta. La lista
+  // vacía borra el cron que había quedado configurado en Cloudflare.
+  "triggers": { "crons": [] },
   "observability": { "enabled": true }
 }
