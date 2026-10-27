@@ -45,9 +45,8 @@ const Carrito = () => {
     setEnviando(true);
     setError(null);
     try {
-      // TODO (backend): POST /api/pedidos tiene que aceptar la personalizacion
-      // de cada item y subir la foto a Cloudinary. El pago con Mercado Pago
-      // se suma al final.
+      // La API valida cada pieza, guarda las fotos y calcula el total.
+      // El pago con Mercado Pago se suma al final.
       const res = await fetch(`${API_URL}/api/pedidos`, {
         method: "POST",
         headers: {

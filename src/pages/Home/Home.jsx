@@ -13,7 +13,7 @@ const PASOS = [
   {
     titulo: "La hacemos a mano",
     // TODO: completar la demora real de fabricacion.
-    texto: "Seguí el avance desde tu cuenta, con fotos del proceso. Demora: [X DÍAS].",
+    texto: "Seguí el avance de tu pedido desde tu cuenta. Demora: [X DÍAS].",
   },
 ];
 

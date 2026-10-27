@@ -63,7 +63,6 @@ const Presupuesto = () => {
     setEnviando(true);
     setError(null);
     try {
-      // TODO (backend): crear POST /api/presupuestos en la API de YosiArt.
       const res = await fetch(`${API_URL}/api/presupuestos`, {
         method: "POST",
         headers: {
