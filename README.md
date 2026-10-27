@@ -58,5 +58,5 @@ tu API local, creá un `.env` en la raíz con `VITE_API_URL=http://localhost:300
 
 ## Pendientes
 
-- **Contenido**: precios reales y medidas exactas (se cargan desde `/admin` → Piezas y precios), fotos de las piezas, demora (`[X DÍAS]`) y zonas de envío (`[ZONAS]`).
+- **Contenido**: precios reales y medidas exactas (se cargan desde `/admin` → Piezas y precios), fotos de las piezas, demora (`[X DÍAS]`).
 - **Mercado Pago**: al final, cuando la página tenga su forma final.

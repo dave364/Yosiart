@@ -14,8 +14,7 @@ const Footer = () => (
         <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer">@yosiart.resina</a>
         <Link to="/seguimiento">Seguí tu pedido</Link>
         <Link to="/presupuesto">Pedir presupuesto</Link>
-        {/* TODO: completar las zonas reales de envío */}
-        <span>Envíos a [ZONAS]</span>
+        <span>Envíos en CABA</span>
       </nav>
     </div>
   </footer>
