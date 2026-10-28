@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAdminApi, fecha, telefonoLindo } from "./api";
-import { plata, buscarColor, buscarGlitter } from "../../data/piezas";
+import { plata, buscarColor, buscarGlitter, buscarLetra } from "../../data/piezas";
 import { FORMAS } from "../../data/formas";
 import PiezaPreview from "../../components/PiezaPreview/PiezaPreview";
 
@@ -39,6 +39,12 @@ const Detalle = ({ p }) => (
       <>
         <dt>Nombre</dt>
         <dd className="adm-detalle__grande">{p.nombre}</dd>
+      </>
+    )}
+    {buscarLetra(p.letra) && (
+      <>
+        <dt>Letra</dt>
+        <dd>{buscarLetra(p.letra).nombre}</dd>
       </>
     )}
     {p.telefono && (

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { COLORES, GLITTERS, MAX_NOMBRE, buscarPieza, buscarColor, tamanosDe, precioDe, plata } from "../../data/piezas";
+import { COLORES, GLITTERS, LETRAS, MAX_NOMBRE, buscarPieza, buscarColor, tamanosDe, precioDe, plata } from "../../data/piezas";
 import { useCatalogo } from "../../context/CatalogoContext";
 import { FORMAS } from "../../data/formas";
 import { useCart } from "../../context/CartContext";
@@ -23,6 +23,7 @@ const OPCIONES_INICIALES = {
   color: "frambuesa",
   glitter: "dorado",
   nombre: "",
+  letra: "plateado",
   telefono: "",
   telefonoLado: "dorso", // en las chapitas de mascotas el teléfono suele ir atrás
   foto: null,
@@ -99,6 +100,8 @@ const Personalizar = () => {
       color: opciones.color,
       glitter: opciones.glitter,
       nombre,
+      // El color de letra solo cuenta si la pieza lleva algo escrito.
+      letra: nombre || (pieza.lleva.telefono && telefono) ? opciones.letra : null,
       telefono: pieza.lleva.telefono ? telefono : "",
       telefonoLado: pieza.lleva.telefono && telefono ? ladoTelefono : null,
       foto: pieza.lleva.foto ? opciones.foto : null,
@@ -134,6 +137,7 @@ const Personalizar = () => {
               color={opciones.color}
               glitter={opciones.glitter}
               nombre={opciones.nombre}
+              letra={opciones.letra}
               telefono={pieza.lleva.telefono ? opciones.telefono : ""}
               telefonoLado={ladoTelefono}
               foto={pieza.lleva.foto ? opciones.foto : null}
@@ -257,6 +261,30 @@ const Personalizar = () => {
                 Hasta {MAX_NOMBRE} letras. Te quedan {MAX_NOMBRE - opciones.nombre.length}.
               </span>
               {intento && errorNombre && <span className="campo__error">{errorNombre}</span>}
+
+              <fieldset className="grupo grupo--letra">
+                <legend>
+                  Color de la letra:{" "}
+                  <span className="grupo__valor">{LETRAS.find((l) => l.id === opciones.letra)?.nombre}</span>
+                </legend>
+                <div className="chips">
+                  {LETRAS.map((l) => (
+                    <button
+                      type="button"
+                      key={l.id}
+                      className="chip"
+                      aria-pressed={opciones.letra === l.id}
+                      onClick={() => cambiar("letra", l.id)}
+                    >
+                      <span className="chip__punto" style={{ background: l.muestra }} aria-hidden="true" />
+                      {l.nombre}
+                    </button>
+                  ))}
+                </div>
+                {opciones.letra === "negro" && opciones.color === "negro" && (
+                  <span className="campo__ayuda">Sobre resina negra, la letra negra casi no se ve. Te conviene la plateada.</span>
+                )}
+              </fieldset>
             </div>
           )}
 

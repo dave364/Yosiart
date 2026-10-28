@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { API_URL } from "../../config";
-import { buscarColor, buscarGlitter, plata } from "../../data/piezas";
+import { buscarColor, buscarGlitter, buscarLetra, plata } from "../../data/piezas";
 import { FORMAS } from "../../data/formas";
 import "./Seguimiento.scss";
 
@@ -26,6 +26,7 @@ const describir = (p = {}) =>
     p.color && buscarColor(p.color).nombre,
     p.glitter && p.glitter !== "sin" && `Glitter ${buscarGlitter(p.glitter).nombre.toLowerCase()}`,
     p.nombre && `«${p.nombre}»`,
+    buscarLetra(p.letra) && `Letra ${buscarLetra(p.letra).nombre.toLowerCase()}`,
     p.telefono && `Tel. ${p.telefono}${p.telefonoLado === "dorso" ? " en el dorso" : ""}`,
   ]
     .filter(Boolean)

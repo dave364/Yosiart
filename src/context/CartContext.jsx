@@ -16,6 +16,7 @@ const claveDe = (piezaId, opciones) =>
     opciones.color,
     opciones.glitter,
     (opciones.nombre || "").trim().toLowerCase(),
+    opciones.letra || "",
     (opciones.telefono || "").trim(),
     opciones.telefonoLado || "",
     opciones.foto ? opciones.foto.slice(-40) : "",

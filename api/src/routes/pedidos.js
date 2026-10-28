@@ -5,7 +5,7 @@ import { query, withTransaction } from "../db.js";
 import { autenticacionOpcional, requiereAuth, requiereAdmin } from "../middleware/auth.js";
 import { mailResumenPedido, mailCambioEstado, enviarEnSegundoPlano, avisarPedidoNuevo } from "../mail.js";
 import { telefonoValido, normalizarTelefono } from "../telefono.js";
-import { COLORES, GLITTERS, MAX_NOMBRE, ESTADOS_PEDIDO } from "../catalogo.js";
+import { COLORES, GLITTERS, LETRAS, MAX_NOMBRE, ESTADOS_PEDIDO } from "../catalogo.js";
 import { guardarFoto, esDataUrl } from "../fotos.js";
 
 export const router = Router();
@@ -24,6 +24,8 @@ const personalizacionSchema = z.object({
   color: z.enum(Object.keys(COLORES)),
   glitter: z.enum(Object.keys(GLITTERS)).default("sin"),
   nombre: z.string().trim().max(MAX_NOMBRE).default(""),
+  // null llega en piezas sin nada escrito; sin dato (carritos viejos) va plateada.
+  letra: z.enum(Object.keys(LETRAS)).nullish(),
   telefono: z.string().trim().max(20).nullish(),
   telefonoLado: z.enum(["frente", "dorso"]).nullish(),
   foto: z.string().max(3_000_000).nullish(),
@@ -108,6 +110,8 @@ function validarPieza(producto, p) {
       color: p.color,
       glitter: p.glitter,
       nombre,
+      // El color de letra solo importa si la pieza lleva algo escrito.
+      letra: nombre || telefono ? p.letra || "plateado" : null,
       telefono,
       telefonoLado,
       foto,

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
-import { buscarColor, buscarGlitter, plata } from "../../data/piezas";
+import { buscarColor, buscarGlitter, buscarLetra, plata } from "../../data/piezas";
 import { FORMAS } from "../../data/formas";
 import { normalizarTelefono, telefonoParece } from "../../utils/telefono";
 import { API_URL } from "../../config";
@@ -136,6 +136,7 @@ const Carrito = () => {
                   <h2>{i.nombrePieza}</h2>
                   <ul className="item__detalle">
                     {i.opciones.nombre && <li>Nombre: <strong>{i.opciones.nombre}</strong></li>}
+                    {buscarLetra(i.opciones.letra) && <li>Letra {buscarLetra(i.opciones.letra).nombre.toLowerCase()}</li>}
                     {i.opciones.telefono && (
                       <li>
                         Teléfono: {i.opciones.telefono}{" "}

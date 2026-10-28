@@ -13,6 +13,12 @@ export const COLORES = [
   { id: "negro", nombre: "Negro", hex: "#2B1B24", texto: "#FFFFFF" },
 ];
 
+// Color de las letras (nombre y teléfono).
+export const LETRAS = [
+  { id: "plateado", nombre: "Plateada", muestra: "linear-gradient(180deg, #FFFFFF, #B9BFC8 50%, #8F96A1 55%, #E4E7EC)" },
+  { id: "negro", nombre: "Negra", muestra: "#141414" },
+];
+
 export const GLITTERS = [
   { id: "sin", nombre: "Sin glitter", hex: null },
   { id: "dorado", nombre: "Dorado", hex: "#E2BE6E" },
@@ -159,6 +165,7 @@ export const precioDesde = (pieza) => {
 };
 export const buscarColor = (id) => COLORES.find((c) => c.id === id) || COLORES[0];
 export const buscarGlitter = (id) => GLITTERS.find((g) => g.id === id) || GLITTERS[0];
+export const buscarLetra = (id) => LETRAS.find((l) => l.id === id) || null;
 
 const formatoPesos = new Intl.NumberFormat("es-AR", {
   style: "currency",

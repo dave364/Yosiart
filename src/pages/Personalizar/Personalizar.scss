@@ -87,6 +87,18 @@
   &[aria-pressed="true"] &__forma { color: var(--blanco); }
 }
 
+.grupo--letra { margin-top: 16px; }
+
+.chip__punto {
+  display: inline-block;
+  flex: none;
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--borde);
+}
+
 .swatches { display: flex; flex-wrap: wrap; gap: 12px; }
 
 .swatch {

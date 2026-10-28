@@ -1,11 +1,11 @@
 import { useId } from "react";
 import { buscarColor, buscarGlitter } from "../../data/piezas";
-import { formaDe, tamanoNombre, HuellaDeco, FOTO_CORAZON, PUNTOS_GLITTER } from "../../data/formas";
+import { formaDe, tamanoNombre, HuellaDeco, DegradeLetra, pinturaLetra, FOTO_CORAZON, PUNTOS_GLITTER } from "../../data/formas";
 
 // Vista plana (solo el frente) de una pieza. Se usa en las tarjetas del
 // catálogo y en las miniaturas del carrito; el personalizador usa Pieza3D.
 
-const PiezaPreview = ({ forma, color, glitter, nombre, telefono, telefonoLado = "frente", foto, etiqueta, className }) => {
+const PiezaPreview = ({ forma, color, glitter, nombre, letra, telefono, telefonoLado = "frente", foto, etiqueta, className }) => {
   const id = useId().replace(/:/g, "");
   const f = formaDe(forma);
   const c = buscarColor(color);
@@ -15,6 +15,7 @@ const PiezaPreview = ({ forma, color, glitter, nombre, telefono, telefonoLado = 
   const tel = telefonoLado === "frente" ? (telefono || "").trim() : "";
   const fs = tamanoNombre(forma, texto);
   const cyNombre = f.texto.cy - (tel ? 10 : 0);
+  const pintura = pinturaLetra(letra, `${id}-letra`, c.texto);
   const descripcion = etiqueta || `Vista previa: ${texto}, color ${c.nombre.toLowerCase()}`;
 
   return (
@@ -24,6 +25,7 @@ const PiezaPreview = ({ forma, color, glitter, nombre, telefono, telefonoLado = 
         <clipPath id={`${id}-foto`}>
           <circle cx={FOTO_CORAZON.cx} cy={FOTO_CORAZON.cy} r={FOTO_CORAZON.r - 4} />
         </clipPath>
+        <DegradeLetra id={`${id}-letra`} />
       </defs>
       <g fill={c.hex}>{f.silueta}</g>
       <g clipPath={`url(#${id}-forma)`}>
@@ -62,12 +64,12 @@ const PiezaPreview = ({ forma, color, glitter, nombre, telefono, telefonoLado = 
           fontFamily="Dancing Script, cursive"
           fontWeight="700"
           fontSize={fs}
-          fill={c.texto}
+          {...pintura}
         >
           {texto}
         </text>
         {tel && (
-          <text x={f.texto.cx} y={cyNombre + 30} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="700" fontSize="14" fill={c.texto}>
+          <text x={f.texto.cx} y={cyNombre + 30} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="700" fontSize="14" {...pintura}>
             {tel}
           </text>
         )}

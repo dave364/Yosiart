@@ -5,6 +5,8 @@ import {
   tamanoNombre,
   tamanoTelefonoDorso,
   HuellaDeco,
+  DegradeLetra,
+  pinturaLetra,
   FOTO_CORAZON,
   PUNTOS_GLITTER as PUNTOS,
 } from "../../data/formas";
@@ -37,7 +39,7 @@ const Argolla = ({ cy, r }) => (
   </>
 );
 
-const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLado = "dorso", foto, tamanoCm }) => {
+const Pieza3D = ({ forma = "hueso", color, glitter, nombre, letra, telefono, telefonoLado = "dorso", foto, tamanoCm }) => {
   const id = useId().replace(/:/g, "");
   const escenarioRef = useRef(null);
   const piezaRef = useRef(null);
@@ -174,6 +176,8 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
   const escala = ancho / 300;
   const zFrente = (f.espesor / 2) * escala;
   const colorHueco = mezclar(c.hex, -0.5);
+  const pintura = pinturaLetra(letra, `${id}-letra`, c.texto);
+  const pinturaDorso = pinturaLetra(letra, `${id}-letra-dorso`, c.texto);
   const fs = tamanoNombre(forma, texto);
   const cyNombre = caja.cy - (telFrente ? 10 : 0);
   // La pieza se ve más chica o más grande según su medida real.
@@ -234,6 +238,7 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
                     <stop offset=".58" stopColor="#fff" stopOpacity="0" />
                     <stop offset="1" stopColor="#fff" stopOpacity="0" />
                   </linearGradient>
+                  <DegradeLetra id={`${id}-letra`} />
                 </defs>
                 <g fill={c.hex}>{silueta}</g>
                 <g clipPath={`url(#${id}-forma)`}>
@@ -269,12 +274,12 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
                     fontFamily="Dancing Script, cursive"
                     fontWeight="700"
                     fontSize={fs}
-                    fill={c.texto}
+                    {...pintura}
                   >
                     {texto}
                   </text>
                   {telFrente && (
-                    <text x={caja.cx} y={cyNombre + 30} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="700" fontSize="14" fill={c.texto}>
+                    <text x={caja.cx} y={cyNombre + 30} textAnchor="middle" fontFamily="Nunito, sans-serif" fontWeight="700" fontSize="14" {...pintura}>
                       {telFrente}
                     </text>
                   )}
@@ -292,6 +297,9 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
                 style={{ transform: `translateZ(${-zFrente}px) rotateY(180deg)` }}
                 aria-hidden="true"
               >
+                <defs>
+                  <DegradeLetra id={`${id}-letra-dorso`} />
+                </defs>
                 <g transform="translate(300 0) scale(-1 1)">
                   <g fill={mezclar(c.hex, -0.08)}>{silueta}</g>
                   {hueco && <circle cx={ax} cy={ay} r="8" fill={colorHueco} />}
@@ -304,7 +312,7 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, telefono, telefonoLa
                     fontFamily="Nunito, sans-serif"
                     fontWeight="800"
                     fontSize={tamanoTelefonoDorso(forma, telDorso)}
-                    fill={c.texto}
+                    {...pinturaDorso}
                   >
                     {telDorso}
                   </text>

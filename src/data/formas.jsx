@@ -108,6 +108,28 @@ export const HuellaDeco = ({ fill }) => (
 // Foto circular dentro del corazón.
 export const FOTO_CORAZON = { cx: 150, cy: 166, r: 50 };
 
+// Letra plateada: degradé metálico de arriba hacia abajo.
+export const DegradeLetra = ({ id }) => (
+  <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stopColor="#FFFFFF" />
+    <stop offset=".45" stopColor="#C3C8D0" />
+    <stop offset=".55" stopColor="#8F96A1" />
+    <stop offset="1" stopColor="#E4E7EC" />
+  </linearGradient>
+);
+
+// Atributos de relleno para el nombre y el teléfono según el color de letra.
+// La plateada lleva un borde fino para que se lea también sobre resinas claras.
+// Sin letra elegida (piezas que ya estaban en un carrito) se usa el color de
+// siempre, que depende de la resina.
+export const pinturaLetra = (letra, idDegrade, colorPorDefecto) => {
+  if (letra === "plateado") {
+    return { fill: `url(#${idDegrade})`, stroke: "#5F6670", strokeWidth: 0.7, paintOrder: "stroke" };
+  }
+  if (letra === "negro") return { fill: "#141414" };
+  return { fill: colorPorDefecto };
+};
+
 // Tamaño de letra para que el nombre entre en el ancho de la forma.
 // Dancing Script ocupa ~0.5em por letra.
 export const tamanoNombre = (forma, nombre) => {
