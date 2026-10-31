@@ -40,6 +40,38 @@ $env:ADMIN_EMAIL="tu@email.com"; $env:ADMIN_PASSWORD="una-clave-larga"; npm run 
 Con la API corriendo, `npm run dev` en la raíz levanta la tienda y le manda
 las llamadas a `/api` a esta API local.
 
+## Estructura
+
+Organizada en capas: cada pedido entra por una ruta y baja hasta la base.
+
+```
+src/
+  routes/         qué URL existe y qué middleware usa (sesión, admin)
+  controllers/    lee el pedido, valida con el schema y responde
+  services/       la lógica del negocio: precios, piezas, correos, fotos
+  repositories/   las consultas SQL, una por tabla
+  schemas/        validaciones con Zod (campos.js: email, nombre, contraseña)
+  middleware/     sesión (auth.js), límite de intentos, manejo de errores
+  lib/            utilidades: contraseñas, teléfonos, errores HTTP
+  constantes/     colores, glitters, formas y estados del taller
+  app.js          arma Express; index.js lo arranca en Node
+  db.js, config.js
+```
+
+## Pruebas
+
+```bash
+npm test                # contra la API en Node
+npm test -- --worker    # contra la API dentro de Cloudflare (wrangler dev)
+```
+
+Recorren todas las rutas (104 llamadas) contra una base de pruebas local
+que se borra en cada corrida (`TEST_DATABASE_URL`, por defecto
+`postgres://yosi:yosi@127.0.0.1:5432/yosiart_test`; nunca la de Neon) y un
+Brevo falso que guarda los correos. Comparan cada respuesta y cada correo
+con `test/esperado.json`: si un cambio altera algo, lo muestran. Cuando el
+cambio es a propósito, `npm test -- --guardar` actualiza lo esperado.
+
 ## Deploy en Cloudflare
 
 La API se publica junto con la tienda, en el mismo worker
@@ -56,11 +88,11 @@ Cada push a `main` la publica sola.
   `npm run db:seed`.
 
 Diferencias con un servidor común, ya resueltas en el código:
-- Cada pedido abre y cierra sus propias conexiones a la base (`db.js`).
-- Las contraseñas usan PBKDF2 nativo (`claves.js`); las cuentas viejas con
+- Cada pedido abre y cierra sus propias conexiones a la base (`src/db.js`).
+- Las contraseñas usan PBKDF2 nativo (`src/lib/claves.js`); las cuentas viejas con
   bcrypt se pasan solas al formato nuevo en su próximo login.
 - Los correos se terminan de mandar después de responder gracias a
-  `waitUntil` (`mail.js` + `worker/index.js`).
+  `waitUntil` (`src/services/mail.service.js` + `worker/index.js`).
 - Las fotos se guardan como `/api/fotos/<id>`, sin dominio.
 
 ## Endpoints
@@ -134,7 +166,7 @@ panel (`PATCH /:id/total`). El precio puede depender del tamaño:
 
 **Las fotos se guardan en la base.** Llegan dentro del pedido, se revisa que
 sean imágenes de verdad (no solo que lo digan) y se sirven con un id
-aleatorio de 32 caracteres. Todo eso vive en `src/fotos.js`: si algún día
+aleatorio de 32 caracteres. Todo eso vive en `src/services/fotos.service.js` y `src/repositories/fotos.repository.js`: si algún día
 pesan demasiado, es el único archivo a cambiar para pasarlas a Cloudinary.
 
 **Seguimiento sin cuenta, pero no de cualquiera.** Para ver un pedido hace

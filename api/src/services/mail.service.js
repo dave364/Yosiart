@@ -1,6 +1,6 @@
 // Envio de correos. Todo el contacto con el proveedor vive aca:
 // cambiar de Brevo a otro servicio es tocar solo la funcion enviar().
-import { BREVO_API_KEY, BREVO_API_URL, MAIL_FROM_EMAIL, MAIL_FROM_NOMBRE, SITIO_URL, API_URL, ADMIN_EMAIL } from "./config.js";
+import { BREVO_API_KEY, BREVO_API_URL, MAIL_FROM_EMAIL, MAIL_FROM_NOMBRE, SITIO_URL, API_URL, ADMIN_EMAIL } from "../config.js";
 
 // Las fotos se guardan como "/api/fotos/<id>"; en un correo hace falta
 // la direccion completa.
@@ -14,7 +14,7 @@ let segundoPlano = () => {};
 export const usarSegundoPlano = (fn) => { segundoPlano = fn; };
 const enFondo = (promesa, contexto) =>
   segundoPlano(promesa.catch((err) => console.error(`[mail] ${contexto}:`, err.message)));
-import { describirPersonalizacion, ESTADOS_PEDIDO } from "./catalogo.js";
+import { describirPersonalizacion, ESTADOS_PEDIDO } from "../constantes/catalogo.js";
 
 const API = BREVO_API_URL;
 

@@ -56,6 +56,10 @@ export const pool = {
 
 export const query = (text, params) => poolActual().query(text, params);
 
+// Lo que usan los repositorios: db.query(...) o, dentro de una
+// transaccion, la conexion que reciben de withTransaction.
+export const db = { query };
+
 // Ejecuta varias consultas dentro de una transaccion.
 // Si algo falla, se revierte todo.
 export async function withTransaction(fn) {

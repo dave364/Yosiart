@@ -1,15 +1,17 @@
 import express from "express";
 import cors from "cors";
 import { ORIGENES } from "./config.js";
-import "./validacion.js";
-import { router as authRouter } from "./routes/auth.js";
-import { router as productosRouter } from "./routes/productos.js";
-import { router as pedidosRouter } from "./routes/pedidos.js";
-import { router as presupuestosRouter } from "./routes/presupuestos.js";
-import { router as fotosRouter } from "./routes/fotos.js";
-import { router as usuariosRouter } from "./routes/usuarios.js";
+// Mensajes de validación en español para toda la API.
+import "./schemas/campos.js";
+import { router as authRouter } from "./routes/auth.routes.js";
+import { router as productosRouter } from "./routes/productos.routes.js";
+import { router as pedidosRouter } from "./routes/pedidos.routes.js";
+import { router as presupuestosRouter } from "./routes/presupuestos.routes.js";
+import { router as fotosRouter } from "./routes/fotos.routes.js";
+import { router as usuariosRouter } from "./routes/usuarios.routes.js";
 import { limite } from "./middleware/limite.js";
 import { conexionPorPedido } from "./db.js";
+import { rutaInexistente, manejarErrores } from "./middleware/errores.js";
 
 // La aplicacion de la API. La arranca src/index.js en tu PC, y
 // worker/index.js en Cloudflare (junto con la tienda).
@@ -99,23 +101,5 @@ app.use("/api/presupuestos", presupuestosRouter);
 app.use("/api/fotos", fotosRouter);
 app.use("/api/usuarios", usuariosRouter);
 
-app.use((_req, res) => res.status(404).json({ error: "Ruta no encontrada." }));
-
-// Manejador de errores unico. Nunca devuelve el stack al cliente:
-// los detalles internos van al log del servidor y nada mas.
-app.use((err, _req, res, _next) => {
-  if (err?.name === "ZodError") {
-    return res.status(400).json({
-      error: "Datos invalidos.",
-      detalles: err.issues.map((i) => ({ campo: i.path.join("."), mensaje: i.message })),
-    });
-  }
-  if (err?.type === "entity.too.large") {
-    return res.status(413).json({ error: "El envio es demasiado pesado. Proba con fotos mas livianas." });
-  }
-  if (err?.status) {
-    return res.status(err.status).json({ error: err.message });
-  }
-  console.error(err);
-  res.status(500).json({ error: "Error interno del servidor." });
-});
+app.use(rutaInexistente);
+app.use(manejarErrores);

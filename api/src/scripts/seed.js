@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { hashPassword } from "../claves.js";
+import { hashPassword } from "../lib/claves.js";
 import { pool } from "../db.js";
 
 // Piezas iniciales: las mismas que muestra la tienda (src/data/piezas.js

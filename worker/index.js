@@ -11,7 +11,7 @@
 import { httpServerHandler } from "cloudflare:node";
 import { waitUntil } from "cloudflare:workers";
 import { app } from "../api/src/app.js";
-import { usarSegundoPlano } from "../api/src/mail.js";
+import { usarSegundoPlano } from "../api/src/services/mail.service.js";
 
 // Los correos se mandan después de responder: waitUntil le pide a
 // Cloudflare que no corte el worker hasta que terminen.

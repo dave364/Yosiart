@@ -5,11 +5,13 @@
 // `fotos` y se reemplazan por una direccion publica (/api/fotos/<id>).
 //
 // Se guardan en la base para arrancar sin otro servicio. Si con el tiempo
-// pesan demasiado, este es el unico archivo que hay que cambiar para
+// pesan demasiado, se cambia repositories/fotos.repository.js para
 // mandarlas a Cloudinary o a un bucket.
 
 import crypto from "node:crypto";
-import { FOTO_MAX_BYTES } from "./config.js";
+import { FOTO_MAX_BYTES } from "../config.js";
+import { datoInvalido } from "../lib/errores.js";
+import * as fotosRepo from "../repositories/fotos.repository.js";
 
 const TIPOS = new Set(["image/jpeg", "image/png", "image/webp"]);
 const PATRON = /^data:(image\/[a-z]+);base64,([A-Za-z0-9+/=]+)$/;
@@ -23,32 +25,29 @@ function esImagenReal(mime, buf) {
   return false;
 }
 
-function error(mensaje) {
-  const err = new Error(mensaje);
-  err.status = 400;
-  return err;
-}
-
 export const esDataUrl = (v) => typeof v === "string" && v.startsWith("data:");
 
 // Guarda una foto y devuelve su direccion (/api/fotos/<id>).
 // Se guarda sin el dominio: la tienda y la API comparten direccion, asi
 // que la foto se sigue viendo aunque mañana cambie el dominio. Los correos
-// le agregan el dominio con fotoAbsoluta (mail.js).
-// `client` es la conexion de la transaccion, para que si el pedido falla
+// le agregan el dominio con fotoAbsoluta (mail.service.js).
+// `conexion` es la de la transaccion, para que si el pedido falla
 // tampoco quede la foto guardada.
-export async function guardarFoto(client, dataUrl) {
+export async function guardarFoto(conexion, dataUrl) {
   const m = PATRON.exec(dataUrl || "");
-  if (!m || !TIPOS.has(m[1])) throw error("La foto tiene que ser JPG, PNG o WEBP.");
+  if (!m || !TIPOS.has(m[1])) throw datoInvalido("La foto tiene que ser JPG, PNG o WEBP.");
 
   const datos = Buffer.from(m[2], "base64");
-  if (datos.length > FOTO_MAX_BYTES) throw error("La foto es demasiado pesada.");
-  if (!esImagenReal(m[1], datos)) throw error("El archivo de la foto no es una imagen valida.");
+  if (datos.length > FOTO_MAX_BYTES) throw datoInvalido("La foto es demasiado pesada.");
+  if (!esImagenReal(m[1], datos)) throw datoInvalido("El archivo de la foto no es una imagen valida.");
 
   const id = crypto.randomBytes(16).toString("hex");
-  await client.query(
-    `INSERT INTO fotos (id, mime, datos, bytes) VALUES ($1, $2, $3, $4)`,
-    [id, m[1], datos, datos.length]
-  );
+  await fotosRepo.crear({ id, mime: m[1], datos }, conexion);
   return `/api/fotos/${id}`;
+}
+
+// Para servirla: solo ids con el formato correcto (32 caracteres hex).
+export async function buscarFoto(id) {
+  if (!/^[a-f0-9]{32}$/.test(id)) return null;
+  return fotosRepo.buscar(id);
 }
