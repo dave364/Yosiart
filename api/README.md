@@ -166,8 +166,9 @@ panel (`PATCH /:id/total`). El precio puede depender del tamaño:
 
 **Las fotos se guardan en la base.** Llegan dentro del pedido, se revisa que
 sean imágenes de verdad (no solo que lo digan) y se sirven con un id
-aleatorio de 32 caracteres. Todo eso vive en `src/services/fotos.service.js` y `src/repositories/fotos.repository.js`: si algún día
-pesan demasiado, es el único archivo a cambiar para pasarlas a Cloudinary.
+aleatorio de 32 caracteres. Dónde se guardan lo decide solo
+`src/repositories/fotos.repository.js`: si algún día pesan demasiado, es el
+único archivo a cambiar para pasarlas a Cloudinary.
 
 **Seguimiento sin cuenta, pero no de cualquiera.** Para ver un pedido hace
 falta el número y el email con el que se hizo, y la consulta tiene límite
