@@ -3,7 +3,7 @@
   "compatibility_date": "2026-09-07",
   // Necesario para que Express, pg y el resto de la API funcionen acá.
   "compatibility_flags": ["nodejs_compat"],
-  "main": "worker/index.js",
+  "main": "worker/index.ts",
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

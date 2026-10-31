@@ -1,0 +1,21 @@
+{
+  // La API corre los .ts directo con Node 24 (que borra los tipos al
+  // ejecutar) y en Cloudflare los empaqueta wrangler. TypeScript solo
+  // revisa: `npm run typecheck`. Por eso noEmit y erasableSyntaxOnly
+  // (nada de enums ni sintaxis que Node no sepa borrar).
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["src", "test"]
+}

@@ -7,11 +7,12 @@
     "node": "24.x"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "node --watch src/index.js",
-    "db:setup": "node src/scripts/setup.js",
-    "db:seed": "node src/scripts/seed.js",
-    "test": "node test/correr.js"
+    "start": "node src/index.ts",
+    "dev": "node --watch src/index.ts",
+    "db:setup": "node src/scripts/setup.ts",
+    "db:seed": "node src/scripts/seed.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node test/correr.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -21,5 +22,13 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.3",
     "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.19.2",
+    "@types/pg": "^8.23.1",
+    "typescript": "^5.9.3"
   }
 }

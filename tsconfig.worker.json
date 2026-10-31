@@ -1,0 +1,18 @@
+{
+  // Revisa worker/index.ts (la puerta de entrada en Cloudflare) junto con
+  // la API que importa. Los tipos de Cloudflare están en
+  // worker/worker-configuration.d.ts (se regeneran con `npx wrangler types worker/worker-configuration.d.ts`).
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["worker"]
+}

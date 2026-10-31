@@ -40,6 +40,21 @@ $env:ADMIN_EMAIL="tu@email.com"; $env:ADMIN_PASSWORD="una-clave-larga"; npm run 
 Con la API corriendo, `npm run dev` en la raíz levanta la tienda y le manda
 las llamadas a `/api` a esta API local.
 
+## TypeScript
+
+Toda la API está en TypeScript, en modo estricto. Node 24 corre los `.ts`
+directamente (borra los tipos al ejecutar) y en Cloudflare los empaqueta
+wrangler, así que no hay paso de compilación: TypeScript solo revisa.
+
+```bash
+npm run typecheck   # revisa los tipos de toda la API y las pruebas
+```
+
+Los tipos compartidos están en `src/tipos.ts`; los de los datos que llegan
+del cliente salen de los schemas de Zod (`z.infer`), así no se escriben dos
+veces. Como Node solo borra tipos, no se usan `enum` ni otra sintaxis que
+no se pueda borrar (`erasableSyntaxOnly`).
+
 ## Estructura
 
 Organizada en capas: cada pedido entra por una ruta y baja hasta la base.
@@ -50,12 +65,13 @@ src/
   controllers/    lee el pedido, valida con el schema y responde
   services/       la lógica del negocio: precios, piezas, correos, fotos
   repositories/   las consultas SQL, una por tabla
-  schemas/        validaciones con Zod (campos.js: email, nombre, contraseña)
-  middleware/     sesión (auth.js), límite de intentos, manejo de errores
+  schemas/        validaciones con Zod (campos.ts: email, nombre, contraseña)
+  middleware/     sesión (auth.ts), límite de intentos, manejo de errores
   lib/            utilidades: contraseñas, teléfonos, errores HTTP
+  tipos.ts        tipos compartidos: usuario, pieza, pedido, presupuesto
   constantes/     colores, glitters, formas y estados del taller
-  app.js          arma Express; index.js lo arranca en Node
-  db.js, config.js
+  app.ts          arma Express; index.ts lo arranca en Node
+  db.ts, config.ts
 ```
 
 ## Pruebas
@@ -75,7 +91,7 @@ cambio es a propósito, `npm test -- --guardar` actualiza lo esperado.
 ## Deploy en Cloudflare
 
 La API se publica junto con la tienda, en el mismo worker
-(`worker/index.js`): `/api/...` va a esta API y el resto a la tienda.
+(`worker/index.ts`): `/api/...` va a esta API y el resto a la tienda.
 Cada push a `main` la publica sola.
 
 - **Base de datos**: Neon (`DATABASE_URL`).
@@ -88,11 +104,11 @@ Cada push a `main` la publica sola.
   `npm run db:seed`.
 
 Diferencias con un servidor común, ya resueltas en el código:
-- Cada pedido abre y cierra sus propias conexiones a la base (`src/db.js`).
-- Las contraseñas usan PBKDF2 nativo (`src/lib/claves.js`); las cuentas viejas con
+- Cada pedido abre y cierra sus propias conexiones a la base (`src/db.ts`).
+- Las contraseñas usan PBKDF2 nativo (`src/lib/claves.ts`); las cuentas viejas con
   bcrypt se pasan solas al formato nuevo en su próximo login.
 - Los correos se terminan de mandar después de responder gracias a
-  `waitUntil` (`src/services/mail.service.js` + `worker/index.js`).
+  `waitUntil` (`src/services/mail.service.ts` + `worker/index.ts`).
 - Las fotos se guardan como `/api/fotos/<id>`, sin dominio.
 
 ## Endpoints
@@ -167,7 +183,7 @@ panel (`PATCH /:id/total`). El precio puede depender del tamaño:
 **Las fotos se guardan en la base.** Llegan dentro del pedido, se revisa que
 sean imágenes de verdad (no solo que lo digan) y se sirven con un id
 aleatorio de 32 caracteres. Dónde se guardan lo decide solo
-`src/repositories/fotos.repository.js`: si algún día pesan demasiado, es el
+`src/repositories/fotos.repository.ts`: si algún día pesan demasiado, es el
 único archivo a cambiar para pasarlas a Cloudinary.
 
 **Seguimiento sin cuenta, pero no de cualquiera.** Para ver un pedido hace
