@@ -5,7 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { buscarColor, buscarGlitter, buscarLetra, plata } from "../../data/piezas";
 import { FORMAS } from "../../data/formas";
 import { normalizarTelefono, telefonoParece } from "../../utils/telefono";
-import { API_URL } from "../../config";
+import { crearPedido } from "../../services/pedidos.service";
 import PiezaPreview from "../../components/PiezaPreview/PiezaPreview";
 import Icono from "../../components/Icono/Icono";
 import "./Carrito.scss";
@@ -47,34 +47,23 @@ const Carrito = () => {
     try {
       // La API valida cada pieza, guarda las fotos y calcula el total.
       // El pago con Mercado Pago se suma al final.
-      const res = await fetch(`${API_URL}/api/pedidos`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
+      const data = await crearPedido(
+        {
           cliente_nombre: nombre.trim(),
           cliente_email: email.trim(),
           cliente_telefono: normalizarTelefono(telefono),
-          // El precio lo calcula el servidor: solo mandamos pieza, cantidad y personalizacion.
           items: items.map((i) => ({
             pieza_id: i.piezaId,
             cantidad: i.cantidad,
             personalizacion: i.opciones,
           })),
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "No pudimos registrar el pedido.");
+        },
+        token
+      );
       setPedido(data);
       vaciar();
     } catch (err) {
-      setError(
-        err.message === "Failed to fetch"
-          ? "No pudimos conectarnos con el servidor. Probá de nuevo en un momento."
-          : err.message
-      );
+      setError(err.message);
     } finally {
       setEnviando(false);
     }

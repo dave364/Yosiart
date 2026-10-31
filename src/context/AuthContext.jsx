@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { API_URL } from "../config";
+import { iniciarSesion, registrarse, usuarioActual } from "../services/auth.service";
 
 const AuthContext = createContext(null);
 
@@ -33,19 +33,12 @@ export const AuthProvider = ({ children }) => {
   const refrescarUsuario = useCallback(async () => {
     if (!token) return null;
     try {
-      const res = await fetch(`${API_URL}/api/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      // 401: token vencido. 404: cuenta suspendida o borrada.
-      if (res.status === 401 || res.status === 404) {
-        setSesion(null);
-        return null;
-      }
-      if (!res.ok) return null;
-      const data = await res.json();
+      const data = await usuarioActual(token);
       setSesion((s) => (s ? { ...s, usuario: data.usuario } : s));
       return data.usuario;
-    } catch {
+    } catch (err) {
+      // 401: token vencido. 404: cuenta suspendida o borrada.
+      if (err.status === 401 || err.status === 404) setSesion(null);
       return null;
     }
   }, [token]);
@@ -60,29 +53,15 @@ export const AuthProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  const pedir = async (ruta, cuerpo) => {
-    const res = await fetch(`${API_URL}${ruta}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(cuerpo),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      const detalle = data.detalles?.[0]?.mensaje;
-      throw new Error(detalle || data.error || "Algo salio mal. Proba de nuevo.");
-    }
-    return data;
-  };
-
   const login = async (email, password) => {
-    const data = await pedir("/api/auth/login", { email, password });
+    const data = await iniciarSesion(email, password);
     setSesion({ token: data.token, usuario: data.usuario });
     setModal(null);
     return data.usuario;
   };
 
   const registro = async (datos) => {
-    const data = await pedir("/api/auth/registro", datos);
+    const data = await registrarse(datos);
     setSesion({ token: data.token, usuario: data.usuario });
     setModal(null);
     return data.usuario;

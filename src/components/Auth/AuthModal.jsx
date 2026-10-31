@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { normalizarTelefono, telefonoParece } from "../../utils/telefono";
 import "./AuthModal.scss";
-import { API_URL } from "../../config";
+import { pedirCambioDePassword } from "../../services/auth.service";
 
 const AuthModal = () => {
   const { modal, cerrarModal, abrirModal, login, registro } = useAuth();
@@ -23,17 +23,9 @@ const AuthModal = () => {
     setEnviando(true);
     setError(null);
     try {
-      const res = await fetch(API_URL + "/api/auth/recuperar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
-      });
-      if (!res.ok) {
-        // Mostramos lo que dice el servidor: si se alcanzo el limite de
-        // intentos, el cliente tiene que saber que espere, no que algo se rompio.
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "No pudimos procesar el pedido.");
-      }
+      // Si falla, se muestra lo que dice el servidor: si se alcanzo el limite
+      // de intentos, el cliente tiene que saber que espere, no que algo se rompio.
+      await pedirCambioDePassword(email.trim());
       setEnviadoReset(true);
     } catch (err) {
       setError(err.message);

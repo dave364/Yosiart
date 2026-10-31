@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { API_URL } from "../config";
+import { listarProductos } from "../services/productos.service";
 import { PIEZAS, muestraDe } from "../data/piezas";
 
 const CatalogoContext = createContext(null);
@@ -30,15 +30,13 @@ export const CatalogoProvider = ({ children }) => {
 
   const recargar = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/productos`);
-      if (!res.ok) return;
-      const datos = await res.json();
+      const datos = await listarProductos();
       if (Array.isArray(datos) && datos.length) {
         setPiezas(datos.map(desdeApi));
         setDesdeServidor(true);
       }
     } catch {
-      // Sin conexión (o la API dormida en Render): queda el catálogo local.
+      // Sin conexión o con la API caída: queda el catálogo local.
     }
   }, []);
 

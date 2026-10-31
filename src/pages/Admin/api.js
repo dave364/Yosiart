@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { API_URL } from "../../config";
 import { useAuth } from "../../context/AuthContext";
+import { pedirApi } from "../../services/api";
 
 // Llamadas del panel a la API, siempre con el token del admin.
 // Si el token vence (401), cierra la sesión para que vuelva a entrar.
@@ -9,21 +9,15 @@ export function useAdminApi() {
 
   return useCallback(
     async (ruta, { method = "GET", body } = {}) => {
-      const res = await fetch(`${API_URL}${ruta}`, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: body === undefined ? undefined : JSON.stringify(body),
-      });
-      if (res.status === 401) {
-        logout();
-        throw new Error("Tu sesión venció. Volvé a entrar.");
+      try {
+        return await pedirApi(ruta, { method, body, token });
+      } catch (err) {
+        if (err.status === 401) {
+          logout();
+          throw new Error("Tu sesión venció. Volvé a entrar.");
+        }
+        throw err;
       }
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.detalles?.[0]?.mensaje || data.error || `Error ${res.status}`);
-      return data;
     },
     [token, logout]
   );

@@ -38,16 +38,15 @@ variables que `api/.env`.
 ```
 src/
   config.js                 URL de la API e Instagram
-  data/piezas.js            colores, glitters y catálogo de respaldo (el real viene de la API)
-  context/CatalogoContext   piezas y precios desde GET /api/productos
-  context/CartContext.jsx   carrito: cada combinación de opciones es un ítem distinto
-  context/AuthContext.jsx   login/registro (de Kenypets)
-  components/PiezaPreview   dibujo SVG de la pieza (personalizador y carrito)
-  components/Navbar, Footer, Icono, Auth, Reset
-  pages/Home, Personalizar, Carrito, Presupuesto
+  services/                 todas las llamadas a la API (api.js maneja errores y sesión)
+  context/                  catálogo, carrito y sesión compartidos por toda la tienda
+  data/                     colores, glitters, formas (SVG) y catálogo de respaldo
+  components/Pieza3D        vista 3D (personalizador y tarjetas del catálogo)
+  components/PiezaPreview   vista plana (carrito y panel)
+  components/               Navbar, Footer, Icono, Auth, Reset
+  pages/                    Home, Personalizar, Carrito, Presupuesto, Seguimiento, Admin
   styles/abstracts/_variables.scss   paleta y tipografías de la marca
-  utils/foto.js             achica las fotos antes de guardarlas
-  utils/telefono.js         validación de teléfonos argentinos (de Kenypets)
+  utils/                    achicar fotos, validar teléfonos
 ```
 
 ## Backend

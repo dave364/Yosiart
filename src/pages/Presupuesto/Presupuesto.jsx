@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { achicarFoto } from "../../utils/foto";
 import { normalizarTelefono, telefonoParece } from "../../utils/telefono";
-import { API_URL } from "../../config";
+import { enviarPresupuesto } from "../../services/presupuestos.service";
 import Icono from "../../components/Icono/Icono";
 import "./Presupuesto.scss";
 
@@ -63,30 +63,20 @@ const Presupuesto = () => {
     setEnviando(true);
     setError(null);
     try {
-      const res = await fetch(`${API_URL}/api/presupuestos`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
+      await enviarPresupuesto(
+        {
           ...datos,
           nombre: datos.nombre.trim(),
           email: datos.email.trim(),
           telefono: datos.telefono.trim() ? normalizarTelefono(datos.telefono) : null,
           cantidad: datos.cantidad ? Number(datos.cantidad) : null,
           fotos,
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "No pudimos enviar tu pedido de presupuesto.");
+        },
+        token
+      );
       setEnviado(true);
     } catch (err) {
-      setError(
-        err.message === "Failed to fetch"
-          ? "No pudimos conectarnos con el servidor. Probá de nuevo en un momento."
-          : err.message
-      );
+      setError(err.message);
     } finally {
       setEnviando(false);
     }

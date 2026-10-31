@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../Auth/AuthModal.scss";
-import { API_URL } from "../../config";
+import { cambiarPassword } from "../../services/auth.service";
 
 // Pantalla que abre el enlace del correo: /#reset=EL_TOKEN
 const Reset = ({ token }) => {
@@ -17,13 +17,7 @@ const Reset = ({ token }) => {
     setEnviando(true);
     setError(null);
     try {
-      const res = await fetch(API_URL + "/api/auth/restablecer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, password }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "No pudimos cambiar la contrasena.");
+      await cambiarPassword(token, password);
       setListo(true);
     } catch (err) {
       setError(err.message);

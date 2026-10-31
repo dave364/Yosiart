@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { API_URL } from "../../config";
+import { misPedidos, buscarPedido } from "../../services/pedidos.service";
 import { buscarColor, buscarGlitter, buscarLetra, plata } from "../../data/piezas";
 import { FORMAS } from "../../data/formas";
 import "./Seguimiento.scss";
@@ -120,8 +120,7 @@ const Seguimiento = () => {
   useEffect(() => {
     if (!logueado) return;
     let vigente = true;
-    fetch(`${API_URL}/api/pedidos/mis`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
+    misPedidos(token)
       .then((d) => vigente && setMios(d))
       .catch(() => vigente && setErrorMios("No pudimos cargar tus pedidos. Probá de nuevo en un momento."));
     return () => {
@@ -139,13 +138,9 @@ const Seguimiento = () => {
     }
     setBuscando(true);
     try {
-      const q = new URLSearchParams({ numero: numero.trim().replace(/^#/, ""), email: email.trim() });
-      const res = await fetch(`${API_URL}/api/pedidos/seguimiento?${q}`);
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "No pudimos buscar el pedido.");
-      setBuscado(data);
+      setBuscado(await buscarPedido(numero.trim().replace(/^#/, ""), email.trim()));
     } catch (err) {
-      setError(err.message === "Failed to fetch" ? "No pudimos conectarnos con el servidor. Probá de nuevo en un momento." : err.message);
+      setError(err.message);
     } finally {
       setBuscando(false);
     }
