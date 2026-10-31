@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/logo.webp";
 import { CATEGORIAS, plata, precioDesde } from "../../data/piezas";
 import { useCatalogo } from "../../context/CatalogoContext";
-import PiezaPreview from "../../components/PiezaPreview/PiezaPreview";
+import Pieza3D from "../../components/Pieza3D/Pieza3D";
 import Icono from "../../components/Icono/Icono";
 import "./Home.scss";
 
@@ -102,15 +102,16 @@ const Home = () => {
           </div>
         ) : (
           <div className="catalogo">
-            {piezas.map((p) => (
+            {piezas.map((p, i) => (
               <article key={p.id} className="producto">
                 <div className="producto__imagen">
-                  {/* TODO: reemplazar por la foto real de la pieza cuando la tengamos */}
-                  <PiezaPreview
+                  {/* Cada tarjeta arranca desfasada para que no se muevan todas iguales. */}
+                  <Pieza3D
+                    compacta
                     forma={p.forma}
                     {...p.muestra}
-                    etiqueta={`Ejemplo de ${p.nombre.toLowerCase()}`}
-                    className="producto__preview"
+                    giroInicial={-20 + i * 15}
+                    etiqueta={`Ejemplo de ${p.nombre.toLowerCase()}, en 3D`}
                   />
                   {p.nuevo && <span className="producto__nuevo">Nuevo</span>}
                 </div>

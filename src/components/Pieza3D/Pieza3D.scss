@@ -65,6 +65,17 @@
     pointer-events: none;
   }
 
+  // Tarjetas del catálogo: sin fondo propio (lo pone la tarjeta) y dejando
+  // que el dedo desplace la página hacia arriba y abajo.
+  &--compacta &__escenario {
+    max-width: none;
+    background: none;
+    border-radius: 0;
+    touch-action: pan-y;
+  }
+
+  &--compacta &__pieza { width: 70%; }
+
   &__controles {
     display: flex;
     flex-wrap: wrap;

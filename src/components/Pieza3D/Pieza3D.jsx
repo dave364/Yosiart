@@ -39,18 +39,35 @@ const Argolla = ({ cy, r }) => (
   </>
 );
 
-const Pieza3D = ({ forma = "hueso", color, glitter, nombre, letra, telefono, telefonoLado = "dorso", foto, tamanoCm }) => {
+// compacta: versión para las tarjetas del catálogo. Gira sola, se puede
+// arrastrar de costado, y no muestra botones ni la pista de "Arrastrá".
+const Pieza3D = ({
+  forma = "hueso",
+  color,
+  glitter,
+  nombre,
+  letra,
+  telefono,
+  telefonoLado = "dorso",
+  foto,
+  tamanoCm,
+  compacta = false,
+  giroInicial = -25,
+  etiqueta,
+}) => {
   const id = useId().replace(/:/g, "");
   const escenarioRef = useRef(null);
   const piezaRef = useRef(null);
   const sombraRef = useRef(null);
-  const giro = useRef({ rotY: -25, rotX: -8, vel: 0, arrastrando: false, x: 0, y: 0, objetivo: null });
+  const giro = useRef({ rotY: giroInicial, rotX: -8, vel: 0, arrastrando: false, x: 0, y: 0, objetivo: null });
   const reducir =
     typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   const [auto, setAuto] = useState(!reducir);
   const autoRef = useRef(auto);
   const [ancho, setAncho] = useState(0);
   const [tocado, setTocado] = useState(false);
+  // Fuera de pantalla no se anima: en el catálogo hay varias piezas a la vez.
+  const visible = useRef(true);
 
   useEffect(() => {
     autoRef.current = auto;
@@ -63,6 +80,16 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, letra, telefono, tel
     const ro = new ResizeObserver(() => setAncho(el.clientWidth));
     ro.observe(el);
     return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const el = escenarioRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([e]) => {
+      visible.current = e.isIntersecting;
+    });
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   // Dibuja la pose actual: giro, brillo, destellos y sombra.
@@ -89,7 +116,7 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, letra, telefono, tel
       const dt = Math.min(50, t - (prev || t));
       prev = t;
       const g = giro.current;
-      if (!g.arrastrando) {
+      if (!g.arrastrando && visible.current) {
         if (g.objetivo != null) {
           // Gira suave hasta mostrar la cara pedida (por ejemplo, el dorso con el teléfono).
           g.rotY += (g.objetivo - g.rotY) * Math.min(1, dt / 120);
@@ -100,6 +127,12 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, letra, telefono, tel
         } else if (Math.abs(g.vel) > 0.01) {
           g.rotY += g.vel * dt;
           g.vel *= Math.pow(0.9, dt / 16);
+        } else if (compacta && autoRef.current) {
+          // En el catálogo se balancea mostrando el frente, para que siempre
+          // se lea el nombre. Si la dieron vuelta, vuelve sola al frente.
+          const frente = Math.round(g.rotY / 360) * 360;
+          const meta = frente + 32 * Math.sin(t / 1300 + giroInicial);
+          g.rotY += (meta - g.rotY) * Math.min(1, dt / 400);
         } else if (autoRef.current) {
           g.rotY += 0.025 * dt;
         }
@@ -110,6 +143,7 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, letra, telefono, tel
     };
     raf = requestAnimationFrame(cuadro);
     return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Repinta enseguida cuando cambian las opciones (nuevas láminas, nuevos destellos).
@@ -184,14 +218,18 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, letra, telefono, tel
   const anchoPieza = tamanoCm ? ANCHO_BASE * Math.max(0.62, Math.min(1, tamanoCm / 6)) : ANCHO_BASE;
 
   return (
-    <div className="pieza3d">
+    <div className={`pieza3d${compacta ? " pieza3d--compacta" : ""}`}>
       <div
         ref={escenarioRef}
         className="pieza3d__escenario"
-        tabIndex={0}
+        tabIndex={compacta ? undefined : 0}
         role="img"
         aria-roledescription="vista 3D"
-        aria-label={`Vista 3D: ${f.nombre.toLowerCase()} con ${texto}, color ${c.nombre.toLowerCase()}. Usá las flechas izquierda y derecha para girarla.`}
+        aria-label={
+          compacta
+            ? etiqueta || `${f.nombre} con ${texto}, color ${c.nombre.toLowerCase()}`
+            : `Vista 3D: ${f.nombre.toLowerCase()} con ${texto}, color ${c.nombre.toLowerCase()}. Usá las flechas izquierda y derecha para girarla.`
+        }
         onPointerDown={alApretar}
         onPointerMove={alMover}
         onPointerUp={alSoltar}
@@ -333,20 +371,22 @@ const Pieza3D = ({ forma = "hueso", color, glitter, nombre, letra, telefono, tel
             </>
           )}
         </div>
-        {!tocado && <p className="pieza3d__pista">Arrastrá para girar</p>}
+        {!tocado && !compacta && <p className="pieza3d__pista">Arrastrá para girar</p>}
       </div>
 
-      <div className="pieza3d__controles">
-        <button type="button" className="chip" aria-pressed={auto} onClick={() => setAuto((v) => !v)}>
-          Giro automático
-        </button>
-        <button type="button" className="chip" onClick={() => mostrarCara("frente")}>
-          Ver frente
-        </button>
-        <button type="button" className="chip" onClick={() => mostrarCara("dorso")}>
-          Ver dorso
-        </button>
-      </div>
+      {!compacta && (
+        <div className="pieza3d__controles">
+          <button type="button" className="chip" aria-pressed={auto} onClick={() => setAuto((v) => !v)}>
+            Giro automático
+          </button>
+          <button type="button" className="chip" onClick={() => mostrarCara("frente")}>
+            Ver frente
+          </button>
+          <button type="button" className="chip" onClick={() => mostrarCara("dorso")}>
+            Ver dorso
+          </button>
+        </div>
+      )}
     </div>
   );
 };

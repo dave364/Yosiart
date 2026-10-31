@@ -66,7 +66,7 @@ export const PIEZAS = [
     lleva: { nombre: true, telefono: true, telefonoAtras: true, foto: false },
     precio: null,
     nuevo: true,
-    muestra: { color: "rosa", glitter: "dorado", nombre: "Luna", telefono: "" },
+    muestra: { color: "rosa", glitter: "dorado", nombre: "Luna", letra: "negro", telefono: "" },
   },
   {
     id: "llavero-corazon-foto",
@@ -77,7 +77,7 @@ export const PIEZAS = [
     lleva: { nombre: true, telefono: false, foto: true },
     precio: null,
     nuevo: false,
-    muestra: { color: "lila", glitter: "plateado", nombre: "Miel", telefono: "" },
+    muestra: { color: "lila", glitter: "plateado", nombre: "Miel", letra: "plateado", telefono: "" },
   },
   {
     id: "llavero-huellita",
@@ -88,7 +88,7 @@ export const PIEZAS = [
     lleva: { nombre: true, telefono: true, foto: false },
     precio: null,
     nuevo: false,
-    muestra: { color: "negro", glitter: "dorado", nombre: "Toby", telefono: "" },
+    muestra: { color: "negro", glitter: "dorado", nombre: "Toby", letra: "plateado", telefono: "" },
   },
   {
     id: "posavasos",
@@ -99,7 +99,7 @@ export const PIEZAS = [
     lleva: { nombre: true, telefono: false, foto: false },
     precio: null,
     nuevo: false,
-    muestra: { color: "turquesa", glitter: "plateado", nombre: "Casa", telefono: "" },
+    muestra: { color: "turquesa", glitter: "plateado", nombre: "Casa", letra: "plateado", telefono: "" },
   },
 ];
 
