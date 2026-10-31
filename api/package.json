@@ -10,7 +10,8 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "db:setup": "node src/scripts/setup.js",
-    "db:seed": "node src/scripts/seed.js"
+    "db:seed": "node src/scripts/seed.js",
+    "test": "node test/correr.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

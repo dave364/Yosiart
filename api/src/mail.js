@@ -1,6 +1,6 @@
 // Envio de correos. Todo el contacto con el proveedor vive aca:
 // cambiar de Brevo a otro servicio es tocar solo la funcion enviar().
-import { BREVO_API_KEY, MAIL_FROM_EMAIL, MAIL_FROM_NOMBRE, SITIO_URL, API_URL, ADMIN_EMAIL } from "./config.js";
+import { BREVO_API_KEY, BREVO_API_URL, MAIL_FROM_EMAIL, MAIL_FROM_NOMBRE, SITIO_URL, API_URL, ADMIN_EMAIL } from "./config.js";
 
 // Las fotos se guardan como "/api/fotos/<id>"; en un correo hace falta
 // la direccion completa.
@@ -16,7 +16,7 @@ const enFondo = (promesa, contexto) =>
   segundoPlano(promesa.catch((err) => console.error(`[mail] ${contexto}:`, err.message)));
 import { describirPersonalizacion, ESTADOS_PEDIDO } from "./catalogo.js";
 
-const API = "https://api.brevo.com/v3/smtp/email";
+const API = BREVO_API_URL;
 
 // Punto de miles a mano. toLocaleString("es-AR") en el servidor no
 // agrupa los numeros de cuatro cifras (da "2800"), mientras que el

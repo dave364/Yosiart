@@ -33,3 +33,6 @@ dist/
 # Secretos locales de wrangler dev
 .dev.vars*
 .wrangler/
+
+# Resultado de la última corrida de pruebas con diferencias
+api/test/resultado.json

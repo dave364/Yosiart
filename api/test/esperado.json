@@ -1,0 +1,2308 @@
+{
+  "pasos": [
+    {
+      "paso": "health",
+      "status": 200,
+      "body": {
+        "ok": true
+      }
+    },
+    {
+      "paso": "ruta inexistente",
+      "status": 404,
+      "body": {
+        "error": "Ruta no encontrada."
+      }
+    },
+    {
+      "paso": "json roto",
+      "status": 400,
+      "body": {
+        "error": "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      }
+    },
+    {
+      "paso": "cuerpo muy grande",
+      "status": 413,
+      "body": {
+        "error": "El envio es demasiado pesado. Proba con fotos mas livianas."
+      }
+    },
+    {
+      "paso": "cors permitido",
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "cors": "http://localhost:5173"
+    },
+    {
+      "paso": "cors ajeno",
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "cors": null
+    },
+    {
+      "paso": "login admin",
+      "status": 200,
+      "body": {
+        "token": "<jwt>",
+        "usuario": {
+          "id": 1,
+          "nombre": "YosiArt",
+          "email": "admin@prueba.com",
+          "telefono": "",
+          "rol": "admin"
+        }
+      }
+    },
+    {
+      "paso": "registro",
+      "status": 201,
+      "body": {
+        "token": "<jwt>",
+        "usuario": {
+          "id": 4,
+          "nombre": "Ana Prueba",
+          "email": "ana@prueba.com",
+          "telefono": "5491123456789",
+          "rol": "cliente"
+        }
+      }
+    },
+    {
+      "paso": "registro repetido",
+      "status": 409,
+      "body": {
+        "error": "Ese email ya esta registrado."
+      }
+    },
+    {
+      "paso": "registro invalido",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "nombre",
+            "mensaje": "Escribí tu nombre y apellido."
+          },
+          {
+            "campo": "email",
+            "mensaje": "Revisá el email: tiene que ser como nombre@ejemplo.com"
+          },
+          {
+            "campo": "telefono",
+            "mensaje": "El teléfono tiene que tener 10 dígitos, con el código de área"
+          },
+          {
+            "campo": "password",
+            "mensaje": "La contraseña tiene que tener al menos 10 caracteres."
+          }
+        ]
+      }
+    },
+    {
+      "paso": "login ok",
+      "status": 200,
+      "body": {
+        "token": "<jwt>",
+        "usuario": {
+          "id": 4,
+          "nombre": "Ana Prueba",
+          "email": "ana@prueba.com",
+          "telefono": "5491123456789",
+          "rol": "cliente"
+        }
+      }
+    },
+    {
+      "paso": "login clave mala",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login inexistente",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login sin datos",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "email",
+            "mensaje": "Entrada inválida: se esperaba texto, recibido indefinido"
+          },
+          {
+            "campo": "password",
+            "mensaje": "Entrada inválida: se esperaba texto, recibido indefinido"
+          }
+        ]
+      }
+    },
+    {
+      "paso": "login cuenta bcrypt",
+      "status": 200,
+      "body": {
+        "token": "<jwt>",
+        "usuario": {
+          "id": 2,
+          "nombre": "Cliente Viejo",
+          "email": "viejo@prueba.com",
+          "telefono": "1122334455",
+          "rol": "cliente"
+        }
+      }
+    },
+    {
+      "paso": "login cuenta 100k",
+      "status": 200,
+      "body": {
+        "token": "<jwt>",
+        "usuario": {
+          "id": 3,
+          "nombre": "Cien Mil",
+          "email": "cienmil@prueba.com",
+          "telefono": "1122334455",
+          "rol": "cliente"
+        }
+      }
+    },
+    {
+      "paso": "me",
+      "status": 200,
+      "body": {
+        "usuario": {
+          "id": 4,
+          "nombre": "Ana Prueba",
+          "email": "ana@prueba.com",
+          "telefono": "5491123456789",
+          "rol": "cliente"
+        }
+      }
+    },
+    {
+      "paso": "me sin token",
+      "status": 401,
+      "body": {
+        "error": "Necesitas iniciar sesion."
+      }
+    },
+    {
+      "paso": "me token falso",
+      "status": 401,
+      "body": {
+        "error": "Necesitas iniciar sesion."
+      }
+    },
+    {
+      "paso": "recuperar existente",
+      "status": 200,
+      "body": {
+        "ok": true
+      }
+    },
+    {
+      "paso": "recuperar inexistente",
+      "status": 200,
+      "body": {
+        "ok": true
+      }
+    },
+    {
+      "paso": "restablecer",
+      "status": 200,
+      "body": {
+        "ok": true
+      }
+    },
+    {
+      "paso": "restablecer reusado",
+      "status": 400,
+      "body": {
+        "error": "El enlace vencio o ya fue usado. Pedi uno nuevo."
+      }
+    },
+    {
+      "paso": "restablecer token corto",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "token",
+            "mensaje": "Demasiado pequeño: se esperaba que texto tuviera >=20 caracteres"
+          }
+        ]
+      }
+    },
+    {
+      "paso": "login con clave nueva",
+      "status": 200,
+      "body": {
+        "token": "<jwt>",
+        "usuario": {
+          "id": 4,
+          "nombre": "Ana Prueba",
+          "email": "ana@prueba.com",
+          "telefono": "5491123456789",
+          "rol": "cliente"
+        }
+      }
+    },
+    {
+      "paso": "productos",
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "slug": "chapita-mascota",
+          "nombre": "Chapita para mascota",
+          "categoria": "mascotas",
+          "descripcion": "Hueso, círculo, pescadito o gatito, con nombre y teléfono.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "hueso",
+          "formas": [
+            "hueso",
+            "circulo",
+            "pescado",
+            "gato"
+          ],
+          "tamanos": {
+            "gato": [
+              {
+                "cm": 5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "mediano",
+                "nombre": "Mediano"
+              },
+              {
+                "cm": 3,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "hueso": [
+              {
+                "cm": 6,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4.5,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "circulo": [
+              {
+                "cm": 5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "mediano",
+                "nombre": "Mediano"
+              },
+              {
+                "cm": 3,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "pescado": [
+              {
+                "cm": 5.5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ]
+          },
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": true,
+            "telefonoAtras": true
+          },
+          "nuevo": true,
+          "orden": 1
+        },
+        {
+          "id": 2,
+          "slug": "llavero-corazon-foto",
+          "nombre": "Llavero corazón con foto",
+          "categoria": "llaveros",
+          "descripcion": "La foto de tu mascota o de quien quieras, dentro de la resina.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "corazon",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": true,
+            "nombre": true,
+            "telefono": false,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 2
+        },
+        {
+          "id": 3,
+          "slug": "llavero-huellita",
+          "nombre": "Llavero huellita",
+          "categoria": "llaveros",
+          "descripcion": "Fondo del color que elijas con huellita y nombre.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "huellita",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": true,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 3
+        },
+        {
+          "id": 4,
+          "slug": "posavasos",
+          "nombre": "Posavasos personalizado",
+          "categoria": "deco",
+          "descripcion": "Juego de 2, con el nombre o la inicial que quieras.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "posavasos",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": false,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 4
+        }
+      ]
+    },
+    {
+      "paso": "productos todos sin token",
+      "status": 401,
+      "body": {
+        "error": "Necesitas iniciar sesion."
+      }
+    },
+    {
+      "paso": "productos todos cliente",
+      "status": 403,
+      "body": {
+        "error": "No tenes permisos para esto."
+      }
+    },
+    {
+      "paso": "productos todos admin",
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "slug": "chapita-mascota",
+          "nombre": "Chapita para mascota",
+          "categoria": "mascotas",
+          "descripcion": "Hueso, círculo, pescadito o gatito, con nombre y teléfono.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "hueso",
+          "formas": [
+            "hueso",
+            "circulo",
+            "pescado",
+            "gato"
+          ],
+          "tamanos": {
+            "gato": [
+              {
+                "cm": 5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "mediano",
+                "nombre": "Mediano"
+              },
+              {
+                "cm": 3,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "hueso": [
+              {
+                "cm": 6,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4.5,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "circulo": [
+              {
+                "cm": 5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "mediano",
+                "nombre": "Mediano"
+              },
+              {
+                "cm": 3,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "pescado": [
+              {
+                "cm": 5.5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ]
+          },
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": true,
+            "telefonoAtras": true
+          },
+          "nuevo": true,
+          "orden": 1,
+          "activo": true
+        },
+        {
+          "id": 2,
+          "slug": "llavero-corazon-foto",
+          "nombre": "Llavero corazón con foto",
+          "categoria": "llaveros",
+          "descripcion": "La foto de tu mascota o de quien quieras, dentro de la resina.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "corazon",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": true,
+            "nombre": true,
+            "telefono": false,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 2,
+          "activo": true
+        },
+        {
+          "id": 3,
+          "slug": "llavero-huellita",
+          "nombre": "Llavero huellita",
+          "categoria": "llaveros",
+          "descripcion": "Fondo del color que elijas con huellita y nombre.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "huellita",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": true,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 3,
+          "activo": true
+        },
+        {
+          "id": 4,
+          "slug": "posavasos",
+          "nombre": "Posavasos personalizado",
+          "categoria": "deco",
+          "descripcion": "Juego de 2, con el nombre o la inicial que quieras.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "posavasos",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": false,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 4,
+          "activo": true
+        }
+      ]
+    },
+    {
+      "paso": "editar precios chapita",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "slug": "chapita-mascota",
+        "nombre": "Chapita para mascota",
+        "categoria": "mascotas",
+        "descripcion": "Hueso, círculo, pescadito o gatito, con nombre y teléfono.",
+        "precio": null,
+        "precios_tamano": {
+          "hueso:chico": 17000,
+          "hueso:grande": 20000,
+          "circulo:grande": 18500
+        },
+        "forma": "hueso",
+        "formas": [
+          "hueso",
+          "circulo",
+          "pescado",
+          "gato"
+        ],
+        "tamanos": {
+          "gato": [
+            {
+              "cm": 5,
+              "id": "grande",
+              "nombre": "Grande"
+            },
+            {
+              "cm": 4,
+              "id": "mediano",
+              "nombre": "Mediano"
+            },
+            {
+              "cm": 3,
+              "id": "chico",
+              "nombre": "Chico"
+            }
+          ],
+          "hueso": [
+            {
+              "cm": 6,
+              "id": "grande",
+              "nombre": "Grande"
+            },
+            {
+              "cm": 4.5,
+              "id": "chico",
+              "nombre": "Chico"
+            }
+          ],
+          "circulo": [
+            {
+              "cm": 5,
+              "id": "grande",
+              "nombre": "Grande"
+            },
+            {
+              "cm": 4,
+              "id": "mediano",
+              "nombre": "Mediano"
+            },
+            {
+              "cm": 3,
+              "id": "chico",
+              "nombre": "Chico"
+            }
+          ],
+          "pescado": [
+            {
+              "cm": 5.5,
+              "id": "grande",
+              "nombre": "Grande"
+            },
+            {
+              "cm": 4,
+              "id": "chico",
+              "nombre": "Chico"
+            }
+          ]
+        },
+        "lleva": {
+          "foto": false,
+          "nombre": true,
+          "telefono": true,
+          "telefonoAtras": true
+        },
+        "nuevo": true,
+        "orden": 1,
+        "activo": true
+      }
+    },
+    {
+      "paso": "precio llavero",
+      "status": 200,
+      "body": {
+        "id": 2,
+        "slug": "llavero-corazon-foto",
+        "nombre": "Llavero corazón con foto",
+        "categoria": "llaveros",
+        "descripcion": "La foto de tu mascota o de quien quieras, dentro de la resina.",
+        "precio": 9000,
+        "precios_tamano": {},
+        "forma": "corazon",
+        "formas": [],
+        "tamanos": {},
+        "lleva": {
+          "foto": true,
+          "nombre": true,
+          "telefono": false,
+          "telefonoAtras": false
+        },
+        "nuevo": false,
+        "orden": 2,
+        "activo": true
+      }
+    },
+    {
+      "paso": "editar inexistente",
+      "status": 404,
+      "body": {
+        "error": "Producto no encontrado."
+      }
+    },
+    {
+      "paso": "editar slug repetido",
+      "status": 409,
+      "body": {
+        "error": "Ya hay un producto con ese slug."
+      }
+    },
+    {
+      "paso": "editar como cliente",
+      "status": 403,
+      "body": {
+        "error": "No tenes permisos para esto."
+      }
+    },
+    {
+      "paso": "crear producto",
+      "status": 201,
+      "body": {
+        "id": 5,
+        "slug": "iman-prueba",
+        "nombre": "Imán de prueba",
+        "categoria": "deco",
+        "descripcion": "",
+        "precio": 5000,
+        "precios_tamano": {},
+        "forma": "circulo",
+        "formas": [],
+        "tamanos": {},
+        "lleva": {
+          "nombre": true
+        },
+        "nuevo": false,
+        "orden": 0,
+        "activo": true
+      }
+    },
+    {
+      "paso": "crear slug repetido",
+      "status": 409,
+      "body": {
+        "error": "Ya hay un producto con ese slug."
+      }
+    },
+    {
+      "paso": "crear invalido",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "slug",
+            "mensaje": "Solo letras, numeros y guiones"
+          },
+          {
+            "campo": "nombre",
+            "mensaje": "Demasiado pequeño: se esperaba que texto tuviera >=2 caracteres"
+          },
+          {
+            "campo": "categoria",
+            "mensaje": "Demasiado pequeño: se esperaba que texto tuviera >=2 caracteres"
+          },
+          {
+            "campo": "forma",
+            "mensaje": "Opción inválida: se esperaba una de \"hueso\"|\"circulo\"|\"pescado\"|\"gato\"|\"huellita\"|\"corazon\"|\"posavasos\""
+          }
+        ]
+      }
+    },
+    {
+      "paso": "productos con el nuevo",
+      "status": 200,
+      "body": [
+        {
+          "id": 5,
+          "slug": "iman-prueba",
+          "nombre": "Imán de prueba",
+          "categoria": "deco",
+          "descripcion": "",
+          "precio": 5000,
+          "precios_tamano": {},
+          "forma": "circulo",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "nombre": true
+          },
+          "nuevo": false,
+          "orden": 0
+        },
+        {
+          "id": 1,
+          "slug": "chapita-mascota",
+          "nombre": "Chapita para mascota",
+          "categoria": "mascotas",
+          "descripcion": "Hueso, círculo, pescadito o gatito, con nombre y teléfono.",
+          "precio": null,
+          "precios_tamano": {
+            "hueso:chico": 17000,
+            "hueso:grande": 20000,
+            "circulo:grande": 18500
+          },
+          "forma": "hueso",
+          "formas": [
+            "hueso",
+            "circulo",
+            "pescado",
+            "gato"
+          ],
+          "tamanos": {
+            "gato": [
+              {
+                "cm": 5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "mediano",
+                "nombre": "Mediano"
+              },
+              {
+                "cm": 3,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "hueso": [
+              {
+                "cm": 6,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4.5,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "circulo": [
+              {
+                "cm": 5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "mediano",
+                "nombre": "Mediano"
+              },
+              {
+                "cm": 3,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "pescado": [
+              {
+                "cm": 5.5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ]
+          },
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": true,
+            "telefonoAtras": true
+          },
+          "nuevo": true,
+          "orden": 1
+        },
+        {
+          "id": 2,
+          "slug": "llavero-corazon-foto",
+          "nombre": "Llavero corazón con foto",
+          "categoria": "llaveros",
+          "descripcion": "La foto de tu mascota o de quien quieras, dentro de la resina.",
+          "precio": 9000,
+          "precios_tamano": {},
+          "forma": "corazon",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": true,
+            "nombre": true,
+            "telefono": false,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 2
+        },
+        {
+          "id": 3,
+          "slug": "llavero-huellita",
+          "nombre": "Llavero huellita",
+          "categoria": "llaveros",
+          "descripcion": "Fondo del color que elijas con huellita y nombre.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "huellita",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": true,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 3
+        },
+        {
+          "id": 4,
+          "slug": "posavasos",
+          "nombre": "Posavasos personalizado",
+          "categoria": "deco",
+          "descripcion": "Juego de 2, con el nombre o la inicial que quieras.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "posavasos",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": false,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 4
+        }
+      ]
+    },
+    {
+      "paso": "desactivar producto",
+      "status": 200,
+      "body": {
+        "ok": true,
+        "mensaje": "Producto desactivado."
+      }
+    },
+    {
+      "paso": "desactivar inexistente",
+      "status": 404,
+      "body": {
+        "error": "Producto no encontrado."
+      }
+    },
+    {
+      "paso": "productos sin el desactivado",
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "slug": "chapita-mascota",
+          "nombre": "Chapita para mascota",
+          "categoria": "mascotas",
+          "descripcion": "Hueso, círculo, pescadito o gatito, con nombre y teléfono.",
+          "precio": null,
+          "precios_tamano": {
+            "hueso:chico": 17000,
+            "hueso:grande": 20000,
+            "circulo:grande": 18500
+          },
+          "forma": "hueso",
+          "formas": [
+            "hueso",
+            "circulo",
+            "pescado",
+            "gato"
+          ],
+          "tamanos": {
+            "gato": [
+              {
+                "cm": 5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "mediano",
+                "nombre": "Mediano"
+              },
+              {
+                "cm": 3,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "hueso": [
+              {
+                "cm": 6,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4.5,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "circulo": [
+              {
+                "cm": 5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "mediano",
+                "nombre": "Mediano"
+              },
+              {
+                "cm": 3,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ],
+            "pescado": [
+              {
+                "cm": 5.5,
+                "id": "grande",
+                "nombre": "Grande"
+              },
+              {
+                "cm": 4,
+                "id": "chico",
+                "nombre": "Chico"
+              }
+            ]
+          },
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": true,
+            "telefonoAtras": true
+          },
+          "nuevo": true,
+          "orden": 1
+        },
+        {
+          "id": 2,
+          "slug": "llavero-corazon-foto",
+          "nombre": "Llavero corazón con foto",
+          "categoria": "llaveros",
+          "descripcion": "La foto de tu mascota o de quien quieras, dentro de la resina.",
+          "precio": 9000,
+          "precios_tamano": {},
+          "forma": "corazon",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": true,
+            "nombre": true,
+            "telefono": false,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 2
+        },
+        {
+          "id": 3,
+          "slug": "llavero-huellita",
+          "nombre": "Llavero huellita",
+          "categoria": "llaveros",
+          "descripcion": "Fondo del color que elijas con huellita y nombre.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "huellita",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": true,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 3
+        },
+        {
+          "id": 4,
+          "slug": "posavasos",
+          "nombre": "Posavasos personalizado",
+          "categoria": "deco",
+          "descripcion": "Juego de 2, con el nombre o la inicial que quieras.",
+          "precio": null,
+          "precios_tamano": {},
+          "forma": "posavasos",
+          "formas": [],
+          "tamanos": {},
+          "lleva": {
+            "foto": false,
+            "nombre": true,
+            "telefono": false,
+            "telefonoAtras": false
+          },
+          "nuevo": false,
+          "orden": 4
+        }
+      ]
+    },
+    {
+      "paso": "pedido invitado",
+      "status": 201,
+      "body": {
+        "id": 1,
+        "numero": "0001",
+        "estado": "pendiente",
+        "cliente_nombre": "Ana Prueba",
+        "cliente_email": "ana@prueba.com",
+        "cliente_telefono": "5491123456789",
+        "total": 49000,
+        "creado_en": "<fecha>",
+        "items": [
+          {
+            "nombre": "Chapita para mascota",
+            "precio_unitario": 20000,
+            "cantidad": 2,
+            "personalizacion": {
+              "forma": "hueso",
+              "tamano": "grande",
+              "tamanoNombre": "Grande",
+              "tamanoCm": 6,
+              "color": "rosa",
+              "glitter": "dorado",
+              "nombre": "Luna",
+              "letra": "negro",
+              "telefono": "11 2233-4455",
+              "telefonoLado": "dorso",
+              "foto": null
+            }
+          },
+          {
+            "nombre": "Llavero corazón con foto",
+            "precio_unitario": 9000,
+            "cantidad": 1,
+            "personalizacion": {
+              "forma": "corazon",
+              "tamano": null,
+              "tamanoNombre": null,
+              "tamanoCm": null,
+              "color": "lila",
+              "glitter": "plateado",
+              "nombre": "Miel",
+              "letra": "plateado",
+              "telefono": null,
+              "telefonoLado": null,
+              "foto": "/api/fotos/<foto>"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "paso": "pedido con cuenta",
+      "status": 201,
+      "body": {
+        "id": 2,
+        "numero": "0002",
+        "estado": "pendiente",
+        "cliente_nombre": "Ana Prueba",
+        "cliente_email": "ana@prueba.com",
+        "cliente_telefono": "5491123456789",
+        "total": null,
+        "creado_en": "<fecha>",
+        "items": [
+          {
+            "nombre": "Chapita para mascota",
+            "precio_unitario": null,
+            "cantidad": 2,
+            "personalizacion": {
+              "forma": "circulo",
+              "tamano": "mediano",
+              "tamanoNombre": "Mediano",
+              "tamanoCm": 4,
+              "color": "rosa",
+              "glitter": "dorado",
+              "nombre": "Luna",
+              "letra": "plateado",
+              "telefono": null,
+              "telefonoLado": null,
+              "foto": null
+            }
+          },
+          {
+            "nombre": "Posavasos personalizado",
+            "precio_unitario": null,
+            "cantidad": 1,
+            "personalizacion": {
+              "forma": "posavasos",
+              "tamano": null,
+              "tamanoNombre": null,
+              "tamanoCm": null,
+              "color": "turquesa",
+              "glitter": "sin",
+              "nombre": "Casa",
+              "letra": "plateado",
+              "telefono": null,
+              "telefonoLado": null,
+              "foto": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "paso": "pedido forma invalida",
+      "status": 400,
+      "body": {
+        "error": "\"Chapita para mascota\" no viene en esa forma."
+      }
+    },
+    {
+      "paso": "pedido tamaño invalido",
+      "status": 400,
+      "body": {
+        "error": "\"Chapita para mascota\" no viene en ese tamaño."
+      }
+    },
+    {
+      "paso": "pedido sin nombre",
+      "status": 400,
+      "body": {
+        "error": "Falta el nombre que va en \"Chapita para mascota\"."
+      }
+    },
+    {
+      "paso": "pedido sin foto",
+      "status": 400,
+      "body": {
+        "error": "Falta la foto que va en \"Llavero corazón con foto\"."
+      }
+    },
+    {
+      "paso": "pedido foto que no es imagen",
+      "status": 400,
+      "body": {
+        "error": "El archivo de la foto no es una imagen valida."
+      }
+    },
+    {
+      "paso": "pedido telefono malo",
+      "status": 400,
+      "body": {
+        "error": "El teléfono de \"Chapita para mascota\" tiene que tener 10 dígitos con el código de área."
+      }
+    },
+    {
+      "paso": "pedido pieza inexistente",
+      "status": 400,
+      "body": {
+        "error": "La pieza \"no-existe\" ya no está disponible."
+      }
+    },
+    {
+      "paso": "pedido pieza desactivada",
+      "status": 400,
+      "body": {
+        "error": "La pieza \"iman-prueba\" ya no está disponible."
+      }
+    },
+    {
+      "paso": "pedido color invalido",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "items.0.personalizacion.color",
+            "mensaje": "Opción inválida: se esperaba una de \"frambuesa\"|\"rosa\"|\"lila\"|\"turquesa\"|\"negro\""
+          }
+        ]
+      }
+    },
+    {
+      "paso": "pedido letra invalida",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "items.0.personalizacion.letra",
+            "mensaje": "Opción inválida: se esperaba una de \"plateado\"|\"negro\""
+          }
+        ]
+      }
+    },
+    {
+      "paso": "pedido sin items",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "items",
+            "mensaje": "Demasiado pequeño: se esperaba que arreglo tuviera >=1 elementos"
+          }
+        ]
+      }
+    },
+    {
+      "paso": "pedido muy pesado",
+      "status": 413,
+      "body": {
+        "error": "El envio es demasiado pesado. Proba con fotos mas livianas."
+      }
+    },
+    {
+      "paso": "ver foto",
+      "status": 200,
+      "body": {
+        "bytes": 70
+      },
+      "tipo": "image/png"
+    },
+    {
+      "paso": "foto id invalido",
+      "status": 404,
+      "body": {
+        "error": "Foto no encontrada."
+      }
+    },
+    {
+      "paso": "foto inexistente",
+      "status": 404,
+      "body": {
+        "error": "Foto no encontrada."
+      }
+    },
+    {
+      "paso": "mis pedidos",
+      "status": 200,
+      "body": [
+        {
+          "id": 2,
+          "numero": "0002",
+          "usuario_id": 4,
+          "cliente_nombre": "Ana Prueba",
+          "cliente_email": "ana@prueba.com",
+          "cliente_telefono": "5491123456789",
+          "estado": "pendiente",
+          "total": null,
+          "creado_en": "<fecha>",
+          "actualizado_en": "<fecha>",
+          "items": [
+            {
+              "nombre": "Chapita para mascota",
+              "precio_unitario": null,
+              "cantidad": 2,
+              "personalizacion": {
+                "foto": null,
+                "color": "rosa",
+                "forma": "circulo",
+                "letra": "plateado",
+                "nombre": "Luna",
+                "tamano": "mediano",
+                "glitter": "dorado",
+                "tamanoCm": 4,
+                "telefono": null,
+                "tamanoNombre": "Mediano",
+                "telefonoLado": null
+              }
+            },
+            {
+              "nombre": "Posavasos personalizado",
+              "precio_unitario": null,
+              "cantidad": 1,
+              "personalizacion": {
+                "foto": null,
+                "color": "turquesa",
+                "forma": "posavasos",
+                "letra": "plateado",
+                "nombre": "Casa",
+                "tamano": null,
+                "glitter": "sin",
+                "tamanoCm": null,
+                "telefono": null,
+                "tamanoNombre": null,
+                "telefonoLado": null
+              }
+            }
+          ],
+          "historial": [
+            {
+              "estado": "pendiente",
+              "nota": "Pedido recibido",
+              "fecha": "<fecha>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "paso": "mis pedidos sin token",
+      "status": 401,
+      "body": {
+        "error": "Necesitas iniciar sesion."
+      }
+    },
+    {
+      "paso": "seguimiento",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "numero": "0001",
+        "cliente_nombre": "Ana Prueba",
+        "cliente_email": "ana@prueba.com",
+        "estado": "pendiente",
+        "total": 49000,
+        "creado_en": "<fecha>",
+        "actualizado_en": "<fecha>",
+        "items": [
+          {
+            "nombre": "Chapita para mascota",
+            "precio_unitario": 20000,
+            "cantidad": 2,
+            "personalizacion": {
+              "foto": null,
+              "color": "rosa",
+              "forma": "hueso",
+              "letra": "negro",
+              "nombre": "Luna",
+              "tamano": "grande",
+              "glitter": "dorado",
+              "tamanoCm": 6,
+              "telefono": "11 2233-4455",
+              "tamanoNombre": "Grande",
+              "telefonoLado": "dorso"
+            }
+          },
+          {
+            "nombre": "Llavero corazón con foto",
+            "precio_unitario": 9000,
+            "cantidad": 1,
+            "personalizacion": {
+              "foto": "/api/fotos/<foto>",
+              "color": "lila",
+              "forma": "corazon",
+              "letra": "plateado",
+              "nombre": "Miel",
+              "tamano": null,
+              "glitter": "plateado",
+              "tamanoCm": null,
+              "telefono": null,
+              "tamanoNombre": null,
+              "telefonoLado": null
+            }
+          }
+        ],
+        "historial": [
+          {
+            "estado": "pendiente",
+            "nota": "Pedido recibido",
+            "fecha": "<fecha>"
+          }
+        ]
+      }
+    },
+    {
+      "paso": "seguimiento email ajeno",
+      "status": 404,
+      "body": {
+        "error": "No encontramos un pedido con ese número y ese email."
+      }
+    },
+    {
+      "paso": "seguimiento numero invalido",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "numero",
+            "mensaje": "Cadena inválida: debe coincidir con el patrón /^\\d{1,10}$/"
+          }
+        ]
+      }
+    },
+    {
+      "paso": "pedidos admin",
+      "status": 200,
+      "body": [
+        {
+          "id": 2,
+          "numero": "0002",
+          "usuario_id": 4,
+          "cliente_nombre": "Ana Prueba",
+          "cliente_email": "ana@prueba.com",
+          "cliente_telefono": "5491123456789",
+          "estado": "pendiente",
+          "total": null,
+          "creado_en": "<fecha>",
+          "actualizado_en": "<fecha>",
+          "items": [
+            {
+              "nombre": "Chapita para mascota",
+              "precio_unitario": null,
+              "cantidad": 2,
+              "personalizacion": {
+                "foto": null,
+                "color": "rosa",
+                "forma": "circulo",
+                "letra": "plateado",
+                "nombre": "Luna",
+                "tamano": "mediano",
+                "glitter": "dorado",
+                "tamanoCm": 4,
+                "telefono": null,
+                "tamanoNombre": "Mediano",
+                "telefonoLado": null
+              }
+            },
+            {
+              "nombre": "Posavasos personalizado",
+              "precio_unitario": null,
+              "cantidad": 1,
+              "personalizacion": {
+                "foto": null,
+                "color": "turquesa",
+                "forma": "posavasos",
+                "letra": "plateado",
+                "nombre": "Casa",
+                "tamano": null,
+                "glitter": "sin",
+                "tamanoCm": null,
+                "telefono": null,
+                "tamanoNombre": null,
+                "telefonoLado": null
+              }
+            }
+          ],
+          "historial": [
+            {
+              "estado": "pendiente",
+              "nota": "Pedido recibido",
+              "fecha": "<fecha>"
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "numero": "0001",
+          "usuario_id": null,
+          "cliente_nombre": "Ana Prueba",
+          "cliente_email": "ana@prueba.com",
+          "cliente_telefono": "5491123456789",
+          "estado": "pendiente",
+          "total": 49000,
+          "creado_en": "<fecha>",
+          "actualizado_en": "<fecha>",
+          "items": [
+            {
+              "nombre": "Chapita para mascota",
+              "precio_unitario": 20000,
+              "cantidad": 2,
+              "personalizacion": {
+                "foto": null,
+                "color": "rosa",
+                "forma": "hueso",
+                "letra": "negro",
+                "nombre": "Luna",
+                "tamano": "grande",
+                "glitter": "dorado",
+                "tamanoCm": 6,
+                "telefono": "11 2233-4455",
+                "tamanoNombre": "Grande",
+                "telefonoLado": "dorso"
+              }
+            },
+            {
+              "nombre": "Llavero corazón con foto",
+              "precio_unitario": 9000,
+              "cantidad": 1,
+              "personalizacion": {
+                "foto": "/api/fotos/<foto>",
+                "color": "lila",
+                "forma": "corazon",
+                "letra": "plateado",
+                "nombre": "Miel",
+                "tamano": null,
+                "glitter": "plateado",
+                "tamanoCm": null,
+                "telefono": null,
+                "tamanoNombre": null,
+                "telefonoLado": null
+              }
+            }
+          ],
+          "historial": [
+            {
+              "estado": "pendiente",
+              "nota": "Pedido recibido",
+              "fecha": "<fecha>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "paso": "pedidos admin filtro",
+      "status": 200,
+      "body": [
+        {
+          "id": 2,
+          "numero": "0002",
+          "usuario_id": 4,
+          "cliente_nombre": "Ana Prueba",
+          "cliente_email": "ana@prueba.com",
+          "cliente_telefono": "5491123456789",
+          "estado": "pendiente",
+          "total": null,
+          "creado_en": "<fecha>",
+          "actualizado_en": "<fecha>",
+          "items": [
+            {
+              "nombre": "Chapita para mascota",
+              "precio_unitario": null,
+              "cantidad": 2,
+              "personalizacion": {
+                "foto": null,
+                "color": "rosa",
+                "forma": "circulo",
+                "letra": "plateado",
+                "nombre": "Luna",
+                "tamano": "mediano",
+                "glitter": "dorado",
+                "tamanoCm": 4,
+                "telefono": null,
+                "tamanoNombre": "Mediano",
+                "telefonoLado": null
+              }
+            },
+            {
+              "nombre": "Posavasos personalizado",
+              "precio_unitario": null,
+              "cantidad": 1,
+              "personalizacion": {
+                "foto": null,
+                "color": "turquesa",
+                "forma": "posavasos",
+                "letra": "plateado",
+                "nombre": "Casa",
+                "tamano": null,
+                "glitter": "sin",
+                "tamanoCm": null,
+                "telefono": null,
+                "tamanoNombre": null,
+                "telefonoLado": null
+              }
+            }
+          ],
+          "historial": [
+            {
+              "estado": "pendiente",
+              "nota": "Pedido recibido",
+              "fecha": "<fecha>"
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "numero": "0001",
+          "usuario_id": null,
+          "cliente_nombre": "Ana Prueba",
+          "cliente_email": "ana@prueba.com",
+          "cliente_telefono": "5491123456789",
+          "estado": "pendiente",
+          "total": 49000,
+          "creado_en": "<fecha>",
+          "actualizado_en": "<fecha>",
+          "items": [
+            {
+              "nombre": "Chapita para mascota",
+              "precio_unitario": 20000,
+              "cantidad": 2,
+              "personalizacion": {
+                "foto": null,
+                "color": "rosa",
+                "forma": "hueso",
+                "letra": "negro",
+                "nombre": "Luna",
+                "tamano": "grande",
+                "glitter": "dorado",
+                "tamanoCm": 6,
+                "telefono": "11 2233-4455",
+                "tamanoNombre": "Grande",
+                "telefonoLado": "dorso"
+              }
+            },
+            {
+              "nombre": "Llavero corazón con foto",
+              "precio_unitario": 9000,
+              "cantidad": 1,
+              "personalizacion": {
+                "foto": "/api/fotos/<foto>",
+                "color": "lila",
+                "forma": "corazon",
+                "letra": "plateado",
+                "nombre": "Miel",
+                "tamano": null,
+                "glitter": "plateado",
+                "tamanoCm": null,
+                "telefono": null,
+                "tamanoNombre": null,
+                "telefonoLado": null
+              }
+            }
+          ],
+          "historial": [
+            {
+              "estado": "pendiente",
+              "nota": "Pedido recibido",
+              "fecha": "<fecha>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "paso": "pedidos filtro invalido",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "",
+            "mensaje": "Opción inválida: se esperaba una de \"pendiente\"|\"confirmado\"|\"en_preparacion\"|\"listo\"|\"enviado\"|\"entregado\"|\"cancelado\""
+          }
+        ]
+      }
+    },
+    {
+      "paso": "pedidos como cliente",
+      "status": 403,
+      "body": {
+        "error": "No tenes permisos para esto."
+      }
+    },
+    {
+      "paso": "cambiar estado",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "numero": "0001",
+        "estado": "confirmado",
+        "cliente_nombre": "Ana Prueba",
+        "cliente_email": "ana@prueba.com",
+        "total": 49000
+      }
+    },
+    {
+      "paso": "cambiar estado inexistente",
+      "status": 404,
+      "body": {
+        "error": "Pedido no encontrado."
+      }
+    },
+    {
+      "paso": "cambiar estado invalido",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "estado",
+            "mensaje": "Opción inválida: se esperaba una de \"pendiente\"|\"confirmado\"|\"en_preparacion\"|\"listo\"|\"enviado\"|\"entregado\"|\"cancelado\""
+          }
+        ]
+      }
+    },
+    {
+      "paso": "cargar total",
+      "status": 200,
+      "body": {
+        "id": 2,
+        "numero": "0002",
+        "total": 12345.68
+      }
+    },
+    {
+      "paso": "cargar total inexistente",
+      "status": 404,
+      "body": {
+        "error": "Pedido no encontrado."
+      }
+    },
+    {
+      "paso": "pedido con historial",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "numero": "0001",
+        "cliente_nombre": "Ana Prueba",
+        "cliente_email": "ana@prueba.com",
+        "estado": "confirmado",
+        "total": 49000,
+        "creado_en": "<fecha>",
+        "actualizado_en": "<fecha>",
+        "items": [
+          {
+            "nombre": "Chapita para mascota",
+            "precio_unitario": 20000,
+            "cantidad": 2,
+            "personalizacion": {
+              "foto": null,
+              "color": "rosa",
+              "forma": "hueso",
+              "letra": "negro",
+              "nombre": "Luna",
+              "tamano": "grande",
+              "glitter": "dorado",
+              "tamanoCm": 6,
+              "telefono": "11 2233-4455",
+              "tamanoNombre": "Grande",
+              "telefonoLado": "dorso"
+            }
+          },
+          {
+            "nombre": "Llavero corazón con foto",
+            "precio_unitario": 9000,
+            "cantidad": 1,
+            "personalizacion": {
+              "foto": "/api/fotos/<foto>",
+              "color": "lila",
+              "forma": "corazon",
+              "letra": "plateado",
+              "nombre": "Miel",
+              "tamano": null,
+              "glitter": "plateado",
+              "tamanoCm": null,
+              "telefono": null,
+              "tamanoNombre": null,
+              "telefonoLado": null
+            }
+          }
+        ],
+        "historial": [
+          {
+            "estado": "pendiente",
+            "nota": "Pedido recibido",
+            "fecha": "<fecha>"
+          },
+          {
+            "estado": "confirmado",
+            "nota": "¡Arrancamos!",
+            "fecha": "<fecha>"
+          }
+        ]
+      }
+    },
+    {
+      "paso": "presupuesto",
+      "status": 201,
+      "body": {
+        "id": 1,
+        "estado": "nuevo"
+      }
+    },
+    {
+      "paso": "presupuesto invalido",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "tipo",
+            "mensaje": "Opción inválida: se esperaba una de \"Souvenirs para un evento\"|\"Pieza única a medida\"|\"Regalo personalizado\"|\"Otro\""
+          },
+          {
+            "campo": "descripcion",
+            "mensaje": "Demasiado pequeño: se esperaba que texto tuviera >=10 caracteres"
+          }
+        ]
+      }
+    },
+    {
+      "paso": "presupuestos admin",
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "usuario_id": null,
+          "nombre": "Ana Prueba",
+          "email": "ana@prueba.com",
+          "telefono": null,
+          "tipo": "Souvenirs para un evento",
+          "cantidad": 40,
+          "fecha_evento": "<fecha>",
+          "descripcion": "40 llaveros lila para un cumple de 15",
+          "fotos": [
+            "/api/fotos/<foto>"
+          ],
+          "estado": "nuevo",
+          "respuesta": null,
+          "precio": null,
+          "creado_en": "<fecha>"
+        }
+      ]
+    },
+    {
+      "paso": "presupuestos filtro",
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "usuario_id": null,
+          "nombre": "Ana Prueba",
+          "email": "ana@prueba.com",
+          "telefono": null,
+          "tipo": "Souvenirs para un evento",
+          "cantidad": 40,
+          "fecha_evento": "<fecha>",
+          "descripcion": "40 llaveros lila para un cumple de 15",
+          "fotos": [
+            "/api/fotos/<foto>"
+          ],
+          "estado": "nuevo",
+          "respuesta": null,
+          "precio": null,
+          "creado_en": "<fecha>"
+        }
+      ]
+    },
+    {
+      "paso": "presupuestos como cliente",
+      "status": 403,
+      "body": {
+        "error": "No tenes permisos para esto."
+      }
+    },
+    {
+      "paso": "responder presupuesto",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "usuario_id": null,
+        "nombre": "Ana Prueba",
+        "email": "ana@prueba.com",
+        "telefono": null,
+        "tipo": "Souvenirs para un evento",
+        "cantidad": 40,
+        "fecha_evento": "<fecha>",
+        "descripcion": "40 llaveros lila para un cumple de 15",
+        "fotos": [
+          "/api/fotos/<foto>"
+        ],
+        "estado": "respondido",
+        "respuesta": "Te sale $2.500 cada uno.",
+        "precio": 100000,
+        "creado_en": "<fecha>"
+      }
+    },
+    {
+      "paso": "presupuesto aceptado sin respuesta",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "usuario_id": null,
+        "nombre": "Ana Prueba",
+        "email": "ana@prueba.com",
+        "telefono": null,
+        "tipo": "Souvenirs para un evento",
+        "cantidad": 40,
+        "fecha_evento": "<fecha>",
+        "descripcion": "40 llaveros lila para un cumple de 15",
+        "fotos": [
+          "/api/fotos/<foto>"
+        ],
+        "estado": "aceptado",
+        "respuesta": "Te sale $2.500 cada uno.",
+        "precio": 100000,
+        "creado_en": "<fecha>"
+      }
+    },
+    {
+      "paso": "responder inexistente",
+      "status": 404,
+      "body": {
+        "error": "Presupuesto no encontrado."
+      }
+    },
+    {
+      "paso": "clientes",
+      "status": 200,
+      "body": [
+        {
+          "id": 4,
+          "nombre": "Ana Prueba",
+          "email": "ana@prueba.com",
+          "telefono": "5491123456789",
+          "rol": "cliente",
+          "activo": true,
+          "creado_en": "<fecha>",
+          "pedidos": 1,
+          "gastado": 12345.68,
+          "pendientes": 1
+        },
+        {
+          "id": 2,
+          "nombre": "Cliente Viejo",
+          "email": "viejo@prueba.com",
+          "telefono": "1122334455",
+          "rol": "cliente",
+          "activo": true,
+          "creado_en": "<fecha>",
+          "pedidos": 0,
+          "gastado": 0,
+          "pendientes": 0
+        },
+        {
+          "id": 3,
+          "nombre": "Cien Mil",
+          "email": "cienmil@prueba.com",
+          "telefono": "1122334455",
+          "rol": "cliente",
+          "activo": true,
+          "creado_en": "<fecha>",
+          "pedidos": 0,
+          "gastado": 0,
+          "pendientes": 0
+        },
+        {
+          "id": 1,
+          "nombre": "YosiArt",
+          "email": "admin@prueba.com",
+          "telefono": "",
+          "rol": "admin",
+          "activo": true,
+          "creado_en": "<fecha>",
+          "pedidos": 0,
+          "gastado": 0,
+          "pendientes": 0
+        }
+      ]
+    },
+    {
+      "paso": "clientes como cliente",
+      "status": 403,
+      "body": {
+        "error": "No tenes permisos para esto."
+      }
+    },
+    {
+      "paso": "suspender",
+      "status": 200,
+      "body": {
+        "id": 4,
+        "activo": false
+      }
+    },
+    {
+      "paso": "login suspendido",
+      "status": 403,
+      "body": {
+        "error": "Tu cuenta esta suspendida. Escribinos a nuestro correo."
+      }
+    },
+    {
+      "paso": "pedido suspendido",
+      "status": 403,
+      "body": {
+        "error": "Tu cuenta está suspendida."
+      }
+    },
+    {
+      "paso": "reactivar",
+      "status": 200,
+      "body": {
+        "id": 4,
+        "activo": true
+      }
+    },
+    {
+      "paso": "suspenderse a si mismo",
+      "status": 400,
+      "body": {
+        "error": "No podes suspender tu propia cuenta."
+      }
+    },
+    {
+      "paso": "suspender inexistente",
+      "status": 404,
+      "body": {
+        "error": "Ese cliente no existe."
+      }
+    },
+    {
+      "paso": "login repetido 1",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login repetido 2",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login repetido 3",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login repetido 4",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login repetido 5",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login repetido 6",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login repetido 7",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login repetido 8",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login repetido 9",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login repetido 10",
+      "status": 401,
+      "body": {
+        "error": "Email o contrasena incorrectos."
+      }
+    },
+    {
+      "paso": "login repetido 11",
+      "status": 429,
+      "body": {
+        "error": "Demasiados intentos. Espera unos minutos y volve a probar."
+      },
+      "retryAfter": true
+    },
+    {
+      "paso": "recuperar repetido 1",
+      "status": 200,
+      "body": {
+        "ok": true
+      }
+    },
+    {
+      "paso": "recuperar repetido 2",
+      "status": 200,
+      "body": {
+        "ok": true
+      }
+    },
+    {
+      "paso": "recuperar repetido 3",
+      "status": 200,
+      "body": {
+        "ok": true
+      }
+    },
+    {
+      "paso": "recuperar repetido 4",
+      "status": 429,
+      "body": {
+        "error": "Ya pediste varios enlaces. Revisa tu correo, incluido spam."
+      },
+      "retryAfter": true
+    }
+  ],
+  "correos": [
+    {
+      "clave": "xkeysib-pruebas",
+      "de": {
+        "email": "hola@yosiart.test",
+        "name": "YosiArt"
+      },
+      "to": "admin@prueba.com",
+      "asunto": "Pedido nuevo #0001 - Ana Prueba",
+      "html": "<!DOCTYPE html>\n<html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>\n<body style=\"margin:0;padding:16px;background:#f4f4f4;font-family:Arial,Helvetica,sans-serif;color:#3A1A2A;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:520px;margin:0 auto;background:#ffffff;border-radius:14px;\">\n    <tr><td style=\"padding:22px;\">\n      <div style=\"font-size:13px;color:#7A5468;font-weight:bold;letter-spacing:1px;\">PEDIDO NUEVO</div>\n      <div style=\"font-size:28px;font-weight:bold;color:#A8124C;margin:4px 0 14px;\">#0001 · $49.000</div>\n     <div style=\"font-size:16px;font-weight:bold;\">Ana Prueba</div>\n     <div style=\"font-size:14px;\">ana@prueba.com · 5491123456789</div>\n     <div style=\"font-size:13px;color:#7A5468;margin-bottom:14px;\">Compra como invitado</div>\n     <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"font-size:14px;\">\n      <tr>\n        <td style=\"padding:10px 0;vertical-align:top;border-bottom:1px solid #F8E1EA;\">\n          <div style=\"font-weight:bold;\">2 × Chapita para mascota</div>\n          <div style=\"font-size:13px;color:#7A5468;\">Hueso grande · Rosa chicle · Glitter dorado · «Luna» · Letra negra · Tel. 11 2233-4455 (dorso)</div>\n        </td>\n        <td align=\"right\" style=\"padding:10px 0 10px 12px;vertical-align:top;white-space:nowrap;border-bottom:1px solid #F8E1EA;\">\n          $40.000\n        </td>\n      </tr>\n      <tr>\n        <td style=\"padding:10px 0;vertical-align:top;border-bottom:1px solid #F8E1EA;\">\n          <div style=\"font-weight:bold;\">1 × Llavero corazón con foto</div>\n          <div style=\"font-size:13px;color:#7A5468;\">Corazón · Lila · Glitter plateado · «Miel» · Letra plateada · con foto</div>\n        </td>\n        <td align=\"right\" style=\"padding:10px 0 10px 12px;vertical-align:top;white-space:nowrap;border-bottom:1px solid #F8E1EA;\">\n          $9.000\n        </td>\n      </tr></table>\n     <a href=\"https://tienda.test/api/fotos/<foto>\" style=\"display:inline-block;margin:12px 8px 0 0;color:#A8124C;\">Ver foto 1</a>\n    </td></tr>\n  </table>\n</body></html>"
+    },
+    {
+      "clave": "xkeysib-pruebas",
+      "de": {
+        "email": "hola@yosiart.test",
+        "name": "YosiArt"
+      },
+      "to": "admin@prueba.com",
+      "asunto": "Pedido nuevo #0002 - Ana Prueba",
+      "html": "<!DOCTYPE html>\n<html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>\n<body style=\"margin:0;padding:16px;background:#f4f4f4;font-family:Arial,Helvetica,sans-serif;color:#3A1A2A;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:520px;margin:0 auto;background:#ffffff;border-radius:14px;\">\n    <tr><td style=\"padding:22px;\">\n      <div style=\"font-size:13px;color:#7A5468;font-weight:bold;letter-spacing:1px;\">PEDIDO NUEVO</div>\n      <div style=\"font-size:28px;font-weight:bold;color:#A8124C;margin:4px 0 14px;\">#0002 · A confirmar</div>\n     <div style=\"font-size:16px;font-weight:bold;\">Ana Prueba</div>\n     <div style=\"font-size:14px;\">ana@prueba.com · 5491123456789</div>\n     <div style=\"font-size:13px;color:#7A5468;margin-bottom:14px;\">Cliente registrado</div>\n     <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"font-size:14px;\">\n      <tr>\n        <td style=\"padding:10px 0;vertical-align:top;border-bottom:1px solid #F8E1EA;\">\n          <div style=\"font-weight:bold;\">2 × Chapita para mascota</div>\n          <div style=\"font-size:13px;color:#7A5468;\">Círculo mediano · Rosa chicle · Glitter dorado · «Luna» · Letra plateada</div>\n        </td>\n        <td align=\"right\" style=\"padding:10px 0 10px 12px;vertical-align:top;white-space:nowrap;border-bottom:1px solid #F8E1EA;\">\n          A confirmar\n        </td>\n      </tr>\n      <tr>\n        <td style=\"padding:10px 0;vertical-align:top;border-bottom:1px solid #F8E1EA;\">\n          <div style=\"font-weight:bold;\">1 × Posavasos personalizado</div>\n          <div style=\"font-size:13px;color:#7A5468;\">Posavasos · Turquesa · «Casa» · Letra plateada</div>\n        </td>\n        <td align=\"right\" style=\"padding:10px 0 10px 12px;vertical-align:top;white-space:nowrap;border-bottom:1px solid #F8E1EA;\">\n          A confirmar\n        </td>\n      </tr></table>\n     \n    </td></tr>\n  </table>\n</body></html>"
+    },
+    {
+      "clave": "xkeysib-pruebas",
+      "de": {
+        "email": "hola@yosiart.test",
+        "name": "YosiArt"
+      },
+      "to": "admin@prueba.com",
+      "asunto": "Presupuesto nuevo - Ana Prueba",
+      "html": "<!DOCTYPE html>\n<html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>\n<body style=\"margin:0;padding:16px;background:#f4f4f4;font-family:Arial,Helvetica,sans-serif;color:#3A1A2A;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:520px;margin:0 auto;background:#ffffff;border-radius:14px;\">\n    <tr><td style=\"padding:22px;\">\n      <div style=\"font-size:13px;color:#7A5468;font-weight:bold;letter-spacing:1px;\">PRESUPUESTO NUEVO</div>\n      <div style=\"font-size:24px;font-weight:bold;color:#A8124C;margin:4px 0 14px;\">Souvenirs para un evento · 40 u.</div>\n     <div style=\"font-size:16px;font-weight:bold;\">Ana Prueba</div>\n     <div style=\"font-size:14px;margin-bottom:14px;\">ana@prueba.com</div>\n     <div style=\"font-size:14px;margin-bottom:10px;\">Para el <strong>Sun Dec 20</strong></div>\n     <p style=\"margin:0 0 10px;white-space:pre-line;\">40 llaveros lila para un cumple de 15</p>\n     <a href=\"https://tienda.test/api/fotos/<foto>\" style=\"display:inline-block;margin:8px 8px 0 0;color:#A8124C;\">Referencia 1</a>\n    </td></tr>\n  </table>\n</body></html>"
+    },
+    {
+      "clave": "xkeysib-pruebas",
+      "de": {
+        "email": "hola@yosiart.test",
+        "name": "YosiArt"
+      },
+      "to": "ana@prueba.com",
+      "asunto": "¡Bienvenida/o a YosiArt!",
+      "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>\n<body style=\"margin:0;padding:0;background:#FDF3F6;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#FDF3F6;padding:24px 12px;\">\n    <tr><td align=\"center\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;\">\n        <tr>\n          <td style=\"background:#F8E1EA;padding:22px 24px;text-align:center;\">\n            <!-- El alt reemplaza al logo cuando el correo bloquea las imagenes,\n                 que es lo que hacen Gmail y Outlook por defecto. -->\n            <img src=\"https://tienda.test/logo.png\" width=\"84\" height=\"84\" alt=\"YosiArt\"\n                 style=\"width:84px;height:84px;border-radius:50%;display:block;margin:0 auto;border:0;color:#A8124C;font-size:26px;font-weight:bold;\">\n            <div style=\"font-size:11px;color:#7A5468;letter-spacing:3px;margin-top:10px;\">RESINA HECHA A MANO</div>\n          </td>\n        </tr>\n        <tr><td style=\"padding:28px 24px;color:#3A1A2A;font-size:15px;line-height:1.6;\">\n          \n    <h1 style=\"font-size:23px;color:#A8124C;margin:0 0 14px;\">¡Hola, Ana! Ya tenés tu cuenta en YosiArt</h1>\n    <p style=\"margin:0 0 16px;\">\n      Gracias por sumarte. Cada pieza la hacemos a mano, una por una, con el\n      nombre o la foto de quien más querés.\n    </p>\n    <p style=\"margin:0 0 10px;font-weight:bold;color:#A8124C;\">Con tu cuenta podés:</p>\n    <ul style=\"margin:0 0 20px;padding-left:20px;\">\n      <li style=\"margin-bottom:8px;\">Seguir tus pedidos paso a paso, desde que los recibimos hasta que te llegan.</li>\n      <li style=\"margin-bottom:8px;\">No volver a cargar tus datos cada vez que comprás.</li>\n    </ul>\n    <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:22px auto;\">\n    <tr><td style=\"background:#A8124C;border-radius:999px;\">\n      <a href=\"https://tienda.test/personalizar\" style=\"display:inline-block;padding:13px 30px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:15px;\">Personalizar una pieza</a>\n    </td></tr>\n  </table>\n  \n        </td></tr>\n        <tr>\n          <td style=\"background:#F8E1EA;padding:18px 24px;text-align:center;color:#7A5468;font-size:12px;line-height:1.5;\">\n            Recibís este correo porque hiciste un pedido o tenés una cuenta en YosiArt.<br>\n            Si necesitás algo, respondé este mensaje.\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>"
+    },
+    {
+      "clave": "xkeysib-pruebas",
+      "de": {
+        "email": "hola@yosiart.test",
+        "name": "YosiArt"
+      },
+      "to": "ana@prueba.com",
+      "asunto": "Cambiar tu contraseña de YosiArt",
+      "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>\n<body style=\"margin:0;padding:0;background:#FDF3F6;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#FDF3F6;padding:24px 12px;\">\n    <tr><td align=\"center\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;\">\n        <tr>\n          <td style=\"background:#F8E1EA;padding:22px 24px;text-align:center;\">\n            <!-- El alt reemplaza al logo cuando el correo bloquea las imagenes,\n                 que es lo que hacen Gmail y Outlook por defecto. -->\n            <img src=\"https://tienda.test/logo.png\" width=\"84\" height=\"84\" alt=\"YosiArt\"\n                 style=\"width:84px;height:84px;border-radius:50%;display:block;margin:0 auto;border:0;color:#A8124C;font-size:26px;font-weight:bold;\">\n            <div style=\"font-size:11px;color:#7A5468;letter-spacing:3px;margin-top:10px;\">RESINA HECHA A MANO</div>\n          </td>\n        </tr>\n        <tr><td style=\"padding:28px 24px;color:#3A1A2A;font-size:15px;line-height:1.6;\">\n          \n    <h1 style=\"font-size:23px;color:#A8124C;margin:0 0 14px;\">Cambiar tu contraseña</h1>\n    <p style=\"margin:0 0 16px;\">\n      Hola Ana, alguien pidió cambiar la contraseña de tu cuenta\n      en YosiArt. Si fuiste vos, usá este botón:\n    </p>\n    <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:22px auto;\">\n    <tr><td style=\"background:#A8124C;border-radius:999px;\">\n      <a href=\"https://tienda.test/#reset=<token>\" style=\"display:inline-block;padding:13px 30px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:15px;\">Elegir una contraseña nueva</a>\n    </td></tr>\n  </table>\n    <p style=\"margin:0 0 16px;font-size:14px;\">El enlace vence en <strong>1 hora</strong> y se puede usar una sola vez.</p>\n    <p style=\"margin:0 0 18px;padding:12px;background:#FDF3F6;border-radius:12px;font-size:14px;\">\n      Si no lo pediste, ignorá este correo: tu contraseña sigue igual.\n    </p>\n    <p style=\"margin:0;font-size:12px;color:#7A5468;word-break:break-all;\">\n      Si el botón no funciona, copiá esta dirección en tu navegador:<br>https://tienda.test/#reset=<token>\n    </p>\n  \n        </td></tr>\n        <tr>\n          <td style=\"background:#F8E1EA;padding:18px 24px;text-align:center;color:#7A5468;font-size:12px;line-height:1.5;\">\n            Recibís este correo porque hiciste un pedido o tenés una cuenta en YosiArt.<br>\n            Si necesitás algo, respondé este mensaje.\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>"
+    },
+    {
+      "clave": "xkeysib-pruebas",
+      "de": {
+        "email": "hola@yosiart.test",
+        "name": "YosiArt"
+      },
+      "to": "ana@prueba.com",
+      "asunto": "Recibimos tu pedido de presupuesto",
+      "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>\n<body style=\"margin:0;padding:0;background:#FDF3F6;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#FDF3F6;padding:24px 12px;\">\n    <tr><td align=\"center\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;\">\n        <tr>\n          <td style=\"background:#F8E1EA;padding:22px 24px;text-align:center;\">\n            <!-- El alt reemplaza al logo cuando el correo bloquea las imagenes,\n                 que es lo que hacen Gmail y Outlook por defecto. -->\n            <img src=\"https://tienda.test/logo.png\" width=\"84\" height=\"84\" alt=\"YosiArt\"\n                 style=\"width:84px;height:84px;border-radius:50%;display:block;margin:0 auto;border:0;color:#A8124C;font-size:26px;font-weight:bold;\">\n            <div style=\"font-size:11px;color:#7A5468;letter-spacing:3px;margin-top:10px;\">RESINA HECHA A MANO</div>\n          </td>\n        </tr>\n        <tr><td style=\"padding:28px 24px;color:#3A1A2A;font-size:15px;line-height:1.6;\">\n          \n    <h1 style=\"font-size:23px;color:#A8124C;margin:0 0 14px;\">¡Recibimos tu idea, Ana!</h1>\n    <p style=\"margin:0 0 16px;\">La vamos a revisar y te respondemos a este correo con el precio y la demora.</p>\n    <p style=\"margin:0;padding:12px;background:#FDF3F6;border-radius:12px;font-size:14px;\">\n      <strong>Souvenirs para un evento</strong> · 40 unidades<br>40 llaveros lila para un cumple de 15\n    </p>\n  \n        </td></tr>\n        <tr>\n          <td style=\"background:#F8E1EA;padding:18px 24px;text-align:center;color:#7A5468;font-size:12px;line-height:1.5;\">\n            Recibís este correo porque hiciste un pedido o tenés una cuenta en YosiArt.<br>\n            Si necesitás algo, respondé este mensaje.\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>"
+    },
+    {
+      "clave": "xkeysib-pruebas",
+      "de": {
+        "email": "hola@yosiart.test",
+        "name": "YosiArt"
+      },
+      "to": "ana@prueba.com",
+      "asunto": "Tu pedido #0001 en YosiArt",
+      "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>\n<body style=\"margin:0;padding:0;background:#FDF3F6;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#FDF3F6;padding:24px 12px;\">\n    <tr><td align=\"center\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;\">\n        <tr>\n          <td style=\"background:#F8E1EA;padding:22px 24px;text-align:center;\">\n            <!-- El alt reemplaza al logo cuando el correo bloquea las imagenes,\n                 que es lo que hacen Gmail y Outlook por defecto. -->\n            <img src=\"https://tienda.test/logo.png\" width=\"84\" height=\"84\" alt=\"YosiArt\"\n                 style=\"width:84px;height:84px;border-radius:50%;display:block;margin:0 auto;border:0;color:#A8124C;font-size:26px;font-weight:bold;\">\n            <div style=\"font-size:11px;color:#7A5468;letter-spacing:3px;margin-top:10px;\">RESINA HECHA A MANO</div>\n          </td>\n        </tr>\n        <tr><td style=\"padding:28px 24px;color:#3A1A2A;font-size:15px;line-height:1.6;\">\n          \n    <h1 style=\"font-size:23px;color:#A8124C;margin:0 0 6px;\">¡Gracias por tu pedido, Ana!</h1>\n    <p style=\"margin:0 0 20px;\">\n      Tu pedido <strong>#0001</strong> quedó registrado. Lo revisamos y te\n      escribimos para confirmarlo y coordinar el pago y la entrega.\n    </p>\n    <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;\">\n      \n      <tr>\n        <td style=\"padding:10px 0;vertical-align:top;border-bottom:1px solid #F8E1EA;\">\n          <div style=\"font-weight:bold;\">2 × Chapita para mascota</div>\n          <div style=\"font-size:13px;color:#7A5468;\">Hueso grande · Rosa chicle · Glitter dorado · «Luna» · Letra negra · Tel. 11 2233-4455 (dorso)</div>\n        </td>\n        <td align=\"right\" style=\"padding:10px 0 10px 12px;vertical-align:top;white-space:nowrap;border-bottom:1px solid #F8E1EA;\">\n          $40.000\n        </td>\n      </tr>\n      <tr>\n        <td style=\"padding:10px 0;vertical-align:top;border-bottom:1px solid #F8E1EA;\">\n          <div style=\"font-weight:bold;\">1 × Llavero corazón con foto</div>\n          <div style=\"font-size:13px;color:#7A5468;\">Corazón · Lila · Glitter plateado · «Miel» · Letra plateada · con foto</div>\n        </td>\n        <td align=\"right\" style=\"padding:10px 0 10px 12px;vertical-align:top;white-space:nowrap;border-bottom:1px solid #F8E1EA;\">\n          $9.000\n        </td>\n      </tr>\n    </table>\n    <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-top:12px;\">\n      <tr>\n        <td style=\"font-size:18px;font-weight:bold;color:#A8124C;\">Total</td>\n        <td align=\"right\" style=\"font-size:18px;font-weight:bold;color:#A8124C;\">$49.000</td>\n      </tr>\n    </table>\n    \n    <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:22px auto;\">\n    <tr><td style=\"background:#A8124C;border-radius:999px;\">\n      <a href=\"https://tienda.test/seguimiento?numero=0001\" style=\"display:inline-block;padding:13px 30px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:15px;\">Seguir mi pedido</a>\n    </td></tr>\n  </table>\n    <p style=\"margin:0;font-size:12px;color:#7A5468;text-align:center;\">\n      Este es un resumen de tu pedido, no una factura. Guardá el número #0001.\n    </p>\n  \n        </td></tr>\n        <tr>\n          <td style=\"background:#F8E1EA;padding:18px 24px;text-align:center;color:#7A5468;font-size:12px;line-height:1.5;\">\n            Recibís este correo porque hiciste un pedido o tenés una cuenta en YosiArt.<br>\n            Si necesitás algo, respondé este mensaje.\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>"
+    },
+    {
+      "clave": "xkeysib-pruebas",
+      "de": {
+        "email": "hola@yosiart.test",
+        "name": "YosiArt"
+      },
+      "to": "ana@prueba.com",
+      "asunto": "Tu pedido #0001: Confirmado",
+      "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>\n<body style=\"margin:0;padding:0;background:#FDF3F6;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#FDF3F6;padding:24px 12px;\">\n    <tr><td align=\"center\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;\">\n        <tr>\n          <td style=\"background:#F8E1EA;padding:22px 24px;text-align:center;\">\n            <!-- El alt reemplaza al logo cuando el correo bloquea las imagenes,\n                 que es lo que hacen Gmail y Outlook por defecto. -->\n            <img src=\"https://tienda.test/logo.png\" width=\"84\" height=\"84\" alt=\"YosiArt\"\n                 style=\"width:84px;height:84px;border-radius:50%;display:block;margin:0 auto;border:0;color:#A8124C;font-size:26px;font-weight:bold;\">\n            <div style=\"font-size:11px;color:#7A5468;letter-spacing:3px;margin-top:10px;\">RESINA HECHA A MANO</div>\n          </td>\n        </tr>\n        <tr><td style=\"padding:28px 24px;color:#3A1A2A;font-size:15px;line-height:1.6;\">\n          \n    <div style=\"font-size:13px;color:#7A5468;letter-spacing:2px;font-weight:bold;\">PEDIDO #0001</div>\n    <h1 style=\"font-size:24px;color:#A8124C;margin:4px 0 14px;\">Confirmado</h1>\n    <p style=\"margin:0 0 16px;\">Hola Ana, Ya confirmamos tu pedido y lo pusimos en la lista del taller.</p>\n    <p style=\"margin:0 0 16px;padding:12px;background:#FDF3F6;border-radius:12px;font-size:14px;\">¡Arrancamos!</p>\n    <p style=\"margin:0 0 6px;\">Total del pedido: <strong>$49.000</strong></p>\n    <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:22px auto;\">\n    <tr><td style=\"background:#A8124C;border-radius:999px;\">\n      <a href=\"https://tienda.test/seguimiento?numero=0001\" style=\"display:inline-block;padding:13px 30px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:15px;\">Ver el seguimiento</a>\n    </td></tr>\n  </table>\n  \n        </td></tr>\n        <tr>\n          <td style=\"background:#F8E1EA;padding:18px 24px;text-align:center;color:#7A5468;font-size:12px;line-height:1.5;\">\n            Recibís este correo porque hiciste un pedido o tenés una cuenta en YosiArt.<br>\n            Si necesitás algo, respondé este mensaje.\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>"
+    },
+    {
+      "clave": "xkeysib-pruebas",
+      "de": {
+        "email": "hola@yosiart.test",
+        "name": "YosiArt"
+      },
+      "to": "ana@prueba.com",
+      "asunto": "Tu pedido #0002 en YosiArt",
+      "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>\n<body style=\"margin:0;padding:0;background:#FDF3F6;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#FDF3F6;padding:24px 12px;\">\n    <tr><td align=\"center\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;\">\n        <tr>\n          <td style=\"background:#F8E1EA;padding:22px 24px;text-align:center;\">\n            <!-- El alt reemplaza al logo cuando el correo bloquea las imagenes,\n                 que es lo que hacen Gmail y Outlook por defecto. -->\n            <img src=\"https://tienda.test/logo.png\" width=\"84\" height=\"84\" alt=\"YosiArt\"\n                 style=\"width:84px;height:84px;border-radius:50%;display:block;margin:0 auto;border:0;color:#A8124C;font-size:26px;font-weight:bold;\">\n            <div style=\"font-size:11px;color:#7A5468;letter-spacing:3px;margin-top:10px;\">RESINA HECHA A MANO</div>\n          </td>\n        </tr>\n        <tr><td style=\"padding:28px 24px;color:#3A1A2A;font-size:15px;line-height:1.6;\">\n          \n    <h1 style=\"font-size:23px;color:#A8124C;margin:0 0 6px;\">¡Gracias por tu pedido, Ana!</h1>\n    <p style=\"margin:0 0 20px;\">\n      Tu pedido <strong>#0002</strong> quedó registrado. Lo revisamos y te\n      escribimos para confirmarlo y coordinar el pago y la entrega.\n    </p>\n    <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;\">\n      \n      <tr>\n        <td style=\"padding:10px 0;vertical-align:top;border-bottom:1px solid #F8E1EA;\">\n          <div style=\"font-weight:bold;\">2 × Chapita para mascota</div>\n          <div style=\"font-size:13px;color:#7A5468;\">Círculo mediano · Rosa chicle · Glitter dorado · «Luna» · Letra plateada</div>\n        </td>\n        <td align=\"right\" style=\"padding:10px 0 10px 12px;vertical-align:top;white-space:nowrap;border-bottom:1px solid #F8E1EA;\">\n          A confirmar\n        </td>\n      </tr>\n      <tr>\n        <td style=\"padding:10px 0;vertical-align:top;border-bottom:1px solid #F8E1EA;\">\n          <div style=\"font-weight:bold;\">1 × Posavasos personalizado</div>\n          <div style=\"font-size:13px;color:#7A5468;\">Posavasos · Turquesa · «Casa» · Letra plateada</div>\n        </td>\n        <td align=\"right\" style=\"padding:10px 0 10px 12px;vertical-align:top;white-space:nowrap;border-bottom:1px solid #F8E1EA;\">\n          A confirmar\n        </td>\n      </tr>\n    </table>\n    <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-top:12px;\">\n      <tr>\n        <td style=\"font-size:18px;font-weight:bold;color:#A8124C;\">Total</td>\n        <td align=\"right\" style=\"font-size:18px;font-weight:bold;color:#A8124C;\">A confirmar</td>\n      </tr>\n    </table>\n    <p style=\"margin:14px 0 0;padding:12px;background:#FDF3F6;border-radius:12px;font-size:14px;\">Algunas piezas tienen el precio a confirmar: te lo pasamos al confirmar el pedido.</p>\n    <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:22px auto;\">\n    <tr><td style=\"background:#A8124C;border-radius:999px;\">\n      <a href=\"https://tienda.test/seguimiento?numero=0002\" style=\"display:inline-block;padding:13px 30px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:15px;\">Seguir mi pedido</a>\n    </td></tr>\n  </table>\n    <p style=\"margin:0;font-size:12px;color:#7A5468;text-align:center;\">\n      Este es un resumen de tu pedido, no una factura. Guardá el número #0002.\n    </p>\n  \n        </td></tr>\n        <tr>\n          <td style=\"background:#F8E1EA;padding:18px 24px;text-align:center;color:#7A5468;font-size:12px;line-height:1.5;\">\n            Recibís este correo porque hiciste un pedido o tenés una cuenta en YosiArt.<br>\n            Si necesitás algo, respondé este mensaje.\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>"
+    },
+    {
+      "clave": "xkeysib-pruebas",
+      "de": {
+        "email": "hola@yosiart.test",
+        "name": "YosiArt"
+      },
+      "to": "ana@prueba.com",
+      "asunto": "Tu presupuesto de YosiArt",
+      "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>\n<body style=\"margin:0;padding:0;background:#FDF3F6;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#FDF3F6;padding:24px 12px;\">\n    <tr><td align=\"center\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;\">\n        <tr>\n          <td style=\"background:#F8E1EA;padding:22px 24px;text-align:center;\">\n            <!-- El alt reemplaza al logo cuando el correo bloquea las imagenes,\n                 que es lo que hacen Gmail y Outlook por defecto. -->\n            <img src=\"https://tienda.test/logo.png\" width=\"84\" height=\"84\" alt=\"YosiArt\"\n                 style=\"width:84px;height:84px;border-radius:50%;display:block;margin:0 auto;border:0;color:#A8124C;font-size:26px;font-weight:bold;\">\n            <div style=\"font-size:11px;color:#7A5468;letter-spacing:3px;margin-top:10px;\">RESINA HECHA A MANO</div>\n          </td>\n        </tr>\n        <tr><td style=\"padding:28px 24px;color:#3A1A2A;font-size:15px;line-height:1.6;\">\n          \n    <h1 style=\"font-size:23px;color:#A8124C;margin:0 0 14px;\">Tu presupuesto de YosiArt</h1>\n    <p style=\"margin:0 0 16px;\">Hola Ana, gracias por esperar. Esto es lo que te proponemos:</p>\n    <p style=\"margin:0 0 16px;padding:14px;background:#FDF3F6;border-radius:12px;white-space:pre-line;\">Te sale $2.500 cada uno.</p>\n    <p style=\"margin:0 0 16px;font-size:18px;\">Precio: <strong style=\"color:#A8124C;\">$100.000</strong></p>\n    <p style=\"margin:0;\">Si te parece bien, respondé este correo y lo empezamos.</p>\n  \n        </td></tr>\n        <tr>\n          <td style=\"background:#F8E1EA;padding:18px 24px;text-align:center;color:#7A5468;font-size:12px;line-height:1.5;\">\n            Recibís este correo porque hiciste un pedido o tenés una cuenta en YosiArt.<br>\n            Si necesitás algo, respondé este mensaje.\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>"
+    }
+  ]
+}
