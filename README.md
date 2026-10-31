@@ -1,7 +1,7 @@
 # YosiArt — tienda de piezas de resina personalizadas
 
 Frontend de la tienda de YosiArt. Usa la misma base que Kenypets
-(React + Vite + SCSS), con la tienda y la API publicadas juntas en
+(React + TypeScript + Vite + SCSS), con la tienda y la API publicadas juntas en
 Cloudflare Workers,
 con la marca y el contenido de YosiArt.
 
@@ -10,7 +10,8 @@ con la marca y el contenido de YosiArt.
 ```bash
 npm install
 npm run dev      # http://localhost:5173
-npm run build    # genera /dist
+npm run build    # revisa los tipos (TypeScript) y genera /dist
+npm run typecheck   # solo revisa los tipos: tienda, worker y API
 npm run lint
 ```
 
@@ -33,12 +34,24 @@ variables que `api/.env`.
 | `/admin` | Panel de YosiArt: pedidos y estados, presupuestos, piezas y precios, clientes (solo cuentas admin) |
 | `/#reset=TOKEN` | Nueva contraseña (viene de Kenypets) |
 
+## TypeScript
+
+Todo el proyecto (tienda, API y worker) está en TypeScript, en modo
+estricto. `npm run build` revisa los tipos antes de armar la página: si
+hay un error, Cloudflare no publica y queda online la versión anterior.
+
+- `tsconfig.app.json`: la tienda (navegador).
+- `tsconfig.worker.json`: el worker de Cloudflare más la API que importa.
+- `tsconfig.node.json`: la configuración de Vite.
+- `api/tsconfig.json`: la API sola, con sus pruebas (`cd api && npm run typecheck`).
+
 ## Estructura
 
 ```
 src/
-  config.js                 URL de la API e Instagram
-  services/                 todas las llamadas a la API (api.js maneja errores y sesión)
+  tipos.ts                  tipos compartidos: pieza, opciones, carrito, pedido, usuario
+  config.ts                 URL de la API e Instagram
+  services/                 todas las llamadas a la API (api.ts maneja errores y sesión)
   context/                  catálogo, carrito y sesión compartidos por toda la tienda
   data/                     colores, glitters, formas (SVG) y catálogo de respaldo
   components/Pieza3D        vista 3D (personalizador y tarjetas del catálogo)

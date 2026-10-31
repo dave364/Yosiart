@@ -1,0 +1,6 @@
+{
+  // Tres partes con reglas distintas: la tienda (navegador), el worker de
+  // Cloudflare y la configuración de Vite (Node). `npx tsc -b` revisa todas.
+  "files": [],
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.worker.json" }, { "path": "./tsconfig.node.json" }]
+}
