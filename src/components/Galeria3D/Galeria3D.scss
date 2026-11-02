@@ -7,14 +7,21 @@
   &__escena {
     position: relative;
     width: 100%;
-    height: 410px;
+    height: 460px;
     perspective: 1300px;
     perspective-origin: 50% 30%;
     touch-action: pan-y; // el dedo de arriba abajo sigue desplazando la página
     user-select: none;
     cursor: grab;
     overflow: hidden;
-    border-radius: var(--radius-lg);
+    // Las sombras de las tarjetas se desvanecen hacia los bordes en vez de
+    // cortarse de golpe (eso dejaba una línea divisoria abajo).
+    $vertical: linear-gradient(to bottom, transparent, #000 6%, #000 84%, transparent);
+    $lados: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+    -webkit-mask-image: $vertical, $lados;
+    -webkit-mask-composite: source-in;
+    mask-image: $vertical, $lados;
+    mask-composite: intersect;
 
     &:active { cursor: grabbing; }
     &:focus-visible { outline: 3px solid var(--lila-glitter); outline-offset: 4px; }
@@ -24,7 +31,7 @@
   &__piso {
     position: absolute;
     left: 50%;
-    top: 60%;
+    top: 55%;
     width: 86%;
     height: 42%;
     transform: translate(-50%, -50%);
@@ -37,7 +44,7 @@
   &__tarjeta {
     position: absolute;
     left: 50%;
-    top: 58%;
+    top: 52%;
     width: 210px;
     aspect-ratio: 1 / 1;
     padding: 8px;
@@ -93,7 +100,7 @@
 }
 
 @media (max-width: 640px) {
-  .galeria3d__escena { height: 330px; }
+  .galeria3d__escena { height: 370px; }
   .galeria3d__tarjeta { width: 140px; padding: 6px; border-radius: 18px; }
   .galeria3d__titulo { min-width: 0; }
 }
