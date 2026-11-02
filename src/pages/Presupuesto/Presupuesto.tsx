@@ -42,7 +42,7 @@ const Presupuesto = () => {
     e.target.value = "";
     setErrorFotos(null);
     try {
-      const nuevas = await Promise.all(archivos.map(achicarFoto));
+      const nuevas = await Promise.all(archivos.map((archivo) => achicarFoto(archivo)));
       setFotos((f) => [...f, ...nuevas].slice(0, MAX_FOTOS));
     } catch (err) {
       setErrorFotos(mensajeDe(err));

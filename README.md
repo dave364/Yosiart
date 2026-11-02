@@ -31,7 +31,7 @@ variables que `api/.env`.
 | `/carrito` | Carrito con cada pieza personalizada, datos del cliente y confirmación del pedido |
 | `/presupuesto` | Formulario para piezas a medida y souvenirs, con imágenes de referencia |
 | `/seguimiento` | Seguimiento del pedido (con número y email, o "Mis pedidos" con sesión) |
-| `/admin` | Panel de YosiArt: pedidos y estados, presupuestos, piezas y precios, clientes (solo cuentas admin) |
+| `/admin` | Panel de YosiArt: pedidos y estados, presupuestos, piezas y precios, galería, clientes (solo cuentas admin) |
 | `/#reset=TOKEN` | Nueva contraseña (viene de Kenypets) |
 
 ## TypeScript
@@ -56,6 +56,7 @@ src/
   data/                     colores, glitters, formas (SVG) y catálogo de respaldo
   components/Pieza3D        vista 3D (personalizador y tarjetas del catálogo)
   components/PiezaPreview   vista plana (carrito y panel)
+  components/Galeria3D      carrusel 3D de trabajos terminados, con foto ampliada
   components/               Navbar, Footer, Icono, Auth, Reset
   pages/                    Home, Personalizar, Carrito, Presupuesto, Seguimiento, Admin
   styles/abstracts/_variables.scss   paleta y tipografías de la marca

@@ -156,5 +156,13 @@ export interface ProductoApi {
   activo?: boolean;
 }
 
+// Un trabajo terminado del carrusel del inicio.
+export interface FotoGaleria {
+  id: number;
+  foto: string; // /api/fotos/<id>
+  titulo: string;
+  creado_en: string;
+}
+
 // El mensaje de un error atrapado con try/catch.
 export const mensajeDe = (err: unknown) => (err instanceof Error ? err.message : String(err));

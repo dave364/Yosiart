@@ -9,6 +9,7 @@ import { router as pedidosRouter } from "./routes/pedidos.routes.ts";
 import { router as presupuestosRouter } from "./routes/presupuestos.routes.ts";
 import { router as fotosRouter } from "./routes/fotos.routes.ts";
 import { router as usuariosRouter } from "./routes/usuarios.routes.ts";
+import { router as galeriaRouter } from "./routes/galeria.routes.ts";
 import { limite } from "./middleware/limite.ts";
 import { conexionPorPedido } from "./db.ts";
 import { rutaInexistente, manejarErrores } from "./middleware/errores.ts";
@@ -38,6 +39,7 @@ app.use(cors({
 const conFotos = express.json({ limit: "8mb" });
 app.use("/api/pedidos", conFotos);
 app.use("/api/presupuestos", conFotos);
+app.use("/api/galeria", conFotos);
 app.use(express.json({ limit: "100kb" }));
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
@@ -100,6 +102,7 @@ app.use("/api/pedidos", pedidosRouter);
 app.use("/api/presupuestos", presupuestosRouter);
 app.use("/api/fotos", fotosRouter);
 app.use("/api/usuarios", usuariosRouter);
+app.use("/api/galeria", galeriaRouter);
 
 app.use(rutaInexistente);
 app.use(manejarErrores);

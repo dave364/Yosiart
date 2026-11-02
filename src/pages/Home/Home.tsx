@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.webp";
 import { CATEGORIAS, plata, precioDesde } from "../../data/piezas";
 import { useCatalogo } from "../../context/CatalogoContext";
 import Pieza3D from "../../components/Pieza3D/Pieza3D";
+import Galeria3D from "../../components/Galeria3D/Galeria3D";
+import { listarGaleria } from "../../services/galeria.service";
+import type { FotoGaleria } from "../../tipos";
 import Icono from "../../components/Icono/Icono";
 import "./Home.scss";
 
@@ -20,6 +23,14 @@ const PASOS = [
 const Home = () => {
   const [categoria, setCategoria] = useState<string | null>(null);
   const { piezas: todas } = useCatalogo();
+  const [galeria, setGaleria] = useState<FotoGaleria[]>([]);
+
+  // La galería se suma cuando llega; si falla o está vacía, no se muestra.
+  useEffect(() => {
+    listarGaleria()
+      .then(setGaleria)
+      .catch(() => setGaleria([]));
+  }, []);
 
   const elegirCategoria = (id: string | null) => {
     setCategoria(id);
@@ -133,6 +144,17 @@ const Home = () => {
           </div>
         )}
       </section>
+
+      {/* TRABAJOS TERMINADOS */}
+      {galeria.length > 0 && (
+        <section className="contenedor seccion" id="trabajos" aria-labelledby="trabajos-titulo">
+          <h2 id="trabajos-titulo" className="titulo-seccion titulo-seccion--centro">
+            Nuestros trabajos
+          </h2>
+          <p className="bajada bajada--centro">Piezas que ya salieron del taller. Tocá una para verla de cerca.</p>
+          <Galeria3D fotos={galeria} />
+        </section>
+      )}
 
       {/* COMO PEDIR */}
       <section className="contenedor seccion" id="como-pedir">

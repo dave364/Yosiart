@@ -306,3 +306,42 @@
 }
 
 .adm-volver { text-align: center; font-weight: 700; }
+
+// --- Galería ---
+.adm-galeria {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 14px;
+
+  &__subir { display: flex; flex-direction: column; gap: 14px; padding: 18px; }
+
+  &__item {
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--borde);
+    background: var(--blanco);
+
+    img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+  }
+
+  &__pie {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+
+    > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
+}
+
+// El input de archivos está oculto: el foco se muestra en el botón.
+.adm-galeria__subir:has(#gal-fotos:focus-visible) .subir-foto {
+  outline: 3px solid var(--lila-glitter);
+  outline-offset: 2px;
+}

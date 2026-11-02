@@ -2096,6 +2096,131 @@
       }
     },
     {
+      "paso": "galeria vacia",
+      "status": 200,
+      "body": []
+    },
+    {
+      "paso": "galeria subir",
+      "status": 201,
+      "body": {
+        "id": 1,
+        "foto": "/api/fotos/<foto>",
+        "titulo": "Chapita de Luna",
+        "creado_en": "<fecha>"
+      }
+    },
+    {
+      "paso": "galeria subir sin titulo",
+      "status": 201,
+      "body": {
+        "id": 2,
+        "foto": "/api/fotos/<foto>",
+        "titulo": "",
+        "creado_en": "<fecha>"
+      }
+    },
+    {
+      "paso": "galeria subir como cliente",
+      "status": 403,
+      "body": {
+        "error": "No tenes permisos para esto."
+      }
+    },
+    {
+      "paso": "galeria subir sin sesion",
+      "status": 401,
+      "body": {
+        "error": "Necesitas iniciar sesion."
+      }
+    },
+    {
+      "paso": "galeria foto falsa",
+      "status": 400,
+      "body": {
+        "error": "El archivo de la foto no es una imagen valida."
+      }
+    },
+    {
+      "paso": "galeria titulo largo",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "titulo",
+            "mensaje": "El título puede tener hasta 80 letras."
+          }
+        ]
+      }
+    },
+    {
+      "paso": "galeria lista",
+      "status": 200,
+      "body": [
+        {
+          "id": 2,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "",
+          "creado_en": "<fecha>"
+        },
+        {
+          "id": 1,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "Chapita de Luna",
+          "creado_en": "<fecha>"
+        }
+      ]
+    },
+    {
+      "paso": "galeria ver foto",
+      "status": 200,
+      "body": {
+        "bytes": 70
+      },
+      "tipo": "image/png"
+    },
+    {
+      "paso": "galeria borrar",
+      "status": 200,
+      "body": {
+        "ok": true
+      }
+    },
+    {
+      "paso": "galeria foto borrada",
+      "status": 404,
+      "body": {
+        "error": "Foto no encontrada."
+      }
+    },
+    {
+      "paso": "galeria borrar inexistente",
+      "status": 404,
+      "body": {
+        "error": "Esa foto ya no está en la galería."
+      }
+    },
+    {
+      "paso": "galeria borrar como cliente",
+      "status": 403,
+      "body": {
+        "error": "No tenes permisos para esto."
+      }
+    },
+    {
+      "paso": "galeria queda una",
+      "status": 200,
+      "body": [
+        {
+          "id": 2,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "",
+          "creado_en": "<fecha>"
+        }
+      ]
+    },
+    {
       "paso": "login repetido 1",
       "status": 401,
       "body": {

@@ -155,6 +155,14 @@ Estados: `pendiente` (recibido) → `confirmado` → `en_preparacion` → `listo
 | GET | `/` | admin | Todos (`?estado=nuevo`) |
 | PATCH | `/:id` | admin | Responde: estado, texto y precio (el texto le llega por correo) |
 
+### Galería — `/api/galeria`
+
+| Método | Ruta | Acceso | Qué hace |
+|---|---|---|---|
+| GET | `/` | público | Fotos de trabajos terminados, la más nueva primero |
+| POST | `/` | admin | Agrega una foto (`{ foto: dataURL, titulo }`) |
+| DELETE | `/:id` | admin | La saca de la galería y borra la imagen |
+
 ### Otros
 
 | Método | Ruta | Acceso | Qué hace |
@@ -162,7 +170,7 @@ Estados: `pendiente` (recibido) → `confirmado` → `en_preparacion` → `listo
 | GET | `/api/fotos/:id` | con el enlace | Una foto que mandó un cliente |
 | GET | `/api/usuarios` | admin | Clientes con sus pedidos y lo gastado |
 | PATCH | `/api/usuarios/:id/activo` | admin | Suspende o reactiva una cuenta |
-| GET | `/api/health` | público | Para el keep-alive |
+| GET | `/api/health` | público | Para saber si la API responde |
 
 ## Decisiones importantes
 

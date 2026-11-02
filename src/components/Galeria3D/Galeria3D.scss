@@ -1,0 +1,188 @@
+.galeria3d {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+
+  &__escena {
+    position: relative;
+    width: 100%;
+    height: 410px;
+    perspective: 1300px;
+    perspective-origin: 50% 30%;
+    touch-action: pan-y; // el dedo de arriba abajo sigue desplazando la página
+    user-select: none;
+    cursor: grab;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+
+    &:active { cursor: grabbing; }
+    &:focus-visible { outline: 3px solid var(--lila-glitter); outline-offset: 4px; }
+  }
+
+  // Un óvalo de luz debajo de las fotos, para que se lea el recorrido.
+  &__piso {
+    position: absolute;
+    left: 50%;
+    top: 60%;
+    width: 86%;
+    height: 42%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(168, 18, 76, 0.16), rgba(236, 111, 163, 0.07) 72%, transparent);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &__tarjeta {
+    position: absolute;
+    left: 50%;
+    top: 58%;
+    width: 210px;
+    aspect-ratio: 1 / 1;
+    padding: 8px;
+    border: 0;
+    border-radius: 22px;
+    background: var(--blanco);
+    box-shadow: 0 18px 40px rgba(58, 26, 42, 0.22);
+    cursor: pointer;
+    will-change: transform, opacity, filter;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+      pointer-events: none;
+    }
+
+    &--frente { box-shadow: 0 24px 50px rgba(168, 18, 76, 0.3); }
+    &:focus-visible { outline: 3px solid var(--lila-glitter); outline-offset: 3px; }
+  }
+
+  &__controles { display: flex; align-items: center; gap: 16px; }
+
+  &__flecha {
+    width: 48px;
+    height: 48px;
+    flex: none;
+    border: 2px solid var(--borde);
+    border-radius: 50%;
+    background: var(--blanco);
+    color: var(--frambuesa);
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover { background: var(--blush-2); }
+  }
+
+  &__titulo {
+    min-width: 220px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-weight: 800;
+    text-align: center;
+
+    span { font-weight: 600; font-size: 14px; color: var(--tinta-suave); }
+  }
+}
+
+@media (max-width: 640px) {
+  .galeria3d__escena { height: 330px; }
+  .galeria3d__tarjeta { width: 140px; padding: 6px; border-radius: 18px; }
+  .galeria3d__titulo { min-width: 0; }
+}
+
+// --- Foto ampliada ---
+.ampliada {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: rgba(30, 10, 20, 0.94);
+  backdrop-filter: blur(6px);
+  animation: ampliada-entra 0.2s ease-out;
+
+  &__figura {
+    margin: 0;
+    max-width: min(92vw, 820px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: ampliada-crece 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  }
+
+  &__marco {
+    overflow: hidden;
+    border-radius: 20px;
+    background: var(--blanco);
+    padding: 8px;
+  }
+
+  &__img {
+    display: block;
+    max-width: 100%;
+    max-height: 72vh;
+    margin: 0 auto;
+    border-radius: 14px;
+    cursor: zoom-in;
+    transition: transform 0.25s ease;
+    touch-action: none;
+
+    &--zoom { transform: scale(2.2); cursor: zoom-out; }
+  }
+
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--blanco);
+    text-align: center;
+
+    strong { font-family: var(--font-display); font-size: 28px; }
+    span { font-size: 14px; opacity: 0.8; }
+  }
+
+  &__cerrar,
+  &__flecha {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--frambuesa);
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover { background: var(--blanco); }
+    &:focus-visible { outline: 3px solid var(--rosa-chicle); outline-offset: 3px; }
+  }
+
+  &__cerrar { top: 16px; right: 16px; }
+  &__flecha { top: 50%; transform: translateY(-50%); }
+  &__flecha--izq { left: 16px; }
+  &__flecha--der { right: 16px; }
+}
+
+@media (max-width: 640px) {
+  .ampliada__flecha { top: auto; bottom: 16px; transform: none; }
+}
+
+@keyframes ampliada-entra { from { opacity: 0; } }
+@keyframes ampliada-crece { from { transform: scale(0.85); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ampliada, .ampliada__figura { animation: none; }
+  .ampliada__img { transition: none; }
+}

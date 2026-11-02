@@ -6,6 +6,7 @@ import PanelPedidos from "./PanelPedidos";
 import PanelPresupuestos from "./PanelPresupuestos";
 import PanelPiezas from "./PanelPiezas";
 import PanelClientes from "./PanelClientes";
+import PanelGaleria from "./PanelGaleria";
 import "./Admin.scss";
 import { mensajeDe } from "../../tipos";
 import type { FormEvent } from "react";
@@ -14,6 +15,7 @@ const SECCIONES = [
   { id: "pedidos", nombre: "Pedidos", Panel: PanelPedidos },
   { id: "presupuestos", nombre: "Presupuestos", Panel: PanelPresupuestos },
   { id: "piezas", nombre: "Piezas y precios", Panel: PanelPiezas },
+  { id: "galeria", nombre: "Galería", Panel: PanelGaleria },
   { id: "clientes", nombre: "Clientes", Panel: PanelClientes },
 ];
 

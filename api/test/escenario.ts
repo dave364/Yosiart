@@ -460,6 +460,47 @@ export async function correrEscenario({
     "suspender 404"
   );
 
+  // ---------- Galeria ----------
+  controlar((await llamar("galeria vacia", "GET", "/api/galeria")).body.length === 0, "galeria vacia");
+  const g1 = await llamar("galeria subir", "POST", "/api/galeria", { token: A, body: { foto: PNG, titulo: "Chapita de Luna" } });
+  controlar(g1.status === 201 && /^\/api\/fotos\/[a-f0-9]{32}$/.test(g1.body.foto), "galeria subir");
+  controlar(
+    (await llamar("galeria subir sin titulo", "POST", "/api/galeria", { token: A, body: { foto: PNG } })).body.titulo === "",
+    "galeria sin titulo"
+  );
+  controlar(
+    (await llamar("galeria subir como cliente", "POST", "/api/galeria", { token: C, body: { foto: PNG } })).status === 403,
+    "galeria 403"
+  );
+  controlar(
+    (await llamar("galeria subir sin sesion", "POST", "/api/galeria", { body: { foto: PNG } })).status === 401,
+    "galeria 401"
+  );
+  controlar(
+    (await llamar("galeria foto falsa", "POST", "/api/galeria", { token: A, body: { foto: "data:image/png;base64,aG9sYQ==" } }))
+      .status === 400,
+    "galeria foto falsa"
+  );
+  controlar(
+    (await llamar("galeria titulo largo", "POST", "/api/galeria", { token: A, body: { foto: PNG, titulo: "x".repeat(81) } }))
+      .status === 400,
+    "galeria titulo largo"
+  );
+  const lista = await llamar("galeria lista", "GET", "/api/galeria");
+  controlar(lista.body.length === 2 && lista.body[1].titulo === "Chapita de Luna", "galeria lista, la nueva primero");
+  controlar((await llamar("galeria ver foto", "GET", g1.body.foto)).status === 200, "galeria ver foto");
+  controlar(
+    (await llamar("galeria borrar", "DELETE", `/api/galeria/${g1.body.id}`, { token: A })).status === 200,
+    "galeria borrar"
+  );
+  controlar((await llamar("galeria foto borrada", "GET", g1.body.foto)).status === 404, "foto borrada con la entrada");
+  controlar(
+    (await llamar("galeria borrar inexistente", "DELETE", "/api/galeria/999", { token: A })).status === 404,
+    "galeria borrar 404"
+  );
+  controlar((await llamar("galeria borrar como cliente", "DELETE", "/api/galeria/1", { token: C })).status === 403, "galeria borrar 403");
+  controlar((await llamar("galeria queda una", "GET", "/api/galeria")).body.length === 1, "galeria queda una");
+
   // ---------- Limites de intentos ----------
   let ultimo: Paso | undefined;
   for (let i = 0; i < 11; i++) {

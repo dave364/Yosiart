@@ -127,6 +127,15 @@ CREATE TABLE IF NOT EXISTS reset_tokens (
   creado_en   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Galería de trabajos terminados (el carrusel del inicio). La imagen vive
+-- en la tabla fotos; acá va el orden y el título que se muestra.
+CREATE TABLE IF NOT EXISTS galeria (
+  id          SERIAL PRIMARY KEY,
+  foto_id     TEXT NOT NULL REFERENCES fotos(id),
+  titulo      TEXT NOT NULL DEFAULT '',
+  creado_en   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE INDEX IF NOT EXISTS idx_productos_activo     ON productos(activo);
 CREATE INDEX IF NOT EXISTS idx_pedidos_usuario      ON pedidos(usuario_id);
 CREATE INDEX IF NOT EXISTS idx_pedidos_estado       ON pedidos(estado);
