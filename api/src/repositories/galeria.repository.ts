@@ -53,6 +53,11 @@ export async function ordenar(conexion: Conexion, idsEnOrden: number[]): Promise
   );
 }
 
+// Agrega la columna del orden en bases creadas antes de que existiera.
+export async function agregarColumnaOrden(): Promise<void> {
+  await db.query(`ALTER TABLE galeria ADD COLUMN IF NOT EXISTS orden INTEGER NOT NULL DEFAULT 0`);
+}
+
 // Borra la entrada y su imagen. Devuelve false si no existía.
 export async function borrar(conexion: Conexion, id: number): Promise<boolean> {
   const { rows } = await conexion.query<{ foto_id: string }>(`DELETE FROM galeria WHERE id = $1 RETURNING foto_id`, [id]);

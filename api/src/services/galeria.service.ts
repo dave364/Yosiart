@@ -6,14 +6,27 @@ import type { FotoGaleria } from "../repositories/galeria.repository.ts";
 import type { DatosFotoGaleria } from "../schemas/galeria.schema.ts";
 import { guardarFoto } from "./fotos.service.ts";
 
-// Código de Postgres cuando la tabla todavía no existe.
-const sinTabla = (err: unknown) => (err as { code?: string } | null)?.code === "42P01";
+// Códigos de Postgres: la tabla todavía no existe / falta una columna.
+const codigo = (err: unknown) => (err as { code?: string } | null)?.code;
+const sinTabla = (err: unknown) => codigo(err) === "42P01";
+
+// Si la base es de antes de que existiera el orden, agrega la columna
+// (las fotos quedan en el orden que tenían) y vuelve a intentar.
+async function conOrden<T>(fn: () => Promise<T>): Promise<T> {
+  try {
+    return await fn();
+  } catch (err) {
+    if (codigo(err) !== "42703") throw err;
+    await galeriaRepo.agregarColumnaOrden();
+    return fn();
+  }
+}
 
 // Si la tabla todavía no se creó en la base, el inicio muestra la galería
 // vacía en vez de fallar.
 export async function listar(): Promise<FotoGaleria[]> {
   try {
-    return await galeriaRepo.listar();
+    return await conOrden(() => galeriaRepo.listar());
   } catch (err) {
     if (sinTabla(err)) return [];
     throw err;
@@ -21,10 +34,12 @@ export async function listar(): Promise<FotoGaleria[]> {
 }
 
 export async function agregar({ foto, titulo }: DatosFotoGaleria): Promise<FotoGaleria> {
-  return withTransaction(async (conexion) => {
-    const direccion = await guardarFoto(conexion, foto); // /api/fotos/<id>
-    return galeriaRepo.crear(conexion, direccion.split("/").pop()!, titulo);
-  });
+  return conOrden(() =>
+    withTransaction(async (conexion) => {
+      const direccion = await guardarFoto(conexion, foto); // /api/fotos/<id>
+      return galeriaRepo.crear(conexion, direccion.split("/").pop()!, titulo);
+    })
+  );
 }
 
 export async function cambiarTitulo(id: number, titulo: string): Promise<FotoGaleria> {
@@ -36,7 +51,7 @@ export async function cambiarTitulo(id: number, titulo: string): Promise<FotoGal
 // Recibe todas las fotos en el orden nuevo. Si la lista no coincide con lo
 // que hay (alguien subió o sacó una foto mientras tanto), no cambia nada.
 export async function ordenar(idsEnOrden: number[]): Promise<FotoGaleria[]> {
-  await withTransaction(async (conexion) => {
+  await conOrden(() => withTransaction(async (conexion) => {
     const actuales = await galeriaRepo.ids(conexion);
     const pedidos = new Set(idsEnOrden);
     const coincide =
@@ -45,7 +60,7 @@ export async function ordenar(idsEnOrden: number[]): Promise<FotoGaleria[]> {
       actuales.every((id) => pedidos.has(id));
     if (!coincide) throw datoInvalido("La galería cambió mientras la ordenabas. Actualizá la página y probá de nuevo.");
     await galeriaRepo.ordenar(conexion, idsEnOrden);
-  });
+  }));
   return galeriaRepo.listar();
 }
 
