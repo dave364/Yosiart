@@ -1,6 +1,6 @@
 // Galería de trabajos terminados.
 import { withTransaction } from "../db.ts";
-import { noEncontrado } from "../lib/errores.ts";
+import { datoInvalido, noEncontrado } from "../lib/errores.ts";
 import * as galeriaRepo from "../repositories/galeria.repository.ts";
 import type { FotoGaleria } from "../repositories/galeria.repository.ts";
 import type { DatosFotoGaleria } from "../schemas/galeria.schema.ts";
@@ -25,6 +25,28 @@ export async function agregar({ foto, titulo }: DatosFotoGaleria): Promise<FotoG
     const direccion = await guardarFoto(conexion, foto); // /api/fotos/<id>
     return galeriaRepo.crear(conexion, direccion.split("/").pop()!, titulo);
   });
+}
+
+export async function cambiarTitulo(id: number, titulo: string): Promise<FotoGaleria> {
+  const foto = await galeriaRepo.cambiarTitulo(id, titulo);
+  if (!foto) throw noEncontrado("Esa foto ya no está en la galería.");
+  return foto;
+}
+
+// Recibe todas las fotos en el orden nuevo. Si la lista no coincide con lo
+// que hay (alguien subió o sacó una foto mientras tanto), no cambia nada.
+export async function ordenar(idsEnOrden: number[]): Promise<FotoGaleria[]> {
+  await withTransaction(async (conexion) => {
+    const actuales = await galeriaRepo.ids(conexion);
+    const pedidos = new Set(idsEnOrden);
+    const coincide =
+      pedidos.size === idsEnOrden.length &&
+      idsEnOrden.length === actuales.length &&
+      actuales.every((id) => pedidos.has(id));
+    if (!coincide) throw datoInvalido("La galería cambió mientras la ordenabas. Actualizá la página y probá de nuevo.");
+    await galeriaRepo.ordenar(conexion, idsEnOrden);
+  });
+  return galeriaRepo.listar();
 }
 
 export async function borrar(id: number): Promise<{ ok: true }> {

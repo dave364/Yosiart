@@ -161,6 +161,8 @@ Estados: `pendiente` (recibido) → `confirmado` → `en_preparacion` → `listo
 |---|---|---|---|
 | GET | `/` | público | Fotos de trabajos terminados, la más nueva primero |
 | POST | `/` | admin | Agrega una foto (`{ foto: dataURL, titulo }`) |
+| PATCH | `/:id` | admin | Cambia el título (`{ titulo }`) |
+| PUT | `/orden` | admin | Guarda el orden (`{ ids: [...] }`, todas las fotos, la primera va primera) |
 | DELETE | `/:id` | admin | La saca de la galería y borra la imagen |
 
 ### Otros

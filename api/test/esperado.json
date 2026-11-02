@@ -2221,6 +2221,206 @@
       ]
     },
     {
+      "paso": "galeria subir otra",
+      "status": 201,
+      "body": {
+        "id": 3,
+        "foto": "/api/fotos/<foto>",
+        "titulo": "Llavero de Paola",
+        "creado_en": "<fecha>"
+      }
+    },
+    {
+      "paso": "galeria subir tercera",
+      "status": 201,
+      "body": {
+        "id": 4,
+        "foto": "/api/fotos/<foto>",
+        "titulo": "Chapita de Rita",
+        "creado_en": "<fecha>"
+      }
+    },
+    {
+      "paso": "galeria orden inicial",
+      "status": 200,
+      "body": [
+        {
+          "id": 4,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "Chapita de Rita",
+          "creado_en": "<fecha>"
+        },
+        {
+          "id": 3,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "Llavero de Paola",
+          "creado_en": "<fecha>"
+        },
+        {
+          "id": 2,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "",
+          "creado_en": "<fecha>"
+        }
+      ]
+    },
+    {
+      "paso": "galeria cambiar titulo",
+      "status": 200,
+      "body": {
+        "id": 3,
+        "foto": "/api/fotos/<foto>",
+        "titulo": "Llavero de Paola (letra P)",
+        "creado_en": "<fecha>"
+      }
+    },
+    {
+      "paso": "galeria titulo vacio",
+      "status": 200,
+      "body": {
+        "id": 3,
+        "foto": "/api/fotos/<foto>",
+        "titulo": "",
+        "creado_en": "<fecha>"
+      }
+    },
+    {
+      "paso": "galeria titulo largo al editar",
+      "status": 400,
+      "body": {
+        "error": "Datos invalidos.",
+        "detalles": [
+          {
+            "campo": "titulo",
+            "mensaje": "El título puede tener hasta 80 letras."
+          }
+        ]
+      }
+    },
+    {
+      "paso": "galeria titulo inexistente",
+      "status": 404,
+      "body": {
+        "error": "Esa foto ya no está en la galería."
+      }
+    },
+    {
+      "paso": "galeria titulo como cliente",
+      "status": 403,
+      "body": {
+        "error": "No tenes permisos para esto."
+      }
+    },
+    {
+      "paso": "galeria ordenar",
+      "status": 200,
+      "body": [
+        {
+          "id": 2,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "",
+          "creado_en": "<fecha>"
+        },
+        {
+          "id": 3,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "",
+          "creado_en": "<fecha>"
+        },
+        {
+          "id": 4,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "Chapita de Rita",
+          "creado_en": "<fecha>"
+        }
+      ]
+    },
+    {
+      "paso": "galeria orden guardado",
+      "status": 200,
+      "body": [
+        {
+          "id": 2,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "",
+          "creado_en": "<fecha>"
+        },
+        {
+          "id": 3,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "",
+          "creado_en": "<fecha>"
+        },
+        {
+          "id": 4,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "Chapita de Rita",
+          "creado_en": "<fecha>"
+        }
+      ]
+    },
+    {
+      "paso": "galeria ordenar incompleto",
+      "status": 400,
+      "body": {
+        "error": "La galería cambió mientras la ordenabas. Actualizá la página y probá de nuevo."
+      }
+    },
+    {
+      "paso": "galeria ordenar repetido",
+      "status": 400,
+      "body": {
+        "error": "La galería cambió mientras la ordenabas. Actualizá la página y probá de nuevo."
+      }
+    },
+    {
+      "paso": "galeria ordenar como cliente",
+      "status": 403,
+      "body": {
+        "error": "No tenes permisos para esto."
+      }
+    },
+    {
+      "paso": "galeria subir despues de ordenar",
+      "status": 201,
+      "body": {
+        "id": 5,
+        "foto": "/api/fotos/<foto>",
+        "titulo": "Chapita de Nala",
+        "creado_en": "<fecha>"
+      }
+    },
+    {
+      "paso": "galeria nueva primera",
+      "status": 200,
+      "body": [
+        {
+          "id": 5,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "Chapita de Nala",
+          "creado_en": "<fecha>"
+        },
+        {
+          "id": 2,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "",
+          "creado_en": "<fecha>"
+        },
+        {
+          "id": 3,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "",
+          "creado_en": "<fecha>"
+        },
+        {
+          "id": 4,
+          "foto": "/api/fotos/<foto>",
+          "titulo": "Chapita de Rita",
+          "creado_en": "<fecha>"
+        }
+      ]
+    },
+    {
       "paso": "login repetido 1",
       "status": 401,
       "body": {

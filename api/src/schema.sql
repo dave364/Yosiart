@@ -133,8 +133,12 @@ CREATE TABLE IF NOT EXISTS galeria (
   id          SERIAL PRIMARY KEY,
   foto_id     TEXT NOT NULL REFERENCES fotos(id),
   titulo      TEXT NOT NULL DEFAULT '',
+  -- Posición en el carrusel: el menor va primero.
+  orden       INTEGER NOT NULL DEFAULT 0,
   creado_en   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+-- Para bases creadas antes de que existiera el orden.
+ALTER TABLE galeria ADD COLUMN IF NOT EXISTS orden INTEGER NOT NULL DEFAULT 0;
 
 CREATE INDEX IF NOT EXISTS idx_productos_activo     ON productos(activo);
 CREATE INDEX IF NOT EXISTS idx_pedidos_usuario      ON pedidos(usuario_id);

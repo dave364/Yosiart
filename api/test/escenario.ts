@@ -501,6 +501,63 @@ export async function correrEscenario({
   controlar((await llamar("galeria borrar como cliente", "DELETE", "/api/galeria/1", { token: C })).status === 403, "galeria borrar 403");
   controlar((await llamar("galeria queda una", "GET", "/api/galeria")).body.length === 1, "galeria queda una");
 
+  // Título y orden
+  const g2 = await llamar("galeria subir otra", "POST", "/api/galeria", { token: A, body: { foto: PNG, titulo: "Llavero de Paola" } });
+  const g3 = await llamar("galeria subir tercera", "POST", "/api/galeria", { token: A, body: { foto: PNG, titulo: "Chapita de Rita" } });
+  const orden1 = (await llamar("galeria orden inicial", "GET", "/api/galeria")).body.map((f: Json) => f.id);
+  controlar(orden1[0] === g3.body.id && orden1[1] === g2.body.id, "la nueva va primera");
+  const editado = await llamar("galeria cambiar titulo", "PATCH", `/api/galeria/${g2.body.id}`, {
+    token: A,
+    body: { titulo: "  Llavero de Paola (letra P)  " },
+  });
+  controlar(editado.status === 200 && editado.body.titulo === "Llavero de Paola (letra P)", "cambiar titulo");
+  controlar(
+    (await llamar("galeria titulo vacio", "PATCH", `/api/galeria/${g2.body.id}`, { token: A, body: { titulo: "" } })).body.titulo === "",
+    "titulo vacio permitido"
+  );
+  controlar(
+    (await llamar("galeria titulo largo al editar", "PATCH", `/api/galeria/${g2.body.id}`, { token: A, body: { titulo: "x".repeat(81) } }))
+      .status === 400,
+    "titulo largo al editar"
+  );
+  controlar(
+    (await llamar("galeria titulo inexistente", "PATCH", "/api/galeria/999", { token: A, body: { titulo: "Hola" } })).status === 404,
+    "titulo 404"
+  );
+  controlar(
+    (await llamar("galeria titulo como cliente", "PATCH", `/api/galeria/${g2.body.id}`, { token: C, body: { titulo: "Hola" } }))
+      .status === 403,
+    "titulo 403"
+  );
+  const invertido = [...orden1].reverse();
+  const reordenado = await llamar("galeria ordenar", "PUT", "/api/galeria/orden", { token: A, body: { ids: invertido } });
+  controlar(
+    reordenado.status === 200 && JSON.stringify(reordenado.body.map((f: Json) => f.id)) === JSON.stringify(invertido),
+    "ordenar"
+  );
+  controlar(
+    JSON.stringify((await llamar("galeria orden guardado", "GET", "/api/galeria")).body.map((f: Json) => f.id)) ===
+      JSON.stringify(invertido),
+    "orden guardado"
+  );
+  controlar(
+    (await llamar("galeria ordenar incompleto", "PUT", "/api/galeria/orden", { token: A, body: { ids: invertido.slice(1) } })).status === 400,
+    "ordenar incompleto"
+  );
+  controlar(
+    (await llamar("galeria ordenar repetido", "PUT", "/api/galeria/orden", {
+      token: A,
+      body: { ids: [invertido[0], invertido[0], invertido[1]] },
+    })).status === 400,
+    "ordenar repetido"
+  );
+  controlar(
+    (await llamar("galeria ordenar como cliente", "PUT", "/api/galeria/orden", { token: C, body: { ids: invertido } })).status === 403,
+    "ordenar 403"
+  );
+  const g4 = await llamar("galeria subir despues de ordenar", "POST", "/api/galeria", { token: A, body: { foto: PNG, titulo: "Chapita de Nala" } });
+  controlar((await llamar("galeria nueva primera", "GET", "/api/galeria")).body[0].id === g4.body.id, "nueva primera tras ordenar");
+
   // ---------- Limites de intentos ----------
   let ultimo: Paso | undefined;
   for (let i = 0; i < 11; i++) {
