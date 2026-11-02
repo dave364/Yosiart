@@ -19,6 +19,17 @@ const VELOCIDAD_AUTO = 0.006; // grados por milisegundo
 const ARRASTRE = 0.25; // grados por píxel arrastrado
 
 const normalizar = (a: number) => ((((a + 180) % 360) + 360) % 360) - 180;
+const suave = (t: number) => t * t * (3 - 2 * t);
+
+// La foto que se va del frente se desvanece del lado por donde entra la
+// siguiente, así el relevo es gradual y no un cambio de golpe.
+// Llega al máximo justo en el cruce (medio paso) y después se apaga.
+const desvanecido = (grados: number, direccion: number, paso: number) => {
+  if (!direccion || grados * direccion <= 0) return 0; // no es la que se va
+  const medio = paso / 2;
+  const d = Math.abs(grados);
+  return d <= medio ? suave(d / medio) : Math.max(0, 1 - (d - medio) / medio);
+};
 
 interface Props {
   fotos: FotoGaleria[];
@@ -27,7 +38,7 @@ interface Props {
 const Galeria3D = ({ fotos }: Props) => {
   const escenaRef = useRef<HTMLDivElement>(null);
   const tarjetasRef = useRef<(HTMLButtonElement | null)[]>([]);
-  const giro = useRef({ angulo: 0, vel: 0, objetivo: null as number | null, arrastrando: false, x: 0, movido: 0 });
+  const giro = useRef({ angulo: 0, anterior: 0, direccion: -1, vel: 0, objetivo: null as number | null, arrastrando: false, x: 0, movido: 0 });
   const reducir = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   const pausa = useRef(false); // el mouse está encima o hay una foto ampliada
   const visible = useRef(true);
@@ -48,6 +59,10 @@ const Galeria3D = ({ fotos }: Props) => {
     const alto = celular ? 52 : 78; // cuánto suben las de atrás (vista desde arriba)
     let masCerca = 0;
     let mejorZ = -Infinity;
+    const g = giro.current;
+    const cambio = g.angulo - g.anterior;
+    if (Math.abs(cambio) > 1e-4) g.direccion = Math.sign(cambio);
+    g.anterior = g.angulo;
     tarjetasRef.current.forEach((el, i) => {
       if (!el) return;
       // Entre -180° y 180°: así la inclinación no sigue creciendo vuelta tras vuelta.
@@ -62,6 +77,15 @@ const Galeria3D = ({ fotos }: Props) => {
       el.style.zIndex = String(Math.round(cerca * 100));
       el.style.filter = `brightness(${0.55 + cerca * 0.45}) saturate(${0.6 + cerca * 0.4})`;
       el.style.opacity = String(0.35 + cerca * 0.65);
+      // Solo en el celular: ahí las fotos se tapan entre sí. En la computadora
+      // quedan una al lado de la otra y no hace falta.
+      const fundido = celular ? desvanecido(grados, g.direccion, paso) : 0;
+      const mascara =
+        fundido > 0.01
+          ? `linear-gradient(${grados < 0 ? "to left" : "to right"}, rgba(0,0,0,${(1 - 0.9 * fundido).toFixed(3)}), #000 ${Math.round(55 * fundido)}%)`
+          : "none";
+      el.style.maskImage = mascara;
+      el.style.webkitMaskImage = mascara;
       if (z > mejorZ) {
         mejorZ = z;
         masCerca = i;
