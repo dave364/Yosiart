@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { memo, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import type { KeyboardEvent, PointerEvent } from "react";
 import type { Apariencia } from "../../tipos";
 import { buscarColor, buscarGlitter } from "../../data/piezas";
@@ -20,6 +20,9 @@ import "./Pieza3D.scss";
 // Las formas vienen de data/formas.tsx (las mismas que la vista plana).
 
 const CAPAS = 26; // láminas que forman el espesor
+// En las tarjetas del catálogo la pieza es chica: con menos láminas el canto
+// se ve igual de macizo y el celular tiene mucho menos para dibujar.
+const CAPAS_COMPACTA = 14;
 const ANCHO_BASE = 62; // % del escenario que ocupa la pieza más grande (6 cm)
 
 // Oscurece (k < 0) o aclara (k > 0) un color hex.
@@ -92,9 +95,12 @@ const Pieza3D = ({
   }, [auto]);
 
   // El espesor se calcula en px, así que necesitamos el ancho real de la pieza.
-  useEffect(() => {
+  // Medimos antes de que se pinte la pantalla, así la pieza aparece de
+  // entrada y no un cuadro después.
+  useLayoutEffect(() => {
     const el = piezaRef.current;
     if (!el) return;
+    setAncho(el.clientWidth);
     const ro = new ResizeObserver(() => setAncho(el.clientWidth));
     ro.observe(el);
     return () => ro.disconnect();
@@ -226,6 +232,7 @@ const Pieza3D = ({
   const telFrente = telefonoLado === "frente" ? tel : "";
   const telDorso = telefonoLado === "dorso" ? tel : "";
   const escala = ancho / 300;
+  const capas = compacta ? CAPAS_COMPACTA : CAPAS;
   const zFrente = (f.espesor / 2) * escala;
   const colorHueco = mezclar(c.hex, -0.5);
   const pintura = pinturaLetra(letra, `${id}-letra`, c.texto);
@@ -259,8 +266,8 @@ const Pieza3D = ({
           {ancho > 0 && (
             <>
               {/* Canto: láminas intermedias, más oscuras hacia el centro */}
-              {Array.from({ length: CAPAS - 2 }, (_, j) => {
-                const t = (j + 1) / (CAPAS - 1) - 0.5;
+              {Array.from({ length: capas - 2 }, (_, j) => {
+                const t = (j + 1) / (capas - 1) - 0.5;
                 return (
                   <svg
                     key={j}
@@ -409,4 +416,6 @@ const Pieza3D = ({
   );
 };
 
-export default Pieza3D;
+// memo: cuando llegan los precios del servidor, las piezas que no cambiaron
+// de aspecto no se vuelven a armar.
+export default memo(Pieza3D);
