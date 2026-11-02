@@ -19,46 +19,6 @@ const VELOCIDAD_AUTO = 0.006; // grados por milisegundo
 const ARRASTRE = 0.25; // grados por píxel arrastrado
 
 const normalizar = (a: number) => ((((a + 180) % 360) + 360) % 360) - 180;
-const suave = (t: number) => t * t * (3 - 2 * t);
-
-// Dónde se ve una tarjeta en pantalla (centro y ancho), con la perspectiva.
-const PERSPECTIVA = 1300;
-const proyectar = (grados: number, rx: number, rz: number, ancho: number) => {
-  const theta = (grados * Math.PI) / 180;
-  const z = Math.cos(theta) * rz;
-  const f = PERSPECTIVA / (PERSPECTIVA - z);
-  const escala = 0.62 + ((z + rz) / (2 * rz)) * 0.48;
-  return { x: Math.sin(theta) * rx * f, w: ancho * escala * f };
-};
-
-// La foto que se va del frente se vuelve transparente justo en la parte que
-// tapa a la siguiente. Al cruzarse (medio paso) esa parte ya es invisible, así
-// que cuando la nueva pasa adelante no hay salto. Después el borde suave se
-// apaga de a poco, ya tapado por la nueva.
-const mascaraSalida = (
-  grados: number,
-  direccion: number,
-  paso: number,
-  rx: number,
-  rz: number,
-  ancho: number,
-) => {
-  if (!direccion || grados * direccion <= 0) return "none"; // no es la que se va
-  const medio = paso / 2;
-  const d = Math.abs(grados);
-  if (d >= paso * 1.5) return "none";
-  const sale = proyectar(grados, rx, rz, ancho);
-  const entra = proyectar(grados - direccion * paso, rx, rz, ancho);
-  // Cuánto de la que se va queda encima de la que entra (0 a 1 de su ancho).
-  const tapa = Math.max(0, Math.min(1, (sale.w / 2 + entra.w / 2 - Math.abs(entra.x - sale.x)) / sale.w));
-  const avance = d <= medio ? suave(d / medio) : 1;
-  const borde = d <= medio ? 1 : Math.max(0, 1 - (d - medio) / paso);
-  const claro = tapa * avance; // parte totalmente transparente
-  const rampa = 0.22 * borde * avance; // transición suave hacia lo opaco
-  if (claro + rampa < 0.01) return "none";
-  const lado = grados < 0 ? "to left" : "to right";
-  return `linear-gradient(${lado}, transparent ${(claro * 100).toFixed(1)}%, #000 ${((claro + rampa) * 100).toFixed(1)}%)`;
-};
 
 interface Props {
   fotos: FotoGaleria[];
@@ -67,7 +27,7 @@ interface Props {
 const Galeria3D = ({ fotos }: Props) => {
   const escenaRef = useRef<HTMLDivElement>(null);
   const tarjetasRef = useRef<(HTMLButtonElement | null)[]>([]);
-  const giro = useRef({ angulo: 0, anterior: 0, direccion: -1, vel: 0, objetivo: null as number | null, arrastrando: false, x: 0, movido: 0 });
+  const giro = useRef({ angulo: 0, vel: 0, objetivo: null as number | null, arrastrando: false, x: 0, movido: 0 });
   const reducir = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   const pausa = useRef(false); // el mouse está encima o hay una foto ampliada
   const visible = useRef(true);
@@ -88,10 +48,6 @@ const Galeria3D = ({ fotos }: Props) => {
     const alto = celular ? 52 : 78; // cuánto suben las de atrás (vista desde arriba)
     let masCerca = 0;
     let mejorZ = -Infinity;
-    const g = giro.current;
-    const cambio = g.angulo - g.anterior;
-    if (Math.abs(cambio) > 1e-4) g.direccion = Math.sign(cambio);
-    g.anterior = g.angulo;
     tarjetasRef.current.forEach((el, i) => {
       if (!el) return;
       // Entre -180° y 180°: así la inclinación no sigue creciendo vuelta tras vuelta.
@@ -106,11 +62,6 @@ const Galeria3D = ({ fotos }: Props) => {
       el.style.zIndex = String(Math.round(cerca * 100));
       el.style.filter = `brightness(${0.55 + cerca * 0.45}) saturate(${0.6 + cerca * 0.4})`;
       el.style.opacity = String(0.35 + cerca * 0.65);
-      // Solo en el celular: ahí las fotos se tapan entre sí. En la computadora
-      // quedan una al lado de la otra y no hace falta.
-      const mascara = celular ? mascaraSalida(grados, g.direccion, paso, rx, rz, el.offsetWidth) : "none";
-      el.style.maskImage = mascara;
-      el.style.webkitMaskImage = mascara;
       if (z > mejorZ) {
         mejorZ = z;
         masCerca = i;
