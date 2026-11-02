@@ -21,14 +21,43 @@ const ARRASTRE = 0.25; // grados por píxel arrastrado
 const normalizar = (a: number) => ((((a + 180) % 360) + 360) % 360) - 180;
 const suave = (t: number) => t * t * (3 - 2 * t);
 
-// La foto que se va del frente se desvanece del lado por donde entra la
-// siguiente, así el relevo es gradual y no un cambio de golpe.
-// Llega al máximo justo en el cruce (medio paso) y después se apaga.
-const desvanecido = (grados: number, direccion: number, paso: number) => {
-  if (!direccion || grados * direccion <= 0) return 0; // no es la que se va
+// Dónde se ve una tarjeta en pantalla (centro y ancho), con la perspectiva.
+const PERSPECTIVA = 1300;
+const proyectar = (grados: number, rx: number, rz: number, ancho: number) => {
+  const theta = (grados * Math.PI) / 180;
+  const z = Math.cos(theta) * rz;
+  const f = PERSPECTIVA / (PERSPECTIVA - z);
+  const escala = 0.62 + ((z + rz) / (2 * rz)) * 0.48;
+  return { x: Math.sin(theta) * rx * f, w: ancho * escala * f };
+};
+
+// La foto que se va del frente se vuelve transparente justo en la parte que
+// tapa a la siguiente. Al cruzarse (medio paso) esa parte ya es invisible, así
+// que cuando la nueva pasa adelante no hay salto. Después el borde suave se
+// apaga de a poco, ya tapado por la nueva.
+const mascaraSalida = (
+  grados: number,
+  direccion: number,
+  paso: number,
+  rx: number,
+  rz: number,
+  ancho: number,
+) => {
+  if (!direccion || grados * direccion <= 0) return "none"; // no es la que se va
   const medio = paso / 2;
   const d = Math.abs(grados);
-  return d <= medio ? suave(d / medio) : Math.max(0, 1 - (d - medio) / medio);
+  if (d >= paso * 1.5) return "none";
+  const sale = proyectar(grados, rx, rz, ancho);
+  const entra = proyectar(grados - direccion * paso, rx, rz, ancho);
+  // Cuánto de la que se va queda encima de la que entra (0 a 1 de su ancho).
+  const tapa = Math.max(0, Math.min(1, (sale.w / 2 + entra.w / 2 - Math.abs(entra.x - sale.x)) / sale.w));
+  const avance = d <= medio ? suave(d / medio) : 1;
+  const borde = d <= medio ? 1 : Math.max(0, 1 - (d - medio) / paso);
+  const claro = tapa * avance; // parte totalmente transparente
+  const rampa = 0.22 * borde * avance; // transición suave hacia lo opaco
+  if (claro + rampa < 0.01) return "none";
+  const lado = grados < 0 ? "to left" : "to right";
+  return `linear-gradient(${lado}, transparent ${(claro * 100).toFixed(1)}%, #000 ${((claro + rampa) * 100).toFixed(1)}%)`;
 };
 
 interface Props {
@@ -79,11 +108,7 @@ const Galeria3D = ({ fotos }: Props) => {
       el.style.opacity = String(0.35 + cerca * 0.65);
       // Solo en el celular: ahí las fotos se tapan entre sí. En la computadora
       // quedan una al lado de la otra y no hace falta.
-      const fundido = celular ? desvanecido(grados, g.direccion, paso) : 0;
-      const mascara =
-        fundido > 0.01
-          ? `linear-gradient(${grados < 0 ? "to left" : "to right"}, rgba(0,0,0,${(1 - 0.9 * fundido).toFixed(3)}), #000 ${Math.round(55 * fundido)}%)`
-          : "none";
+      const mascara = celular ? mascaraSalida(grados, g.direccion, paso, rx, rz, el.offsetWidth) : "none";
       el.style.maskImage = mascara;
       el.style.webkitMaskImage = mascara;
       if (z > mejorZ) {
