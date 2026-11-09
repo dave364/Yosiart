@@ -25,6 +25,28 @@
     top: 100px;
 
     @media (max-width: 900px) { position: static; }
+
+    // En el celular la pieza queda fija debajo del menú, más chica, y las
+    // opciones pasan por debajo: cada cambio se ve sin tener que subir.
+    // Solo si la pantalla es lo bastante alta (no en el celular acostado).
+    @media (max-width: 900px) and (min-height: 560px) {
+      position: sticky;
+      top: 76px; // alto del menú
+      z-index: 5;
+      margin: 0 -16px;
+      padding: 8px 16px 10px;
+      background: color-mix(in srgb, var(--blush) 92%, transparent);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 8px 16px -10px rgba(168, 18, 76, .35);
+
+      .personalizar__vista-caja { padding: 6px; border-radius: 20px; gap: 0; }
+      .personalizar__vista-caja > p { display: none; }
+      .pieza3d { gap: 4px; }
+      .pieza3d__escenario { max-width: min(210px, 26vh); margin: 0 auto; }
+      .pieza3d__pista { display: none; }
+      .pieza3d__controles { flex-wrap: nowrap; gap: 6px; }
+      .pieza3d__controles .chip { font-size: 13px; padding: 5px 11px; min-height: 32px; }
+    }
   }
 
   &__vista-caja {
@@ -182,4 +204,9 @@
   font-weight: 700;
 
   a { font-weight: 800; }
+}
+
+// Al tocar un campo en el celular, que no quede escondido detrás de la vista fija.
+@media (max-width: 900px) and (min-height: 560px) {
+  .personalizar__opciones :is(input, textarea, select) { scroll-margin-top: 340px; }
 }
