@@ -17,6 +17,18 @@ body {
   line-height: 1.5;
 }
 
+// Fondo de resina marmolada, muy suave para no competir con los textos.
+// Fijo detrás de todo: no se mueve al bajar y no tapa nada.
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("/fondo-marmol.svg") 0 0 / 600px 600px;
+  opacity: .2;
+}
+
 a {
   color: var(--frambuesa);
   &:hover { color: var(--frambuesa-hover); }
