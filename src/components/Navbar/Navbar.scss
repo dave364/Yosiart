@@ -2,16 +2,32 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--blush);
-  border-bottom: 1px solid var(--borde);
+  // Píldora de vidrio flotante: deja ver el fondo marmolado esmerilado.
+  padding: 10px 12px 0;
+
+  // Velo suave detrás de la píldora: lo que pasa por debajo al bajar se
+  // desvanece en vez de asomarse por los costados.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 -16px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(253, 243, 246, .92) 60%, rgba(253, 243, 246, 0));
+  }
 
   &__barra {
     display: flex;
     align-items: center;
     gap: 16px;
-    min-height: 76px;
-    padding-top: 12px;
-    padding-bottom: 12px;
+    min-height: 64px;
+    padding: 6px 10px 6px 18px;
+    background: rgba(253, 243, 246, .55);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
+    border: 1px solid rgba(255, 255, 255, .8);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 8px 24px rgba(168, 18, 76, .14);
   }
 
   &__marca {
@@ -22,8 +38,8 @@
     margin-right: auto;
 
     img {
-      width: 52px;
-      height: 52px;
+      width: 44px;
+      height: 44px;
       border-radius: var(--radius-pill);
       object-fit: cover;
       border: 2px solid var(--rosa-chicle);
@@ -144,7 +160,14 @@
 
   // Celular: el menu se abre debajo de la barra
   @media (max-width: 860px) {
-    &__barra { flex-wrap: wrap; gap: 8px; }
+    &__barra { flex-wrap: wrap; gap: 8px; padding: 6px 8px 6px 10px; }
+
+    // Con el menú abierto la píldora se estira hacia abajo: esquinas menos
+    // redondas y vidrio más opaco para que las opciones se lean bien.
+    &__barra:has(.navbar__menu--abierto) {
+      border-radius: 28px;
+      background: rgba(253, 243, 246, .94);
+    }
     &__toggle { display: inline-flex; order: -1; }
     &__marca { gap: 8px; }
     &__marca span { font-size: 26px; }
@@ -171,6 +194,7 @@
         min-height: 48px;
         display: flex;
         align-items: center;
+        padding: 0 8px;
         border-top: 1px solid var(--borde);
       }
 

@@ -31,15 +31,15 @@
     // Solo si la pantalla es lo bastante alta (no en el celular acostado).
     @media (max-width: 900px) and (min-height: 560px) {
       position: sticky;
-      top: 76px; // alto del menú
+      top: 80px; // debajo de la píldora del menú
       z-index: 5;
-      margin: 0 -16px;
-      padding: 8px 16px 10px;
-      background: color-mix(in srgb, var(--blush) 92%, transparent);
-      backdrop-filter: blur(6px);
-      box-shadow: 0 8px 16px -10px rgba(168, 18, 76, .35);
 
-      .personalizar__vista-caja { padding: 6px; border-radius: 20px; gap: 0; }
+      .personalizar__vista-caja {
+        padding: 6px;
+        border-radius: 20px;
+        gap: 0;
+        box-shadow: 0 10px 24px rgba(168, 18, 76, .18);
+      }
       .personalizar__vista-caja > p { display: none; }
       .pieza3d { gap: 4px; }
       .pieza3d__escenario { max-width: min(210px, 26vh); margin: 0 auto; }
