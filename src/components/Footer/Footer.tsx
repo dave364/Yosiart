@@ -3,8 +3,6 @@ import logo from "../../assets/logo.webp";
 import { INSTAGRAM_URL } from "../../config";
 import "./Footer.scss";
 
-// Abre el chat de Instagram directamente
-const DM_URL = "https://ig.me/m/yosiart.resina";
 
 // La "P" de Pixelmate hecha de píxeles, para la firma del pie
 const PIXELES: Array<[number, number]> = [
@@ -57,7 +55,7 @@ const Footer = () => (
         <p>¿Querés cancelar una compra? Escribinos y lo resolvemos.</p>
         {/* Obligatorio para vender online en Argentina (Res. 424/2020): visible,
             accesible desde el inicio y sin pedir registro. */}
-        <a className="footer__arrepentimiento" href={DM_URL} target="_blank" rel="noopener noreferrer">
+        <a className="footer__arrepentimiento" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
           Botón de arrepentimiento
         </a>
       </div>
