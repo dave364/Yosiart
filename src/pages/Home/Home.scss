@@ -52,7 +52,11 @@
     letter-spacing: .04em;
   }
 
-  &__botones { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+  &__botones {
+    display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px;
+    // En el celular, los dos botones del mismo ancho y fáciles de tocar
+    @media (max-width: 480px) { .btn { width: 100%; justify-content: center; } }
+  }
 
   &__imagen { flex: 1 1 340px; min-width: 0; display: flex; justify-content: center; }
 

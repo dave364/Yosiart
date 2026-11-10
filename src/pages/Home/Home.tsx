@@ -15,8 +15,9 @@ const PASOS = [
   { titulo: "Personalizala", texto: "Elegí forma, colores, nombre y, si querés, subí una foto." },
   {
     titulo: "La hacemos a mano",
-    // TODO: completar la demora real de fabricacion.
-    texto: "Seguí el avance de tu pedido desde tu cuenta. Demora: [X DÍAS].",
+    // TODO: sumar la demora real de fabricación cuando esté definida
+    // (antes se veía el texto de relleno "[X DÍAS]" en la web).
+    texto: "Podés seguir el avance de tu pedido desde tu cuenta, paso a paso.",
   },
 ];
 

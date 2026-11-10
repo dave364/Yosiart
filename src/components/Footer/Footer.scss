@@ -30,6 +30,8 @@
     font-size: 15px;
     font-weight: 700;
 
+    // Altura cómoda para tocar con el dedo
+    a { display: inline-flex; align-items: center; min-height: 44px; }
     span { color: var(--tinta-suave); font-weight: 600; }
   }
 }
